@@ -52,6 +52,16 @@ const router = createRouter({
       component: () => import('@/pages/PdfToWordPage.vue'),
     },
     {
+      path: '/pdf-to-excel',
+      name: 'pdf-to-excel',
+      component: () => import('@/pages/PdfToExcelPage.vue'),
+    },
+    {
+      path: '/pdf-to-ppt',
+      name: 'pdf-to-ppt',
+      component: () => import('@/pages/PdfToPptPage.vue'),
+    },
+    {
       path: '/pdf-to-image',
       name: 'pdf-to-image',
       component: () => import('@/pages/PdfToImagePage.vue'),

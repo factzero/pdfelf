@@ -49,6 +49,8 @@ const categories = [
     name: '🔄 从 PDF 转换',
     tools: [
       { icon: '📄', title: 'PDF 转 Word', description: '将 PDF 转换为可编辑的 Word 文档', route: '/pdf-to-word' },
+      { icon: '📊', title: 'PDF 转 Excel', description: '将 PDF 转换为 Excel 电子表格', route: '/pdf-to-excel' },
+      { icon: '📽️', title: 'PDF 转 PPT', description: '将 PDF 转换为 PowerPoint 演示文稿', route: '/pdf-to-ppt' },
       { icon: '🖼️', title: 'PDF 转图片', description: '将 PDF 页面导出为 PNG 或 JPEG', route: '/pdf-to-image' },
     ],
   },
