@@ -1,0 +1,98 @@
+<template>
+  <div class="tool-page container">
+    <h1 class="tool-title">📋 提取 PDF 页面</h1>
+    <p class="tool-desc">从 PDF 中提取指定页面，保存为新的 PDF 文件</p>
+    <FileDropZone :accept="['pdf']" @file-selected="onFileSelected" @error="onError" />
+    <div v-if="selectedFile && pageCount > 0" class="options">
+      <p class="page-info">共 {{ pageCount }} 页，勾选要提取的页面：</p>
+      <div class="page-grid">
+        <label v-for="p in pageCount" :key="p" class="page-item" :class="{ selected: toExtract.includes(p) }">
+          <input type="checkbox" :value="p" v-model="toExtract" />
+          <span>第 {{ p }} 页</span>
+        </label>
+      </div>
+      <div class="actions-row">
+        <button class="btn-link" @click="selectAll">全选</button>
+        <button class="btn-link" @click="clearAll">取消全选</button>
+      </div>
+    </div>
+    <button
+      v-if="selectedFile"
+      class="btn btn--primary btn--large"
+      :disabled="isProcessing || toExtract.length === 0"
+      @click="extract"
+    >
+      {{ isProcessing ? '处理中...' : `提取 ${toExtract.length} 页` }}
+    </button>
+    <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
+    <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+    <ResultDownload v-if="resultBlob" :file-info="{ blob: resultBlob, filename: outputFilename }" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import FileDropZone from '@/components/FileDropZone.vue'
+import ProgressBar from '@/components/ProgressBar.vue'
+import ResultDownload from '@/components/ResultDownload.vue'
+import { useToolStore } from '@/stores/toolStore'
+import { storeToRefs } from 'pinia'
+import { generateOutputFilename } from '@/utils/fileUtils'
+import { getPageCount, extractPages } from '@/services/pdfService'
+
+const store = useToolStore()
+const { isProcessing, progress, progressText } = storeToRefs(store)
+
+const selectedFile = ref<File | null>(null)
+const pageCount = ref(0)
+const toExtract = ref<number[]>([])
+const resultBlob = ref<Blob | null>(null)
+const outputFilename = ref('')
+const errorMsg = ref('')
+
+async function onFileSelected(file: File | File[]) {
+  errorMsg.value = ''
+  resultBlob.value = null
+  selectedFile.value = file as File
+  outputFilename.value = generateOutputFilename(selectedFile.value.name, 'pdf', 'extracted')
+  const count = await getPageCount(selectedFile.value)
+  pageCount.value = count
+  toExtract.value = []
+}
+
+function onError(message: string) { errorMsg.value = message }
+function selectAll() { toExtract.value = Array.from({ length: pageCount.value }, (_, i) => i + 1) }
+function clearAll() { toExtract.value = [] }
+
+async function extract() {
+  if (!selectedFile.value || toExtract.value.length === 0) return
+  store.startProcessing('正在提取页面...')
+  try {
+    const blob = await extractPages(selectedFile.value, [...toExtract.value], (p) => store.updateProgress(p))
+    resultBlob.value = blob
+    store.finishProcessing()
+  } catch (e) {
+    store.setError(e instanceof Error ? e.message : '提取失败')
+    errorMsg.value = '提取失败，请重试'
+  }
+}
+</script>
+
+<style scoped>
+.tool-page { max-width: 640px; margin: 0 auto; }
+.tool-title { font-size: 1.75rem; font-weight: 700; text-align: center; margin-bottom: var(--spacing-sm); }
+.tool-desc { text-align: center; color: var(--color-text-secondary); margin-bottom: var(--spacing-xl); }
+.options { margin-top: var(--spacing-lg); }
+.page-info { font-size: 0.9375rem; font-weight: 600; margin-bottom: var(--spacing-md); }
+.page-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: var(--spacing-xs); }
+.page-item { display: flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-md); cursor: pointer; font-size: 0.875rem; transition: all var(--transition-fast); }
+.page-item:hover { border-color: var(--color-primary); }
+.page-item.selected { border-color: var(--color-primary); background: var(--color-primary-light); }
+.actions-row { display: flex; gap: var(--spacing-md); margin-top: var(--spacing-md); }
+.btn-link { background: none; border: none; color: var(--color-primary); cursor: pointer; font-size: 0.8125rem; text-decoration: underline; }
+.btn--large { display: block; width: 100%; margin-top: var(--spacing-xl); padding: var(--spacing-md); font-size: 1rem; }
+.btn--primary { background: var(--color-primary); color: white; border-radius: var(--radius-md); font-weight: 600; transition: background var(--transition-fast); }
+.btn--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
+.btn--primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.error { margin-top: var(--spacing-md); color: var(--color-error); font-size: 0.875rem; text-align: center; }
+</style>

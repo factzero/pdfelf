@@ -8,6 +8,7 @@ const router = createRouter({
       name: 'home',
       component: () => import('@/pages/HomePage.vue'),
     },
+    // 整理
     {
       path: '/compress-pdf',
       name: 'compress-pdf',
@@ -24,6 +25,28 @@ const router = createRouter({
       component: () => import('@/pages/SplitPage.vue'),
     },
     {
+      path: '/rotate-pdf',
+      name: 'rotate-pdf',
+      component: () => import('@/pages/RotatePage.vue'),
+    },
+    {
+      path: '/delete-pages',
+      name: 'delete-pages',
+      component: () => import('@/pages/DeletePage.vue'),
+    },
+    {
+      path: '/extract-pages',
+      name: 'extract-pages',
+      component: () => import('@/pages/ExtractPage.vue'),
+    },
+    // 编辑
+    {
+      path: '/add-watermark',
+      name: 'add-watermark',
+      component: () => import('@/pages/WatermarkPage.vue'),
+    },
+    // 从 PDF 转换
+    {
       path: '/pdf-to-word',
       name: 'pdf-to-word',
       component: () => import('@/pages/PdfToWordPage.vue'),
@@ -32,6 +55,33 @@ const router = createRouter({
       path: '/pdf-to-image',
       name: 'pdf-to-image',
       component: () => import('@/pages/PdfToImagePage.vue'),
+    },
+    // 转换成 PDF
+    {
+      path: '/word-to-pdf',
+      name: 'word-to-pdf',
+      component: () => import('@/pages/WordToPdfPage.vue'),
+    },
+    {
+      path: '/excel-to-pdf',
+      name: 'excel-to-pdf',
+      component: () => import('@/pages/ExcelToPdfPage.vue'),
+    },
+    {
+      path: '/ppt-to-pdf',
+      name: 'ppt-to-pdf',
+      component: () => import('@/pages/PptToPdfPage.vue'),
+    },
+    {
+      path: '/image-to-pdf',
+      name: 'image-to-pdf',
+      component: () => import('@/pages/ImageToPdfPage.vue'),
+    },
+    // 阅读器
+    {
+      path: '/pdf-reader',
+      name: 'pdf-reader',
+      component: () => import('@/pages/PdfReaderPage.vue'),
     },
   ],
 })

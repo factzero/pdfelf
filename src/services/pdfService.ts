@@ -1,4 +1,4 @@
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import JSZip from 'jszip'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 
@@ -131,4 +131,196 @@ export async function splitPDF(
   const zipBlob = await zip.generateAsync({ type: 'blob' })
   onProgress?.(100)
   return zipBlob
+}
+
+/**
+ * Get page count of a PDF file
+ */
+export async function getPageCount(file: File): Promise<number> {
+  const buffer = await readFileAsArrayBuffer(file)
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  return pdfDoc.getPageCount()
+}
+
+/**
+ * Rotate pages of a PDF
+ * @param file - Input PDF file
+ * @param rotations - Map of page number (1-indexed) to rotation angle (90, 180, 270)
+ * @param onProgress - Progress callback
+ * @returns Rotated PDF as Blob
+ */
+export async function rotatePDF(
+  file: File,
+  rotations: Map<number, number>,
+  onProgress?: (percent: number) => void
+): Promise<Blob> {
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(30)
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const pages = pdfDoc.getPages()
+
+  onProgress?.(50)
+  for (const [pageNum, angle] of rotations) {
+    const idx = pageNum - 1
+    if (idx >= 0 && idx < pages.length) {
+      const page = pages[idx]
+      const currentRotation = page.getRotation().angle
+      page.setRotation({ angle: (currentRotation + angle) % 360 })
+    }
+  }
+
+  onProgress?.(80)
+  const resultBytes = await pdfDoc.save()
+  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  onProgress?.(100)
+  return blob
+}
+
+/**
+ * Delete pages from a PDF
+ * @param file - Input PDF file
+ * @param pagesToDelete - Array of page numbers (1-indexed) to delete
+ * @param onProgress - Progress callback
+ * @returns PDF with pages removed as Blob
+ */
+export async function deletePages(
+  file: File,
+  pagesToDelete: number[],
+  onProgress?: (percent: number) => void
+): Promise<Blob> {
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(30)
+  const sourceDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const totalPages = sourceDoc.getPageCount()
+
+  const deleteSet = new Set(pagesToDelete)
+  const keepIndices = Array.from({ length: totalPages }, (_, i) => i)
+    .filter((i) => !deleteSet.has(i + 1))
+
+  if (keepIndices.length === 0) {
+    throw new Error('不能删除所有页面')
+  }
+
+  onProgress?.(50)
+  const newDoc = await PDFDocument.create()
+  const copiedPages = await newDoc.copyPages(sourceDoc, keepIndices)
+  copiedPages.forEach((p) => newDoc.addPage(p))
+
+  onProgress?.(80)
+  const resultBytes = await newDoc.save()
+  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  onProgress?.(100)
+  return blob
+}
+
+/**
+ * Extract pages from a PDF (keep only specified pages)
+ * @param file - Input PDF file
+ * @param pagesToExtract - Array of page numbers (1-indexed) to extract
+ * @param onProgress - Progress callback
+ * @returns Extracted PDF as Blob
+ */
+export async function extractPages(
+  file: File,
+  pagesToExtract: number[],
+  onProgress?: (percent: number) => void
+): Promise<Blob> {
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(30)
+  const sourceDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const totalPages = sourceDoc.getPageCount()
+
+  const indices = pagesToExtract
+    .filter((p) => p >= 1 && p <= totalPages)
+    .map((p) => p - 1)
+
+  if (indices.length === 0) {
+    throw new Error('请指定有效的页码')
+  }
+
+  onProgress?.(50)
+  const newDoc = await PDFDocument.create()
+  const copiedPages = await newDoc.copyPages(sourceDoc, indices)
+  copiedPages.forEach((p) => newDoc.addPage(p))
+
+  onProgress?.(80)
+  const resultBytes = await newDoc.save()
+  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  onProgress?.(100)
+  return blob
+}
+
+/**
+ * Add watermark to every page of a PDF
+ * @param file - Input PDF file
+ * @param watermarkText - Text to add as watermark
+ * @param options - Watermark styling options
+ * @param onProgress - Progress callback
+ * @returns Watermarked PDF as Blob
+ */
+export async function addWatermark(
+  file: File,
+  watermarkText: string,
+  options: {
+    fontSize?: number
+    opacity?: number
+    color?: { r: number; g: number; b: number }
+    angle?: number
+  } = {},
+  onProgress?: (percent: number) => void
+): Promise<Blob> {
+  const {
+    fontSize = 48,
+    opacity = 0.15,
+    color = { r: 0.5, g: 0.5, b: 0.5 },
+    angle = 45,
+  } = options
+
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(30)
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const pages = pdfDoc.getPages()
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+
+  onProgress?.(50)
+  const radians = (angle * Math.PI) / 180
+  const { r, g, b } = color
+
+  for (let i = 0; i < pages.length; i++) {
+    onProgress?.(50 + Math.round((i / pages.length) * 40))
+    const page = pages[i]
+    const { width, height } = page.getSize()
+
+    // Calculate text dimensions
+    const textWidth = font.widthOfTextAtSize(watermarkText, fontSize)
+    const textHeight = fontSize
+
+    // Draw multiple watermarks in a grid to cover the page
+    const stepX = textWidth * 2.2
+    const stepY = textHeight * 4
+
+    for (let x = -textWidth; x < width + textWidth; x += stepX) {
+      for (let y = -textHeight; y < height + textHeight; y += stepY) {
+        page.drawText(watermarkText, {
+          x,
+          y,
+          size: fontSize,
+          font,
+          opacity,
+          color: rgb(r, g, b),
+          rotate: { type: 0, angle: radians },
+        })
+      }
+    }
+  }
+
+  onProgress?.(95)
+  const resultBytes = await pdfDoc.save()
+  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  onProgress?.(100)
+  return blob
 }
