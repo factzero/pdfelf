@@ -21,18 +21,20 @@ defineProps<{
   flex-direction: column;
   align-items: center;
   padding: var(--spacing-xl) var(--spacing-lg);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   text-decoration: none;
   transition: all var(--transition-normal);
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
 }
 
 .tool-card:hover {
   border-color: var(--color-primary);
+  background: var(--color-primary-light);
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .tool-card__icon {

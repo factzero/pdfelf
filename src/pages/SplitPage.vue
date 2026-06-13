@@ -162,6 +162,7 @@ function parseRanges(input: string): [number, number][] {
   align-items: flex-start;
   gap: var(--spacing-sm);
   padding: var(--spacing-md);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   cursor: pointer;
