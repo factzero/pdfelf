@@ -3,10 +3,36 @@
     <h1 class="tool-title">✂️ 分割 PDF</h1>
     <p class="tool-desc">按页面范围或每 N 页分割 PDF</p>
     <FileDropZone
+      v-if="!selectedFile"
       :accept="['pdf']"
       @file-selected="onFileSelected"
       @error="onError"
     />
+
+    <!-- 已选文件预览区 -->
+    <div v-if="selectedFile" class="file-preview">
+      <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
+        <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF 预览" />
+        <div v-else class="file-preview__placeholder">
+          <span class="file-preview__placeholder-icon">📄</span>
+        </div>
+        <Transition name="fade">
+          <button
+            v-if="showDelete"
+            class="file-preview__delete"
+            @click="removeFile"
+          >
+            ✕
+          </button>
+        </Transition>
+      </div>
+      <div class="file-preview__meta">
+        <span class="file-preview__name">{{ selectedFile.name }}</span>
+        <span class="file-preview__size">{{ formatFileSize(selectedFile.size) }}</span>
+        <span v-if="totalPages > 0" class="file-preview__pages">共 {{ totalPages }} 页</span>
+      </div>
+    </div>
+
     <div v-if="selectedFile" class="options">
       <label class="option">
         <input type="radio" v-model="splitMode" value="range" />
@@ -40,35 +66,57 @@
         />
       </div>
     </div>
-    <button
-      v-if="selectedFile"
-      class="btn btn--primary btn--large"
-      :disabled="isProcessing"
-      @click="split"
-    >
-      {{ isProcessing ? '处理中...' : '分割 PDF' }}
-    </button>
-    <ProgressBar
-      :visible="isProcessing"
-      :percent="progress"
-      :text="progressText"
-    />
+    <!-- 操作区卡片 -->
+    <div v-if="selectedFile" class="action-card">
+      <button
+        v-if="!isProcessing && !resultBlob"
+        class="btn btn--primary btn--large"
+        @click="split"
+      >
+        分割 PDF
+      </button>
+
+      <div v-if="isProcessing" class="action-card__progress">
+        <div class="progress-bar">
+          <div class="progress-bar__fill" :style="{ width: `${progress}%` }"></div>
+        </div>
+        <div class="progress-info">
+          <span class="progress-text">{{ progressText }}</span>
+          <span class="progress-percent">{{ progress }}%</span>
+        </div>
+      </div>
+
+      <div v-if="resultBlob" class="action-card__result">
+        <div class="result-icon">✅</div>
+        <div class="result-body">
+          <p class="result-title">分割完成</p>
+          <p class="result-desc">已将 PDF 分割为多个文件</p>
+          <p class="result-filename">split.zip</p>
+        </div>
+        <button class="btn btn--primary result-download-btn" @click="downloadResult">
+          ⬇ 下载文件
+        </button>
+      </div>
+    </div>
+
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
-    <ResultDownload
-      v-if="resultBlob"
-      :file-info="{ blob: resultBlob, filename: 'split.zip' }"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onUnmounted, watch } from 'vue'
 import FileDropZone from '@/components/FileDropZone.vue'
-import ProgressBar from '@/components/ProgressBar.vue'
-import ResultDownload from '@/components/ResultDownload.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { splitPDF } from '@/services/pdfService'
+import { readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
+import * as pdfjsLib from 'pdfjs-dist'
+
+// Use bundled worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString()
 
 const store = useToolStore()
 const { isProcessing, progress, progressText } = storeToRefs(store)
@@ -79,11 +127,91 @@ const rangeInput = ref('')
 const everyN = ref(1)
 const resultBlob = ref<Blob | null>(null)
 const errorMsg = ref('')
+const previewUrl = ref('')
+const totalPages = ref(0)
+const showDelete = ref(false)
+let objectUrl: string | null = null
 
-function onFileSelected(file: File | File[]) {
+// 切换分割模式或参数时清除上一次的结果，让按钮重新出现
+watch([splitMode, rangeInput, everyN], () => {
+  if (resultBlob.value) {
+    resultBlob.value = null
+    errorMsg.value = ''
+  }
+})
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return bytes + ' B'
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+}
+
+function removeFile() {
+  if (objectUrl) {
+    URL.revokeObjectURL(objectUrl)
+    objectUrl = null
+  }
+  selectedFile.value = null
+  previewUrl.value = ''
+  totalPages.value = 0
+  resultBlob.value = null
+  errorMsg.value = ''
+  showDelete.value = false
+}
+
+onUnmounted(() => {
+  if (objectUrl) {
+    URL.revokeObjectURL(objectUrl)
+    objectUrl = null
+  }
+})
+
+async function onFileSelected(file: File | File[]) {
   errorMsg.value = ''
   resultBlob.value = null
+  if (objectUrl) {
+    URL.revokeObjectURL(objectUrl)
+    objectUrl = null
+  }
+  previewUrl.value = ''
+  totalPages.value = 0
   selectedFile.value = file as File
+
+  try {
+    const buffer = await readFileAsArrayBuffer(selectedFile.value)
+    const loadingTask = pdfjsLib.getDocument({ data: buffer })
+    const pdf = await loadingTask.promise
+    totalPages.value = pdf.numPages
+
+    if (pdf.numPages > 0) {
+      const page = await pdf.getPage(1)
+      const scale = 1.5
+      const viewport = page.getViewport({ scale })
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.floor(viewport.width)
+      canvas.height = Math.floor(viewport.height)
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        await page.render({ canvasContext: ctx, viewport }).promise
+        const blob = await new Promise<Blob | null>((resolve) => {
+          canvas.toBlob((b) => resolve(b), 'image/png')
+        })
+        if (blob) {
+          objectUrl = URL.createObjectURL(blob)
+          previewUrl.value = objectUrl
+        }
+      }
+    }
+  } catch {
+    previewUrl.value = ''
+    totalPages.value = 0
+  }
+}
+
+function downloadResult() {
+  if (resultBlob.value) {
+    downloadBlob(resultBlob.value, 'split.zip')
+  }
 }
 
 function onError(message: string) {
@@ -150,6 +278,101 @@ function parseRanges(input: string): [number, number][] {
   margin-bottom: var(--spacing-xl);
 }
 
+/* ===== 文件预览缩略图 ===== */
+.file-preview {
+  margin-top: var(--spacing-lg);
+}
+
+.file-preview__thumbnail {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+  cursor: pointer;
+}
+
+.file-preview__canvas {
+  display: block;
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.file-preview__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background: #fff;
+}
+
+.file-preview__placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.file-preview__delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.file-preview__delete:hover {
+  background: rgba(220, 38, 38, 0.85);
+}
+
+.file-preview__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.file-preview__name {
+  font-weight: 600;
+  color: var(--color-text);
+  word-break: break-all;
+}
+
+.file-preview__size {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.file-preview__pages {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .options {
   margin-top: var(--spacing-lg);
   display: flex;
@@ -213,12 +436,22 @@ function parseRanges(input: string): [number, number][] {
   width: 120px;
 }
 
+/* ===== 操作区卡片 ===== */
+.action-card {
+  margin-top: var(--spacing-xl);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+}
+
 .btn--large {
   display: block;
   width: 100%;
-  margin-top: var(--spacing-xl);
   padding: var(--spacing-md);
   font-size: 1rem;
+  border: none;
+  cursor: pointer;
 }
 
 .btn--primary {
@@ -236,6 +469,88 @@ function parseRanges(input: string): [number, number][] {
 .btn--primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* 进度条 */
+.action-card__progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--color-bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), #60a5fa);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.progress-percent {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* 结果区 */
+.action-card__result {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.result-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.result-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-title {
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.result-desc {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.result-filename {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+  margin-top: var(--spacing-xs);
+}
+
+.result-download-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 0.9375rem;
 }
 
 .error {
