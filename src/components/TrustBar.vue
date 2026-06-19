@@ -3,15 +3,15 @@
     <div class="trust-bar__inner container">
       <div class="trust-item">
         <span class="trust-item__icon">🔒</span>
-        <span>100% 浏览器本地处理</span>
+        <span>{{ $t('trust.localProcessing') }}</span>
       </div>
       <div class="trust-item">
         <span class="trust-item__icon">☁️</span>
-        <span>无需上传服务器</span>
+        <span>{{ $t('trust.noUpload') }}</span>
       </div>
       <div class="trust-item">
         <span class="trust-item__icon">🎉</span>
-        <span>完全免费</span>
+        <span>{{ $t('trust.free') }}</span>
       </div>
     </div>
   </div>

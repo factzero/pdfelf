@@ -1,45 +1,45 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">🔏 PDF 添加水印</h1>
-    <p class="tool-desc">给 PDF 每一页添加文字水印</p>
+    <h1 class="tool-title">{{ $t('watermark.title') }}</h1>
+    <p class="tool-desc">{{ $t('watermark.desc') }}</p>
     <FileDropZone :accept="['pdf']" @file-selected="onFileSelected" @error="onError" />
     <div v-if="selectedFile" class="options">
       <div class="form-group">
-        <label class="form-label">水印文字</label>
-        <input v-model="watermarkText" type="text" class="form-input" placeholder="例如：机密文件" maxlength="50" />
+        <label class="form-label">{{ $t('watermark.text') }}</label>
+        <input v-model="watermarkText" type="text" class="form-input" :placeholder="$t('watermark.textPlaceholder')" maxlength="50" />
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">字体大小</label>
+          <label class="form-label">{{ $t('watermark.fontSize') }}</label>
           <input v-model.number="fontSize" type="number" class="form-input" min="12" max="120" />
         </div>
         <div class="form-group">
-          <label class="form-label">透明度</label>
+          <label class="form-label">{{ $t('watermark.opacity') }}</label>
           <select v-model.number="opacity" class="form-input">
-            <option :value="0.08">很浅 (8%)</option>
-            <option :value="0.15">浅 (15%)</option>
-            <option :value="0.25">中等 (25%)</option>
-            <option :value="0.4">深 (40%)</option>
+            <option :value="0.08">{{ $t('watermark.opacityVeryLight') }}</option>
+            <option :value="0.15">{{ $t('watermark.opacityLight') }}</option>
+            <option :value="0.25">{{ $t('watermark.opacityMedium') }}</option>
+            <option :value="0.4">{{ $t('watermark.opacityHeavy') }}</option>
           </select>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">旋转角度</label>
+          <label class="form-label">{{ $t('watermark.rotation') }}</label>
           <select v-model.number="angle" class="form-input">
-            <option :value="0">水平</option>
+            <option :value="0">{{ $t('watermark.rotationHorizontal') }}</option>
             <option :value="30">30°</option>
-            <option :value="45">45° (推荐)</option>
+            <option :value="45">{{ $t('watermark.rotation45') }}</option>
             <option :value="60">60°</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">颜色</label>
+          <label class="form-label">{{ $t('watermark.color') }}</label>
           <select v-model="colorPreset" class="form-input">
-            <option value="gray">灰色</option>
-            <option value="red">红色</option>
-            <option value="blue">蓝色</option>
-            <option value="black">黑色</option>
+            <option value="gray">{{ $t('watermark.colorGray') }}</option>
+            <option value="red">{{ $t('watermark.colorRed') }}</option>
+            <option value="blue">{{ $t('watermark.colorBlue') }}</option>
+            <option value="black">{{ $t('watermark.colorBlack') }}</option>
           </select>
         </div>
       </div>
@@ -50,7 +50,7 @@
       :disabled="isProcessing || !watermarkText.trim()"
       @click="addWatermark"
     >
-      {{ isProcessing ? '处理中...' : '添加水印' }}
+      {{ isProcessing ? $t('common.processing') : $t('watermark.addBtn') }}
     </button>
     <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
@@ -59,16 +59,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename } from '@/utils/fileUtils'
-import { addWatermark } from '@/services/pdfService'
+import { addWatermark as addWatermarkService } from '@/services/pdfService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const colorMap: Record<string, { r: number; g: number; b: number }> = {
@@ -79,7 +81,7 @@ const colorMap: Record<string, { r: number; g: number; b: number }> = {
 }
 
 const selectedFile = ref<File | null>(null)
-const watermarkText = ref('机密文件')
+const watermarkText = ref(t('watermark.defaultText'))
 const fontSize = ref(48)
 const opacity = ref(0.15)
 const angle = ref(45)
@@ -97,11 +99,11 @@ function onFileSelected(file: File | File[]) {
 
 function onError(message: string) { errorMsg.value = message }
 
-async function doWatermark() {
+async function addWatermark() {
   if (!selectedFile.value || !watermarkText.value.trim()) return
-  store.startProcessing('正在添加水印...')
+  store.startProcessing(t('watermark.adding'))
   try {
-    const blob = await addWatermark(
+    const blob = await addWatermarkService(
       selectedFile.value,
       watermarkText.value.trim(),
       {
@@ -115,8 +117,8 @@ async function doWatermark() {
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '添加水印失败')
-    errorMsg.value = '添加水印失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('watermark.failed'))
+    errorMsg.value = t('watermark.failed')
   }
 }
 </script>

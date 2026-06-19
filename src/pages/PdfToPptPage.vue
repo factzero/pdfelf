@@ -1,7 +1,7 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">📽️ PDF 转 PPT</h1>
-    <p class="tool-desc">将 PDF 文件转换为 PowerPoint 演示文稿，每页 PDF 对应一张幻灯片</p>
+    <h1 class="tool-title">{{ $t('pdfToPpt.title') }}</h1>
+    <p class="tool-desc">{{ $t('pdfToPpt.desc') }}</p>
     <FileDropZone
       :accept="['pdf']"
       @file-selected="onFileSelected"
@@ -9,7 +9,7 @@
     />
     <div v-if="selectedFile" class="file-info">
       <p class="file-info__name">📄 {{ selectedFile.name }}</p>
-      <p class="file-info__hint">每页 PDF 将渲染为图片嵌入到对应的幻灯片中</p>
+      <p class="file-info__hint">{{ $t('pdfToPpt.renderNote') }}</p>
     </div>
     <button
       v-if="selectedFile"
@@ -17,7 +17,7 @@
       :disabled="isProcessing"
       @click="convert"
     >
-      {{ isProcessing ? '转换中...' : '转换为 PPT' }}
+      {{ isProcessing ? $t('common.processing') : $t('pdfToPpt.convertBtn') }}
     </button>
     <ProgressBar
       :visible="isProcessing"
@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -43,6 +44,7 @@ import { generateOutputFilename } from '@/utils/fileUtils'
 import { pdfToPpt } from '@/services/pdfToPptService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const selectedFile = ref<File | null>(null)
@@ -63,7 +65,7 @@ function onError(message: string) {
 
 async function convert() {
   if (!selectedFile.value) return
-  store.startProcessing('正在转换 PDF → PPT...')
+  store.startProcessing(t('pdfToPpt.converting'))
   try {
     const blob = await pdfToPpt(selectedFile.value, (p) =>
       store.updateProgress(p)
@@ -71,8 +73,8 @@ async function convert() {
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '转换失败')
-    errorMsg.value = '转换失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('pdfToPpt.failed'))
+    errorMsg.value = t('pdfToPpt.failed')
   }
 }
 </script>

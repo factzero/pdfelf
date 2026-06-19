@@ -7,10 +7,10 @@ export const useToolStore = defineStore('tool', () => {
   const progressText = ref('')
   const error = ref<string | null>(null)
 
-  function startProcessing(text = '处理中...') {
+  function startProcessing(text?: string) {
     isProcessing.value = true
     progress.value = 0
-    progressText.value = text
+    progressText.value = text ?? ''
     error.value = null
   }
 
@@ -19,10 +19,10 @@ export const useToolStore = defineStore('tool', () => {
     if (text) progressText.value = text
   }
 
-  function finishProcessing() {
+  function finishProcessing(text?: string) {
     isProcessing.value = false
     progress.value = 100
-    progressText.value = '处理完成'
+    if (text) progressText.value = text
   }
 
   function setError(message: string) {

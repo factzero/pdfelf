@@ -1,17 +1,17 @@
 <template>
   <div class="reader-page">
     <div v-if="!selectedFile" class="upload-area container">
-      <h1 class="tool-title">📖 PDF 阅读器</h1>
-      <p class="tool-desc">在浏览器中阅读 PDF 文件</p>
+      <h1 class="tool-title">{{ $t('reader.title') }}</h1>
+      <p class="tool-desc">{{ $t('reader.desc') }}</p>
       <FileDropZone :accept="['pdf']" @file-selected="onFileSelected" @error="onError" />
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
     </div>
     <div v-else class="reader">
       <div class="reader__toolbar">
-        <button class="tb-btn" @click="goBack">← 返回</button>
-        <button class="tb-btn" @click="prevPage" :disabled="currentPage <= 1">上一页</button>
-        <span class="tb-page">第 {{ currentPage }} / {{ totalPages }} 页</span>
-        <button class="tb-btn" @click="nextPage" :disabled="currentPage >= totalPages">下一页</button>
+        <button class="tb-btn" @click="goBack">{{ $t('reader.back') }}</button>
+        <button class="tb-btn" @click="prevPage" :disabled="currentPage <= 1">{{ $t('common.prevPage') }}</button>
+        <span class="tb-page">{{ $t('common.pageInfo', { current: currentPage, total: totalPages }) }}</span>
+        <button class="tb-btn" @click="nextPage" :disabled="currentPage >= totalPages">{{ $t('common.nextPage') }}</button>
         <select v-model.number="zoom" class="tb-zoom">
           <option :value="50">50%</option>
           <option :value="75">75%</option>
@@ -24,13 +24,14 @@
       <div class="reader__canvas-wrap" ref="canvasWrap">
         <canvas ref="canvasEl" class="reader__canvas"></canvas>
       </div>
-      <div v-if="isLoading" class="reader__loading">加载中...</div>
+      <div v-if="isLoading" class="reader__loading">{{ $t('reader.loading') }}</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, nextTick, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import * as pdfjsLib from 'pdfjs-dist'
 import FileDropZone from '@/components/FileDropZone.vue'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
@@ -39,6 +40,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url
 ).toString()
+
+const { t } = useI18n()
 
 const selectedFile = ref<File | null>(null)
 const errorMsg = ref('')
@@ -71,7 +74,7 @@ async function loadPdf(file: File) {
     currentPage.value = 1
     await renderPage()
   } catch (e) {
-    errorMsg.value = '无法打开此 PDF 文件'
+    errorMsg.value = t('reader.cannotOpen')
     selectedFile.value = null
   }
   isLoading.value = false

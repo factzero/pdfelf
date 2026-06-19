@@ -1,18 +1,18 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">🔄 旋转 PDF</h1>
-    <p class="tool-desc">旋转 PDF 页面，支持每页独立设置旋转角度</p>
+    <h1 class="tool-title">{{ $t('rotate.title') }}</h1>
+    <p class="tool-desc">{{ $t('rotate.desc') }}</p>
     <FileDropZone :accept="['pdf']" @file-selected="onFileSelected" @error="onError" />
     <div v-if="selectedFile && pageCount > 0" class="options">
-      <p class="page-info">共 {{ pageCount }} 页，选择要旋转的页面：</p>
+      <p class="page-info">{{ $t('rotate.selectPages', { n: pageCount }) }}</p>
       <div class="page-grid">
         <div v-for="p in pageCount" :key="p" class="page-item">
-          <span class="page-num">第 {{ p }} 页</span>
+          <span class="page-num">{{ $t('common.page', { p }) }}</span>
           <select v-model.number="rotations[p]" class="rotate-select">
-            <option :value="0">不旋转</option>
-            <option :value="90">顺时针 90°</option>
-            <option :value="180">180°</option>
-            <option :value="270">逆时针 90°</option>
+            <option :value="0">{{ $t('rotate.noRotation') }}</option>
+            <option :value="90">{{ $t('rotate.rotate90') }}</option>
+            <option :value="180">{{ $t('rotate.rotate180') }}</option>
+            <option :value="270">{{ $t('rotate.rotate270') }}</option>
           </select>
         </div>
       </div>
@@ -23,7 +23,7 @@
       :disabled="isProcessing"
       @click="rotate"
     >
-      {{ isProcessing ? '处理中...' : '旋转并保存' }}
+      {{ isProcessing ? $t('common.processing') : $t('rotate.rotateBtn') }}
     </button>
     <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -42,6 +43,7 @@ import { generateOutputFilename } from '@/utils/fileUtils'
 import { rotatePDF, getPageCount } from '@/services/pdfService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const selectedFile = ref<File | null>(null)
@@ -74,17 +76,17 @@ async function rotate() {
     if (angle > 0) rotationMap.set(Number(p), angle)
   }
   if (rotationMap.size === 0) {
-    errorMsg.value = '请至少选择一页进行旋转'
+    errorMsg.value = t('rotate.noSelection')
     return
   }
-  store.startProcessing('正在旋转 PDF...')
+  store.startProcessing(t('rotate.rotating'))
   try {
     const blob = await rotatePDF(selectedFile.value, rotationMap, (p) => store.updateProgress(p))
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '旋转失败')
-    errorMsg.value = '旋转失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('rotate.failed'))
+    errorMsg.value = t('rotate.failed')
   }
 }
 </script>

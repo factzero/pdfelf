@@ -1,7 +1,7 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">✂️ 分割 PDF</h1>
-    <p class="tool-desc">按页面范围或每 N 页分割 PDF</p>
+    <h1 class="tool-title">{{ $t('split.title') }}</h1>
+    <p class="tool-desc">{{ $t('split.desc') }}</p>
     <FileDropZone
       v-if="!selectedFile"
       :accept="['pdf']"
@@ -12,7 +12,7 @@
     <!-- 已选文件预览区 -->
     <div v-if="selectedFile" class="file-preview">
       <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
-        <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF 预览" />
+        <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF Preview" />
         <div v-else class="file-preview__placeholder">
           <span class="file-preview__placeholder-icon">📄</span>
         </div>
@@ -29,7 +29,7 @@
       <div class="file-preview__meta">
         <span class="file-preview__name">{{ selectedFile.name }}</span>
         <span class="file-preview__size">{{ formatFileSize(selectedFile.size) }}</span>
-        <span v-if="totalPages > 0" class="file-preview__pages">共 {{ totalPages }} 页</span>
+        <span v-if="totalPages > 0" class="file-preview__pages">{{ $t('common.pages', { n: totalPages }) }}</span>
       </div>
     </div>
 
@@ -37,23 +37,23 @@
       <label class="option">
         <input type="radio" v-model="splitMode" value="range" />
         <span class="option__label">
-          <strong>按范围提取</strong>
-          <small>输入页码范围，如 1-3, 5-8</small>
+          <strong>{{ $t('split.range') }}</strong>
+          <small>{{ $t('split.rangeDesc') }}</small>
         </span>
       </label>
       <div v-if="splitMode === 'range'" class="option-input">
         <input
           v-model="rangeInput"
           type="text"
-          placeholder="例如：1-3, 5-8"
+          :placeholder="$t('split.rangePlaceholder')"
           class="input"
         />
       </div>
       <label class="option">
         <input type="radio" v-model="splitMode" value="every" />
         <span class="option__label">
-          <strong>每 N 页分割</strong>
-          <small>按固定页数分割为多个文件</small>
+          <strong>{{ $t('split.every') }}</strong>
+          <small>{{ $t('split.everyDesc') }}</small>
         </span>
       </label>
       <div v-if="splitMode === 'every'" class="option-input">
@@ -61,7 +61,7 @@
           v-model.number="everyN"
           type="number"
           min="1"
-          placeholder="每 N 页"
+          :placeholder="$t('split.everyPlaceholder')"
           class="input input--short"
         />
       </div>
@@ -73,7 +73,7 @@
         class="btn btn--primary btn--large"
         @click="split"
       >
-        分割 PDF
+        {{ $t('split.splitBtn') }}
       </button>
 
       <div v-if="isProcessing" class="action-card__progress">
@@ -89,12 +89,12 @@
       <div v-if="resultBlob" class="action-card__result">
         <div class="result-icon">✅</div>
         <div class="result-body">
-          <p class="result-title">分割完成</p>
-          <p class="result-desc">已将 PDF 分割为多个文件</p>
+          <p class="result-title">{{ $t('split.completed') }}</p>
+          <p class="result-desc">{{ $t('split.splitDesc') }}</p>
           <p class="result-filename">split.zip</p>
         </div>
         <button class="btn btn--primary result-download-btn" @click="downloadResult">
-          ⬇ 下载文件
+          {{ $t('common.downloadFile') }}
         </button>
       </div>
     </div>
@@ -105,6 +105,7 @@
 
 <script setup lang="ts">
 import { ref, onUnmounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
@@ -118,6 +119,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString()
 
+const { t } = useI18n()
 const store = useToolStore()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
@@ -220,7 +222,7 @@ function onError(message: string) {
 
 async function split() {
   if (!selectedFile.value) return
-  store.startProcessing('正在分割 PDF...')
+  store.startProcessing(t('split.splitting'))
   try {
     const ranges =
       splitMode.value === 'range'
@@ -236,8 +238,8 @@ async function split() {
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '分割失败')
-    errorMsg.value = e instanceof Error ? e.message : '分割失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('split.failed'))
+    errorMsg.value = e instanceof Error ? e.message : t('split.failed')
   }
 }
 
@@ -254,7 +256,7 @@ function parseRanges(input: string): [number, number][] {
       if (!isNaN(n)) ranges.push([n, n])
     }
   }
-  if (ranges.length === 0) throw new Error('请输入有效的页码范围')
+  if (ranges.length === 0) throw new Error(t('split.invalidRange'))
   return ranges
 }
 </script>

@@ -1,10 +1,10 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">📝 Word 转 PDF</h1>
-    <p class="tool-desc">将 Word 文档 (.docx) 转换为 PDF 格式</p>
+    <h1 class="tool-title">{{ $t('wordToPdf.title') }}</h1>
+    <p class="tool-desc">{{ $t('wordToPdf.desc') }}</p>
     <FileDropZone :accept="['docx']" @file-selected="onFileSelected" @error="onError" />
     <div v-if="selectedFile" class="notice">
-      <p>⚠️ 注意：目前转换会保留文档的文字内容，复杂的格式（表格、图片、排版）可能无法完整保留。</p>
+      <p>{{ $t('wordToPdf.note') }}</p>
     </div>
     <button
       v-if="selectedFile"
@@ -12,7 +12,7 @@
       :disabled="isProcessing"
       @click="convert"
     >
-      {{ isProcessing ? '转换中...' : '转换为 PDF' }}
+      {{ isProcessing ? $t('common.processing') : $t('wordToPdf.convertBtn') }}
     </button>
     <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -30,6 +31,7 @@ import { storeToRefs } from 'pinia'
 import { wordToPdf } from '@/services/officeToPdfService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const selectedFile = ref<File | null>(null)
@@ -48,14 +50,14 @@ function onError(message: string) { errorMsg.value = message }
 
 async function convert() {
   if (!selectedFile.value) return
-  store.startProcessing('正在转换 Word → PDF...')
+  store.startProcessing(t('wordToPdf.converting'))
   try {
     const blob = await wordToPdf(selectedFile.value, (p) => store.updateProgress(p))
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '转换失败')
-    errorMsg.value = '转换失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('wordToPdf.failed'))
+    errorMsg.value = t('wordToPdf.failed')
   }
 }
 </script>

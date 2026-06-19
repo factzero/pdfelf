@@ -4,10 +4,10 @@
       <div class="result__icon">✅</div>
       <div class="result__info">
         <p class="result__filename">{{ fileInfo.filename }}</p>
-        <p class="result__size">文件大小：{{ fileInfo.size }}</p>
+        <p class="result__size">{{ $t('common.fileSize', { size: fileInfo.size }) }}</p>
       </div>
       <button class="btn btn--primary" @click="download">
-        ⬇ 下载文件
+        {{ $t('common.downloadFile') }}
       </button>
     </div>
   </div>

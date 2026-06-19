@@ -1,7 +1,7 @@
 <template>
   <div class="tool-page container" @click="closeInsertMenu">
-    <h1 class="tool-title">🔗 合并 PDF</h1>
-    <p class="tool-desc">将多个 PDF 合并为一个文件，拖拽调整顺序</p>
+    <h1 class="tool-title">{{ $t('merge.title') }}</h1>
+    <p class="tool-desc">{{ $t('merge.desc') }}</p>
 
     <!-- 文件缩略图列表 -->
     <div v-if="fileItems.length > 0" class="merge-list">
@@ -26,7 +26,7 @@
             />
             <div v-else class="merge-item__thumb-placeholder">
               <span v-if="item.type === 'blank'" class="merge-item__thumb-blank">📄</span>
-              <span v-else class="merge-item__thumb-loading">加载中...</span>
+              <span v-else class="merge-item__thumb-loading">{{ $t('merge.loading') }}</span>
             </div>
 
             <!-- 鼠标悬停显示删除按钮 -->
@@ -44,11 +44,11 @@
             <span class="merge-item__name" :title="item.name">{{ item.name }}</span>
             <span class="merge-item__meta">
               <template v-if="item.type === 'blank'">
-                {{ item.pageCount }} 空白页
+                {{ item.pageCount === 1 ? $t('merge.blankPage') : $t('merge.blankPages', { n: item.pageCount }) }}
               </template>
               <template v-else>
                 {{ formatFileSize(item.file.size) }}
-                <span v-if="item.pageCount > 0"> · {{ item.pageCount }} 页</span>
+                <span v-if="item.pageCount > 0"> · {{ $t('common.pages', { n: item.pageCount }) }}</span>
               </template>
             </span>
           </div>
@@ -67,10 +67,10 @@
           <Transition name="fade">
             <div v-if="insertMenuIndex === i" class="merge-insert__menu">
               <button class="merge-insert__menu-item" @click.stop="insertFileAt(i + 1)">
-                📄 添加文档
+                {{ $t('merge.addDoc') }}
               </button>
               <button class="merge-insert__menu-item" @click.stop="insertBlankAt(i + 1)">
-                📃 添加空白页
+                {{ $t('merge.addBlank') }}
               </button>
             </div>
           </Transition>
@@ -81,13 +81,13 @@
       <button
         class="merge-item merge-item--add"
         @click="addMoreFiles"
-        title="添加 PDF 文件"
+        :title="$t('merge.addPdf')"
       >
         <div class="merge-item__thumb merge-item__thumb--add">
           <span class="merge-add-icon">+</span>
         </div>
         <div class="merge-item__info">
-          <span class="merge-item__name merge-item__name--add">添加</span>
+          <span class="merge-item__name merge-item__name--add">{{ $t('merge.add') }}</span>
         </div>
       </button>
     </div>
@@ -118,7 +118,7 @@
         class="btn btn--primary btn--large"
         @click="merge"
       >
-        合并 PDF（{{ fileItems.length }} 个文件）
+        {{ $t('merge.mergeBtn', { n: fileItems.length }) }}
       </button>
 
       <div v-if="isProcessing" class="action-card__progress">
@@ -134,12 +134,12 @@
       <div v-if="resultBlob" class="action-card__result">
         <div class="result-icon">✅</div>
         <div class="result-body">
-          <p class="result-title">合并完成</p>
-          <p class="result-desc">已将 {{ fileItems.length }} 个文件合并为一个 PDF</p>
+          <p class="result-title">{{ $t('merge.completed') }}</p>
+          <p class="result-desc">{{ $t('merge.mergedDesc', { n: fileItems.length }) }}</p>
           <p class="result-filename">merged.pdf</p>
         </div>
         <button class="btn btn--primary result-download-btn" @click="downloadResult">
-          ⬇ 下载文件
+          {{ $t('common.downloadFile') }}
         </button>
       </div>
     </div>
@@ -150,6 +150,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onUnmounted, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
@@ -163,6 +164,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 ).toString()
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 interface FileItem {
@@ -225,13 +227,8 @@ async function renderThumbnail(file: File): Promise<{ previewUrl: string; pageCo
       const ctx = canvas.getContext('2d')
       if (ctx) {
         await page.render({ canvasContext: ctx, viewport }).promise
-        const blob = await new Promise<Blob | null>((resolve) => {
-          canvas.toBlob((b) => resolve(b), 'image/png')
-        })
-        if (blob) {
-          const url = createObjectUrl(blob)
-          return { previewUrl: url, pageCount }
-        }
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7)
+        return { previewUrl: dataUrl, pageCount }
       }
     }
     return { previewUrl: '', pageCount }
@@ -318,7 +315,7 @@ function insertBlankAt(index: number) {
   fileItems.splice(index, 0, {
     id: ++idCounter,
     type: 'blank',
-    name: '空白页',
+    name: t('merge.blankPage'),
     previewUrl: '',
     pageCount: 1,
     hovered: false,
@@ -376,18 +373,18 @@ async function merge() {
     .filter((f): f is File => !!f)
 
   if (realFiles.length === 0) {
-    errorMsg.value = '请至少添加一个 PDF 文件'
+    errorMsg.value = t('merge.noFiles')
     return
   }
 
-  store.startProcessing('正在合并 PDF...')
+  store.startProcessing(t('merge.merging'))
   try {
     const blob = await mergePDFs(realFiles, (p) => store.updateProgress(p))
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '合并失败')
-    errorMsg.value = '合并失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('merge.failed'))
+    errorMsg.value = t('merge.failed')
   }
 }
 

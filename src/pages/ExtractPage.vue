@@ -1,19 +1,19 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">📋 提取 PDF 页面</h1>
-    <p class="tool-desc">从 PDF 中提取指定页面，保存为新的 PDF 文件</p>
+    <h1 class="tool-title">{{ $t('extract.title') }}</h1>
+    <p class="tool-desc">{{ $t('extract.desc') }}</p>
     <FileDropZone :accept="['pdf']" @file-selected="onFileSelected" @error="onError" />
     <div v-if="selectedFile && pageCount > 0" class="options">
-      <p class="page-info">共 {{ pageCount }} 页，勾选要提取的页面：</p>
+      <p class="page-info">{{ $t('extract.selectPages', { n: pageCount }) }}</p>
       <div class="page-grid">
         <label v-for="p in pageCount" :key="p" class="page-item" :class="{ selected: toExtract.includes(p) }">
           <input type="checkbox" :value="p" v-model="toExtract" />
-          <span>第 {{ p }} 页</span>
+          <span>{{ $t('common.page', { p }) }}</span>
         </label>
       </div>
       <div class="actions-row">
-        <button class="btn-link" @click="selectAll">全选</button>
-        <button class="btn-link" @click="clearAll">取消全选</button>
+        <button class="btn-link" @click="selectAll">{{ $t('common.selectAll') }}</button>
+        <button class="btn-link" @click="clearAll">{{ $t('common.deselectAll') }}</button>
       </div>
     </div>
     <button
@@ -22,7 +22,7 @@
       :disabled="isProcessing || toExtract.length === 0"
       @click="extract"
     >
-      {{ isProcessing ? '处理中...' : `提取 ${toExtract.length} 页` }}
+      {{ isProcessing ? $t('common.processing') : $t('extract.extractBtn', { n: toExtract.length }) }}
     </button>
     <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -41,6 +42,7 @@ import { generateOutputFilename } from '@/utils/fileUtils'
 import { getPageCount, extractPages } from '@/services/pdfService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const selectedFile = ref<File | null>(null)
@@ -66,14 +68,14 @@ function clearAll() { toExtract.value = [] }
 
 async function extract() {
   if (!selectedFile.value || toExtract.value.length === 0) return
-  store.startProcessing('正在提取页面...')
+  store.startProcessing(t('extract.extracting'))
   try {
     const blob = await extractPages(selectedFile.value, [...toExtract.value], (p) => store.updateProgress(p))
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '提取失败')
-    errorMsg.value = '提取失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('extract.failed'))
+    errorMsg.value = t('extract.failed')
   }
 }
 </script>

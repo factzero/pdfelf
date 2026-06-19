@@ -26,8 +26,8 @@
           <p class="dropzone__filesize">{{ fileSize }}</p>
         </template>
         <template v-else>
-          <p class="dropzone__title">拖放文件至此处</p>
-          <p class="dropzone__subtitle">或点击选择文件</p>
+          <p class="dropzone__title">{{ $t('dropzone.dragHere') }}</p>
+          <p class="dropzone__subtitle">{{ $t('dropzone.clickToSelect') }}</p>
         </template>
       </div>
     </div>
@@ -37,7 +37,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { formatFileSize } from '@/utils/fileUtils'
+
+const { t } = useI18n()
 
 const props = withDefaults(
   defineProps<{
@@ -69,7 +72,7 @@ const hasFile = computed(() => selectedFiles.value.length > 0)
 
 const fileName = computed(() => {
   if (selectedFiles.value.length === 1) return selectedFiles.value[0].name
-  return `已选择 ${selectedFiles.value.length} 个文件`
+  return t('dropzone.selectedFiles', { count: selectedFiles.value.length })
 })
 
 const fileSize = computed(() => {
@@ -79,7 +82,7 @@ const fileSize = computed(() => {
 
 const hint = computed(() => {
   const exts = props.accept.map((e) => e.toUpperCase()).join(' / ')
-  return `支持格式：${exts} · 最大 ${props.maxSizeMB}MB`
+  return t('dropzone.supportedFormats', { exts, max: props.maxSizeMB })
 })
 
 function onDragOver() {
@@ -113,15 +116,14 @@ function onFileChange(e: Event) {
 function handleFiles(fileList: FileList) {
   const files = Array.from(fileList)
 
-  // Validate types
   for (const file of files) {
     const ext = file.name.split('.').pop()?.toLowerCase() || ''
     if (!props.accept.includes(ext)) {
-      emit('error', `不支持的文件格式：${file.name}`)
+      emit('error', t('dropzone.unsupportedFormat', { name: file.name }))
       return
     }
     if (file.size > props.maxSizeMB * 1024 * 1024) {
-      emit('error', `文件过大：${file.name}（最大 ${props.maxSizeMB}MB）`)
+      emit('error', t('dropzone.fileTooBig', { name: file.name, max: props.maxSizeMB }))
       return
     }
   }

@@ -1,10 +1,10 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">📽️ PPT 转 PDF</h1>
-    <p class="tool-desc">将 PowerPoint 演示文稿 (.pptx) 转换为 PDF 格式</p>
+    <h1 class="tool-title">{{ $t('pptToPdf.title') }}</h1>
+    <p class="tool-desc">{{ $t('pptToPdf.desc') }}</p>
     <FileDropZone :accept="['pptx']" @file-selected="onFileSelected" @error="onError" />
     <div v-if="selectedFile" class="notice">
-      <p>⚠️ 注意：转换会保留每页幻灯片的文字内容，图片、动画和复杂排版可能无法完整呈现。</p>
+      <p>{{ $t('pptToPdf.note') }}</p>
     </div>
     <button
       v-if="selectedFile"
@@ -12,7 +12,7 @@
       :disabled="isProcessing"
       @click="convert"
     >
-      {{ isProcessing ? '转换中...' : '转换为 PDF' }}
+      {{ isProcessing ? $t('common.processing') : $t('pptToPdf.convertBtn') }}
     </button>
     <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -30,6 +31,7 @@ import { storeToRefs } from 'pinia'
 import { pptToPdf } from '@/services/officeToPdfService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const selectedFile = ref<File | null>(null)
@@ -48,14 +50,14 @@ function onError(message: string) { errorMsg.value = message }
 
 async function convert() {
   if (!selectedFile.value) return
-  store.startProcessing('正在转换 PPT → PDF...')
+  store.startProcessing(t('pptToPdf.converting'))
   try {
     const blob = await pptToPdf(selectedFile.value, (p) => store.updateProgress(p))
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '转换失败')
-    errorMsg.value = '转换失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('pptToPdf.failed'))
+    errorMsg.value = t('pptToPdf.failed')
   }
 }
 </script>

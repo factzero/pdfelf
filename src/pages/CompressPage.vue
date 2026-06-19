@@ -1,7 +1,7 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">🗜️ 压缩 PDF</h1>
-    <p class="tool-desc">减小 PDF 文件大小，选择适合你的压缩模式</p>
+    <h1 class="tool-title">{{ $t('compress.title') }}</h1>
+    <p class="tool-desc">{{ $t('compress.desc') }}</p>
 
     <!-- 上传区：未选文件时显示 -->
     <FileDropZone
@@ -14,7 +14,7 @@
     <!-- 已选文件预览区 -->
     <div v-if="selectedFile" class="file-preview">
       <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
-        <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF 预览" />
+        <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF Preview" />
         <div v-else class="file-preview__placeholder">
           <span class="file-preview__placeholder-icon">📄</span>
         </div>
@@ -31,7 +31,7 @@
       <div class="file-preview__meta">
         <span class="file-preview__name">{{ selectedFile.name }}</span>
         <span class="file-preview__size">{{ formatFileSize(selectedFile.size) }}</span>
-        <span v-if="totalPages > 0" class="file-preview__pages">共 {{ totalPages }} 页</span>
+        <span v-if="totalPages > 0" class="file-preview__pages">{{ $t('common.pages', { n: totalPages }) }}</span>
       </div>
     </div>
 
@@ -39,15 +39,15 @@
       <label class="option">
         <input type="radio" v-model="compressMode" value="basic" />
         <span class="option__label">
-          <strong>基本压缩</strong>
-          <small>推荐 — 适度压缩，保持良好质量</small>
+          <strong>{{ $t('compress.basic') }}</strong>
+          <small>{{ $t('compress.basicDesc') }}</small>
         </span>
       </label>
       <label class="option">
         <input type="radio" v-model="compressMode" value="strong" />
         <span class="option__label">
-          <strong>强压缩</strong>
-          <small>更高压缩率，可能有轻微质量损失</small>
+          <strong>{{ $t('compress.strong') }}</strong>
+          <small>{{ $t('compress.strongDesc') }}</small>
         </span>
       </label>
     </div>
@@ -59,7 +59,7 @@
         class="btn btn--primary btn--large"
         @click="compress"
       >
-        开始压缩
+        {{ $t('compress.startBtn') }}
       </button>
 
       <!-- 处理中：进度条替代按钮 -->
@@ -77,23 +77,23 @@
       <div v-if="resultBlob" class="action-card__result">
         <div class="result-icon">✅</div>
         <div class="result-body">
-          <p class="result-title">压缩完成</p>
+          <p class="result-title">{{ $t('compress.completed') }}</p>
           <div class="result-compare">
             <span class="result-compare__item">
-              <span class="result-compare__label">压缩前</span>
+              <span class="result-compare__label">{{ $t('compress.before') }}</span>
               <span class="result-compare__value">{{ originalSize }}</span>
             </span>
             <span class="result-compare__arrow">→</span>
             <span class="result-compare__item">
-              <span class="result-compare__label">压缩后</span>
+              <span class="result-compare__label">{{ $t('compress.after') }}</span>
               <span class="result-compare__value result-compare__value--highlight">{{ compressedSize }}</span>
             </span>
-            <span v-if="sizeReduction > 0" class="result-compare__saved">节省 {{ sizeReduction }}%</span>
+            <span v-if="sizeReduction > 0" class="result-compare__saved">{{ $t('compress.saved', { pct: sizeReduction }) }}</span>
           </div>
           <p class="result-filename">{{ outputFilename }}</p>
         </div>
         <button class="btn btn--primary result-download-btn" @click="downloadResult">
-          ⬇ 下载文件
+          {{ $t('common.downloadFile') }}
         </button>
       </div>
     </div>
@@ -104,6 +104,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
@@ -117,6 +118,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString()
 
+const { t } = useI18n()
 const store = useToolStore()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
@@ -241,7 +243,7 @@ function onError(message: string) {
 async function compress() {
   if (!selectedFile.value) return
   store.startProcessing(
-    compressMode.value === 'basic' ? '正在压缩...' : '正在进行强压缩...'
+    compressMode.value === 'basic' ? t('compress.compressing') : t('compress.compressingStrong')
   )
   try {
     const blob = await compressPDF(
@@ -252,8 +254,8 @@ async function compress() {
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '压缩失败')
-    errorMsg.value = '压缩失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('compress.failed'))
+    errorMsg.value = t('compress.failed')
   }
 }
 </script>

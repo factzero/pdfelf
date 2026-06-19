@@ -1,22 +1,18 @@
 <template>
   <div class="home container">
     <div class="hero">
-      <h1 class="hero__title">
-        <span class="hero__icon">🧝</span>
-        PDF Elf
-      </h1>
-      <p class="hero__subtitle">免费在线 PDF 工具 — 所有处理在浏览器本地完成</p>
+      <p class="hero__subtitle">{{ $t('home.heroSubtitle') }}</p>
     </div>
 
-    <section v-for="category in categories" :key="category.name" class="category">
-      <h2 class="category__title">{{ category.name }}</h2>
+    <section v-for="category in categories" :key="category.nameKey" class="category">
+      <h2 class="category__title">{{ $t(category.nameKey) }}</h2>
       <div class="tools-grid">
         <ToolCard
           v-for="tool in category.tools"
           :key="tool.route"
           :icon="tool.icon"
-          :title="tool.title"
-          :description="tool.description"
+          :title="$t(tool.titleKey)"
+          :description="$t(tool.descKey)"
           :route="tool.route"
         />
       </div>
@@ -29,44 +25,44 @@ import ToolCard from '@/components/ToolCard.vue'
 
 const categories = [
   {
-    name: '📂 整理 PDF',
+    nameKey: 'categories.organize',
     tools: [
-      { icon: '🗜️', title: '压缩 PDF', description: '减小 PDF 文件大小，基本和强压缩两种模式', route: '/compress-pdf' },
-      { icon: '🔗', title: '合并 PDF', description: '将多个 PDF 合并为一个文件，支持拖拽排序', route: '/merge-pdf' },
-      { icon: '✂️', title: '分割 PDF', description: '按页面范围或每 N 页分割 PDF', route: '/split-pdf' },
-      { icon: '🔄', title: '旋转 PDF', description: '旋转 PDF 页面，每页独立设置角度', route: '/rotate-pdf' },
-      { icon: '🗑️', title: '删除页面', description: '从 PDF 中删除不需要的页面', route: '/delete-pages' },
-      { icon: '📋', title: '提取页面', description: '从 PDF 中提取指定页面为新文件', route: '/extract-pages' },
+      { icon: '🗜️', titleKey: 'tools.compressPdf.title', descKey: 'tools.compressPdf.desc', route: '/compress-pdf' },
+      { icon: '🔗', titleKey: 'tools.mergePdf.title', descKey: 'tools.mergePdf.desc', route: '/merge-pdf' },
+      { icon: '✂️', titleKey: 'tools.splitPdf.title', descKey: 'tools.splitPdf.desc', route: '/split-pdf' },
+      { icon: '🔄', titleKey: 'tools.rotatePdf.title', descKey: 'tools.rotatePdf.desc', route: '/rotate-pdf' },
+      { icon: '🗑️', titleKey: 'tools.deletePages.title', descKey: 'tools.deletePages.desc', route: '/delete-pages' },
+      { icon: '📋', titleKey: 'tools.extractPages.title', descKey: 'tools.extractPages.desc', route: '/extract-pages' },
     ],
   },
   {
-    name: '✏️ 编辑 PDF',
+    nameKey: 'categories.edit',
     tools: [
-      { icon: '🔏', title: '添加水印', description: '给 PDF 每一页添加文字水印', route: '/add-watermark' },
+      { icon: '🔏', titleKey: 'tools.addWatermark.title', descKey: 'tools.addWatermark.desc', route: '/add-watermark' },
     ],
   },
   {
-    name: '🔄 从 PDF 转换',
+    nameKey: 'categories.fromPdf',
     tools: [
-      { icon: '📄', title: 'PDF 转 Word', description: '将 PDF 转换为可编辑的 Word 文档', route: '/pdf-to-word' },
-      { icon: '📊', title: 'PDF 转 Excel', description: '将 PDF 转换为 Excel 电子表格', route: '/pdf-to-excel' },
-      { icon: '📽️', title: 'PDF 转 PPT', description: '将 PDF 转换为 PowerPoint 演示文稿', route: '/pdf-to-ppt' },
-      { icon: '🖼️', title: 'PDF 转图片', description: '将 PDF 页面导出为 PNG 或 JPEG', route: '/pdf-to-image' },
+      { icon: '📄', titleKey: 'tools.pdfToWord.title', descKey: 'tools.pdfToWord.desc', route: '/pdf-to-word' },
+      { icon: '📊', titleKey: 'tools.pdfToExcel.title', descKey: 'tools.pdfToExcel.desc', route: '/pdf-to-excel' },
+      { icon: '📽️', titleKey: 'tools.pdfToPpt.title', descKey: 'tools.pdfToPpt.desc', route: '/pdf-to-ppt' },
+      { icon: '🖼️', titleKey: 'tools.pdfToImage.title', descKey: 'tools.pdfToImage.desc', route: '/pdf-to-image' },
     ],
   },
   {
-    name: '📥 转换成 PDF',
+    nameKey: 'categories.toPdf',
     tools: [
-      { icon: '📝', title: 'Word 转 PDF', description: '将 Word 文档 (.docx) 转为 PDF', route: '/word-to-pdf' },
-      { icon: '📊', title: 'Excel 转 PDF', description: '将 Excel 表格 (.xlsx) 转为 PDF', route: '/excel-to-pdf' },
-      { icon: '📽️', title: 'PPT 转 PDF', description: '将 PowerPoint (.pptx) 转为 PDF', route: '/ppt-to-pdf' },
-      { icon: '🖼️', title: '图片转 PDF', description: '将图片合并转换为 PDF 文件', route: '/image-to-pdf' },
+      { icon: '📝', titleKey: 'tools.wordToPdf.title', descKey: 'tools.wordToPdf.desc', route: '/word-to-pdf' },
+      { icon: '📊', titleKey: 'tools.excelToPdf.title', descKey: 'tools.excelToPdf.desc', route: '/excel-to-pdf' },
+      { icon: '📽️', titleKey: 'tools.pptToPdf.title', descKey: 'tools.pptToPdf.desc', route: '/ppt-to-pdf' },
+      { icon: '🖼️', titleKey: 'tools.imageToPdf.title', descKey: 'tools.imageToPdf.desc', route: '/image-to-pdf' },
     ],
   },
   {
-    name: '📖 阅读器',
+    nameKey: 'categories.reader',
     tools: [
-      { icon: '📖', title: 'PDF 阅读器', description: '在浏览器中在线阅读 PDF 文件', route: '/pdf-reader' },
+      { icon: '📖', titleKey: 'tools.pdfReader.title', descKey: 'tools.pdfReader.desc', route: '/pdf-reader' },
     ],
   },
 ]

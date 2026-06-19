@@ -1,7 +1,7 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">📊 PDF 转 Excel</h1>
-    <p class="tool-desc">将 PDF 文件转换为 Excel 电子表格，每页 PDF 对应一个工作表</p>
+    <h1 class="tool-title">{{ $t('pdfToExcel.title') }}</h1>
+    <p class="tool-desc">{{ $t('pdfToExcel.desc') }}</p>
     <FileDropZone
       :accept="['pdf']"
       @file-selected="onFileSelected"
@@ -13,7 +13,7 @@
       :disabled="isProcessing"
       @click="convert"
     >
-      {{ isProcessing ? '转换中...' : '转换为 Excel' }}
+      {{ isProcessing ? $t('common.processing') : $t('pdfToExcel.convertBtn') }}
     </button>
     <ProgressBar
       :visible="isProcessing"
@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -39,6 +40,7 @@ import { generateOutputFilename } from '@/utils/fileUtils'
 import { pdfToExcel } from '@/services/pdfToExcelService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const selectedFile = ref<File | null>(null)
@@ -59,7 +61,7 @@ function onError(message: string) {
 
 async function convert() {
   if (!selectedFile.value) return
-  store.startProcessing('正在转换 PDF → Excel...')
+  store.startProcessing(t('pdfToExcel.converting'))
   try {
     const blob = await pdfToExcel(selectedFile.value, (p) =>
       store.updateProgress(p)
@@ -67,8 +69,8 @@ async function convert() {
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '转换失败')
-    errorMsg.value = '转换失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('pdfToExcel.failed'))
+    errorMsg.value = t('pdfToExcel.failed')
   }
 }
 </script>

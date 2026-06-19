@@ -1,7 +1,7 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">🖼️ PDF 转图片</h1>
-    <p class="tool-desc">将 PDF 页面导出为 PNG 或 JPEG 图片</p>
+    <h1 class="tool-title">{{ $t('pdfToImage.title') }}</h1>
+    <p class="tool-desc">{{ $t('pdfToImage.desc') }}</p>
     <FileDropZone
       :accept="['pdf']"
       @file-selected="onFileSelected"
@@ -9,7 +9,7 @@
     />
     <div v-if="selectedFile" class="options">
       <div class="option-group">
-        <label class="option-label">图片格式</label>
+        <label class="option-label">{{ $t('pdfToImage.format') }}</label>
         <div class="option-row">
           <label class="option-chip">
             <input type="radio" v-model="format" value="png" />
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="option-group">
-        <label class="option-label">分辨率</label>
+        <label class="option-label">{{ $t('pdfToImage.resolution') }}</label>
         <div class="option-row">
           <label v-for="d in dpiOptions" :key="d" class="option-chip">
             <input type="radio" :value="d" v-model.number="dpi" />
@@ -37,7 +37,7 @@
       :disabled="isProcessing"
       @click="convert"
     >
-      {{ isProcessing ? '转换中...' : '转换为图片' }}
+      {{ isProcessing ? $t('common.processing') : $t('pdfToImage.convertBtn') }}
     </button>
     <ProgressBar
       :visible="isProcessing"
@@ -54,6 +54,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -62,6 +63,7 @@ import { storeToRefs } from 'pinia'
 import { pdfToImage } from '@/services/imageService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const dpiOptions = [72, 150, 300]
@@ -87,7 +89,7 @@ function onError(message: string) {
 
 async function convert() {
   if (!selectedFile.value) return
-  store.startProcessing('正在转换 PDF → 图片...')
+  store.startProcessing(t('pdfToImage.converting'))
   try {
     const result = await pdfToImage(
       selectedFile.value,
@@ -104,8 +106,8 @@ async function convert() {
     }
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '转换失败')
-    errorMsg.value = '转换失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('pdfToImage.failed'))
+    errorMsg.value = t('pdfToImage.failed')
   }
 }
 </script>

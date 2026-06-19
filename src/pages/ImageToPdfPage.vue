@@ -1,7 +1,7 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">🖼️ 图片转 PDF</h1>
-    <p class="tool-desc">将一张或多张图片合并转换为 PDF 文件</p>
+    <h1 class="tool-title">{{ $t('imageToPdf.title') }}</h1>
+    <p class="tool-desc">{{ $t('imageToPdf.desc') }}</p>
     <FileDropZone :accept="['png', 'jpg', 'jpeg', 'webp', 'gif']" :multiple="true" @file-selected="onFileSelected" @error="onError" />
     <div v-if="files.length > 0" class="options">
       <div class="file-list">
@@ -12,19 +12,19 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">页面尺寸</label>
+          <label class="form-label">{{ $t('imageToPdf.pageSize') }}</label>
           <select v-model="pageSize" class="form-input">
-            <option value="auto">自动适应</option>
-            <option value="a4">A4</option>
-            <option value="a3">A3</option>
-            <option value="letter">Letter</option>
+            <option value="auto">{{ $t('imageToPdf.autoFit') }}</option>
+            <option value="a4">{{ $t('imageToPdf.a4') }}</option>
+            <option value="a3">{{ $t('imageToPdf.a3') }}</option>
+            <option value="letter">{{ $t('imageToPdf.letter') }}</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">方向</label>
+          <label class="form-label">{{ $t('imageToPdf.orientation') }}</label>
           <select v-model="orientation" class="form-input" :disabled="pageSize === 'auto'">
-            <option value="portrait">纵向</option>
-            <option value="landscape">横向</option>
+            <option value="portrait">{{ $t('imageToPdf.portrait') }}</option>
+            <option value="landscape">{{ $t('imageToPdf.landscape') }}</option>
           </select>
         </div>
       </div>
@@ -35,7 +35,7 @@
       :disabled="isProcessing"
       @click="convert"
     >
-      {{ isProcessing ? '转换中...' : '转换为 PDF' }}
+      {{ isProcessing ? $t('common.processing') : $t('imageToPdf.convertBtn') }}
     </button>
     <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
@@ -53,6 +54,7 @@ import { storeToRefs } from 'pinia'
 import { imagesToPdf } from '@/services/imageToPdfService'
 
 const store = useToolStore()
+const { t } = useI18n()
 const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const files = ref<File[]>([])
@@ -79,7 +81,7 @@ function removeFile(index: number) {
 
 async function convert() {
   if (files.value.length === 0) return
-  store.startProcessing('正在转换为 PDF...')
+  store.startProcessing(t('imageToPdf.converting'))
   try {
     const blob = await imagesToPdf(
       [...files.value],
@@ -90,8 +92,8 @@ async function convert() {
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : '转换失败')
-    errorMsg.value = '转换失败，请重试'
+    store.setError(e instanceof Error ? e.message : t('imageToPdf.failed'))
+    errorMsg.value = t('imageToPdf.failed')
   }
 }
 </script>
