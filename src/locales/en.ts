@@ -144,6 +144,7 @@ export default {
     extractBtn: 'Extract {n} page(s)',
     extracting: 'Extracting pages...',
     failed: 'Extraction failed, please try again',
+    completed: 'Extraction completed',
   },
   watermark: {
     title: '🔏 Add Watermark to PDF',

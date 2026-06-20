@@ -144,6 +144,7 @@ export default {
     extractBtn: '提取 {n} 页',
     extracting: '正在提取页面...',
     failed: '提取失败，请重试',
+    completed: '提取完成',
   },
   watermark: {
     title: '🔏 PDF 添加水印',

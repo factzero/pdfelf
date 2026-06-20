@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onUnmounted } from 'vue'
+import { ref, reactive, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as pdfjsLib from 'pdfjs-dist'
 import FileDropZone from '@/components/FileDropZone.vue'
@@ -132,6 +132,14 @@ function removeFile() {
   errorMsg.value = ''
   showDelete.value = false
 }
+
+// 修改旋转角度后自动重置结果，支持再次旋转
+watch(() => ({ ...rotations }), () => {
+  if (resultBlob.value) {
+    resultBlob.value = null
+    errorMsg.value = ''
+  }
+}, { deep: true })
 
 onUnmounted(() => {
   if (objectUrl) {

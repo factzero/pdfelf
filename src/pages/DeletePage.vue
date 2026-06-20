@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import { useToolStore } from '@/stores/toolStore'
@@ -134,6 +134,14 @@ function removeFile() {
   errorMsg.value = ''
   showDelete.value = false
 }
+
+// 修改勾选后自动重置结果，支持再次删除
+watch(toDelete, () => {
+  if (resultBlob.value) {
+    resultBlob.value = null
+    errorMsg.value = ''
+  }
+}, { deep: true })
 
 onUnmounted(() => {
   if (objectUrl) {
