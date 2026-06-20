@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib'
 import JSZip from 'jszip'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 
@@ -39,7 +39,7 @@ export async function compressPDF(
   })
 
   onProgress?.(90)
-  const blob = new Blob([compressedBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  const blob = new Blob([compressedBytes], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -63,7 +63,7 @@ export async function mergePDFs(
 
   onProgress?.(95)
   const resultBytes = await mergedDoc.save()
-  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  const blob = new Blob([resultBytes], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -160,19 +160,32 @@ export async function rotatePDF(
   const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
   const pages = pdfDoc.getPages()
 
+  if (pages.length === 0) {
+    throw new Error('PDF has no pages')
+  }
+
   onProgress?.(50)
   for (const [pageNum, angle] of rotations) {
     const idx = pageNum - 1
     if (idx >= 0 && idx < pages.length) {
       const page = pages[idx]
-      const currentRotation = page.getRotation().angle
-      page.setRotation({ angle: (currentRotation + angle) % 360 })
+      // Safely get current rotation, default to 0
+      let currentAngle = 0
+      try {
+        const rot = page.getRotation()
+        currentAngle = rot?.angle ?? 0
+      } catch {
+        currentAngle = 0
+      }
+      const newAngle = ((currentAngle + angle) % 360 + 360) % 360
+      page.setRotation(degrees(newAngle))
     }
   }
 
   onProgress?.(80)
   const resultBytes = await pdfDoc.save()
-  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  // Use resultBytes directly to avoid SharedArrayBuffer view issues
+  const blob = new Blob([resultBytes], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -210,7 +223,7 @@ export async function deletePages(
 
   onProgress?.(80)
   const resultBytes = await newDoc.save()
-  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  const blob = new Blob([resultBytes], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -248,7 +261,7 @@ export async function extractPages(
 
   onProgress?.(80)
   const resultBytes = await newDoc.save()
-  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  const blob = new Blob([resultBytes], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -320,7 +333,7 @@ export async function addWatermark(
 
   onProgress?.(95)
   const resultBytes = await pdfDoc.save()
-  const blob = new Blob([resultBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  const blob = new Blob([resultBytes], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }

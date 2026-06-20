@@ -35,6 +35,7 @@
     "tsx": "^4.19.5",
     "typescript": "~6.0.2",
     "vite": "^8.0.12",
+    "vite-plugin-prerender": "^1.0.8",
     "vue-tsc": "^3.2.8"
   }
 }

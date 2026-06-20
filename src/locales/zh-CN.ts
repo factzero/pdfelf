@@ -123,6 +123,7 @@ export default {
     rotate270: '逆时针 90°',
     rotateBtn: '旋转并保存',
     noSelection: '请至少选择一页进行旋转',
+    completed: '旋转完成',
     rotating: '正在旋转 PDF...',
     failed: '旋转失败，请重试',
   },

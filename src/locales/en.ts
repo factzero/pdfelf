@@ -124,6 +124,7 @@ export default {
     rotateBtn: 'Rotate and Save',
     noSelection: 'Please select at least one page to rotate',
     rotating: 'Rotating PDF...',
+    completed: 'Rotation Complete',
     failed: 'Rotation failed, please try again',
   },
   delete: {
