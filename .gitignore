@@ -25,3 +25,6 @@ dist-ssr
 
 # Stats data (runtime, not to be committed)
 server/statsData.json
+
+# Playwright CLI cache
+.playwright-cli/
