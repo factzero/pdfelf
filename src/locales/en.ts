@@ -135,6 +135,7 @@ export default {
     cannotDeleteAll: 'Cannot delete all pages',
     deleting: 'Deleting pages...',
     failed: 'Deletion failed, please try again',
+    completed: 'Deletion completed',
   },
   extract: {
     title: '📋 Extract PDF Pages',

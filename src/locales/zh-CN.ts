@@ -135,6 +135,7 @@ export default {
     cannotDeleteAll: '不能删除所有页面',
     deleting: '正在删除页面...',
     failed: '删除失败，请重试',
+    completed: '删除完成',
   },
   extract: {
     title: '📋 提取 PDF 页面',
