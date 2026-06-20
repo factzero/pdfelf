@@ -34,8 +34,32 @@
 
 ```bash
 npm install
+
+# 仅前端开发
 npm run dev
+
+# 前端 + 访问统计后台
+npm run dev:all
 ```
+
+## 📊 访问统计
+
+项目内置一个轻量级 Express 后台用于统计网站访问量：
+
+```bash
+# 单独启动统计后台
+npm run dev:server
+
+# 生产环境启动（托管前端 + API）
+npm run build
+npm run start
+```
+
+统计 API：
+- `GET /api/stats` — 获取统计数据（总访问量、今日访问、独立访客）
+- `POST /api/stats/visit` — 记录一次页面访问
+
+数据存储在 `server/statsData.json` 文件中（已加入 .gitignore）。
 
 ## 🏗️ 构建
 
@@ -66,8 +90,12 @@ src/
 ├── services/      # PDF/Word/图片处理服务
 ├── stores/        # Pinia 状态管理
 ├── router/        # 路由配置
+├── i18n/          # 国际化配置
+├── locales/       # 语言文件 (zh-CN, en)
 ├── utils/         # 工具函数
 └── styles/        # 全局样式
+server/
+└── statsStore/    # 访问统计后台 (Express)
 ```
 
 ## 🔒 隐私

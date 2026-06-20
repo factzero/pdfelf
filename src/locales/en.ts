@@ -246,4 +246,8 @@ export default {
     loading: 'Loading...',
     cannotOpen: 'Cannot open this PDF file',
   },
+  stats: {
+    totalVisits: '{n} total visits',
+    todayVisits: '{n} today',
+  },
 }

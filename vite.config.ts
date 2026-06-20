@@ -11,7 +11,11 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['pdfelf.online'],
+    host: '0.0.0.0',
+    allowedHosts: true,
+    proxy: {
+      '/api': 'http://localhost:3001',
+    },
   },
   worker: {
     format: 'es',

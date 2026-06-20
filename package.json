@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:server": "tsx server/index.ts",
+    "dev:all": "concurrently --names front,stats \"vite\" \"tsx server/index.ts\"",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "cross-env NODE_ENV=production tsx server/index.ts"
   },
   "dependencies": {
     "docx": "^9.7.1",
@@ -22,9 +25,14 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "@types/node": "^24.12.3",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vue/tsconfig": "^0.9.1",
+    "concurrently": "^9.2.1",
+    "cross-env": "^7.0.3",
+    "express": "^5.1.0",
+    "tsx": "^4.19.5",
     "typescript": "~6.0.2",
     "vite": "^8.0.12",
     "vue-tsc": "^3.2.8"

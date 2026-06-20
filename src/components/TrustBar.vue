@@ -13,11 +13,31 @@
         <span class="trust-item__icon">🎉</span>
         <span>{{ $t('trust.free') }}</span>
       </div>
+      <div v-if="stats" class="trust-item trust-item--stats">
+        <span class="trust-item__icon">👁</span>
+        <span>{{ $t('stats.totalVisits', { n: stats.totalVisits }) }}</span>
+        <span class="trust-item__sep">·</span>
+        <span>{{ $t('stats.todayVisits', { n: stats.todayVisits }) }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { fetchStats } from '@/services/statsService'
+
+interface StatsData {
+  totalVisits: number
+  todayVisits: number
+  uniqueVisitors: number
+}
+
+const stats = ref<StatsData | null>(null)
+
+onMounted(async () => {
+  stats.value = await fetchStats()
+})
 </script>
 
 <style scoped>
@@ -44,6 +64,15 @@
 
 .trust-item__icon {
   font-size: 1rem;
+}
+
+.trust-item--stats {
+  opacity: 0.8;
+}
+
+.trust-item__sep {
+  margin: 0 2px;
+  opacity: 0.4;
 }
 
 @media (max-width: 640px) {

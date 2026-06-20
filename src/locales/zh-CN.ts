@@ -246,4 +246,8 @@ export default {
     loading: '加载中...',
     cannotOpen: '无法打开此 PDF 文件',
   },
+  stats: {
+    totalVisits: '总访问 {n} 次',
+    todayVisits: '今日 {n} 次',
+  },
 }
