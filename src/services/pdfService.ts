@@ -1,4 +1,5 @@
-import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib'
+import { PDFDocument, rgb, degrees } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
 import JSZip from 'jszip'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 
@@ -297,35 +298,41 @@ export async function addWatermark(
   onProgress?.(30)
   const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
   const pages = pdfDoc.getPages()
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+
+  // Register fontkit to embed custom fonts (needed for CJK support)
+  pdfDoc.registerFontkit(fontkit)
+
+  onProgress?.(40)
+  // Load a subsetted CJK font from Google Fonts
+  const font = await loadWatermarkFont(pdfDoc, watermarkText)
 
   onProgress?.(50)
-  const radians = (angle * Math.PI) / 180
   const { r, g, b } = color
 
   for (let i = 0; i < pages.length; i++) {
-    onProgress?.(50 + Math.round((i / pages.length) * 40))
+    onProgress?.(50 + Math.round((i / pages.length) * 45))
     const page = pages[i]
     const { width, height } = page.getSize()
 
-    // Calculate text dimensions
-    const textWidth = font.widthOfTextAtSize(watermarkText, fontSize)
-    const textHeight = fontSize
+    // Grid spacing: page-dimension based, but at least 1.5× text width
+    // to prevent overlaps with long watermark text.
+    const textW = font.widthOfTextAtSize(watermarkText, fontSize)
+    const minDim = Math.min(width, height)
+    const step = Math.max(minDim / 2, textW * 1.5)
+    const margin = step / 2   // offset for diagonal stagger
 
-    // Draw multiple watermarks in a grid to cover the page
-    const stepX = textWidth * 2.2
-    const stepY = textHeight * 4
-
-    for (let x = -textWidth; x < width + textWidth; x += stepX) {
-      for (let y = -textHeight; y < height + textHeight; y += stepY) {
+    for (let x = 0; x < width + step; x += step) {
+      for (let y = 0; y < height + step; y += step) {
+        // offset every other row to create a staggered pattern
+        const offsetX = (Math.round(y / step) % 2 === 0) ? 0 : margin
         page.drawText(watermarkText, {
-          x,
+          x: x + offsetX,
           y,
           size: fontSize,
           font,
           opacity,
           color: rgb(r, g, b),
-          rotate: { type: 0, angle: radians },
+          rotate: degrees(angle),
         })
       }
     }
@@ -336,4 +343,31 @@ export async function addWatermark(
   const blob = new Blob([resultBytes], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
+}
+
+/**
+ * Load a subsetted CJK font from Google Fonts for the given watermark text.
+ * Uses fontkit to embed the font into the PDF document.
+ */
+async function loadWatermarkFont(
+  pdfDoc: PDFDocument,
+  text: string,
+): ReturnType<PDFDocument['embedFont']> {
+  // Only fetch the glyphs we actually need via Google Fonts' text= parameter
+  const uniqueChars = [...new Set(text)].join('')
+  const cssUrl = `https://fonts.googleapis.com/css2?family=Noto+Sans+SC&text=${encodeURIComponent(uniqueChars)}`
+
+  const cssResp = await fetch(cssUrl)
+  if (!cssResp.ok) throw new Error('Failed to fetch font CSS from Google Fonts')
+  const css = await cssResp.text()
+
+  // Extract the actual font file URL from the CSS @font-face rule
+  const urlMatch = css.match(/url\((https?:\/\/[^)]+)\)/)
+  if (!urlMatch) throw new Error('Failed to parse font URL from Google Fonts response')
+
+  const fontResp = await fetch(urlMatch[1])
+  if (!fontResp.ok) throw new Error('Failed to fetch font file from CDN')
+  const fontBytes = await fontResp.arrayBuffer()
+
+  return pdfDoc.embedFont(fontBytes)
 }

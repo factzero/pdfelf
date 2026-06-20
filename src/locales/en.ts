@@ -171,6 +171,7 @@ export default {
     addBtn: 'Add Watermark',
     adding: 'Adding watermark...',
     failed: 'Failed to add watermark, please try again',
+    completed: 'Watermark added',
   },
   pdfToWord: {
     title: '📄 PDF to Word',

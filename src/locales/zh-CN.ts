@@ -171,6 +171,7 @@ export default {
     addBtn: '添加水印',
     adding: '正在添加水印...',
     failed: '添加水印失败，请重试',
+    completed: '添加完成',
   },
   pdfToWord: {
     title: '📄 PDF 转 Word',
