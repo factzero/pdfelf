@@ -9,17 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import TrustBar from '@/components/TrustBar.vue'
-import { recordPageVisit } from '@/services/statsService'
-
-const router = useRouter()
-
-// 每次路由切换时记录（含首次加载）
-router.afterEach((to) => {
-  recordPageVisit(to.path)
-})
 </script>
 
 <style scoped>
