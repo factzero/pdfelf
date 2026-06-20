@@ -12,20 +12,38 @@ interface StatsData {
   pageViews: Record<string, number>
 }
 
+function getDefaults(): StatsData {
+  return { totalVisits: 0, dailyVisits: {}, uniqueVisitors: [], pageViews: {} }
+}
+
 function load(): StatsData {
   if (!existsSync(DATA_FILE)) {
-    return { totalVisits: 0, dailyVisits: {}, uniqueVisitors: [], pageViews: {} }
+    return getDefaults()
   }
   try {
     const raw = readFileSync(DATA_FILE, 'utf-8')
     return JSON.parse(raw)
   } catch {
-    return { totalVisits: 0, dailyVisits: {}, uniqueVisitors: [], pageViews: {} }
+    return getDefaults()
   }
 }
 
 function save(data: StatsData) {
-  writeFileSync(DATA_FILE, JSON.stringify(data, null, 2))
+  try {
+    writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8')
+  } catch (err) {
+    console.error('[StatsStore] Failed to write stats file:', err)
+  }
+}
+
+/** 服务器启动时初始化数据文件（若不存在则创建） */
+export function initStore() {
+  if (!existsSync(DATA_FILE)) {
+    save(getDefaults())
+    console.log('[StatsStore] Created initial stats file:', DATA_FILE)
+  } else {
+    console.log('[StatsStore] Loaded existing stats file:', DATA_FILE)
+  }
 }
 
 export function getStats() {

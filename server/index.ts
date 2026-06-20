@@ -1,7 +1,7 @@
 import express from 'express'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { getStats, recordVisit } from './statsStore'
+import { getStats, recordVisit, initStore } from './statsStore'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -42,6 +42,9 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-app.listen(PORT, '0.0.0.0', () => {
+// 初始化统计存储文件（不存在则自动创建）
+initStore()
+
+app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`\n📊 [Stats Server] http://localhost:${PORT}`)
 })

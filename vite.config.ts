@@ -16,6 +16,10 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:3001',
     },
+    hmr: {
+      host: 'pdfelf.online',
+      protocol: 'ws',
+    },
   },
   worker: {
     format: 'es',
