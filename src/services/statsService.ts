@@ -14,17 +14,19 @@ interface StatsResponse {
   uniqueVisitors: number
 }
 
-let lastRecordTimestamp = 0
-const RECORD_THROTTLE_MS = 2000
+let lastRecordedPath = ''
+let lastRecordTime = 0
 
 /**
  * 记录一次页面访问，后端自动去重统计独立访客
- * 2 秒内同一路径不去重上报，防止路由初始化时重复触发
+ * 同一路径 1 秒内不重复上报，防止路由初始化重复触发
  */
 export async function recordPageVisit(path: string) {
   const now = Date.now()
-  if (now - lastRecordTimestamp < RECORD_THROTTLE_MS) return
-  lastRecordTimestamp = now
+  // 同一路径 1 秒内只报一次
+  if (path === lastRecordedPath && now - lastRecordTime < 1000) return
+  lastRecordedPath = path
+  lastRecordTime = now
 
   try {
     await fetch('/api/stats/visit', {
