@@ -35,25 +35,18 @@ let lastRecordTime = 0
  */
 export async function recordPageVisit(path: string) {
   const now = Date.now()
-  // 同一路径 1 秒内只报一次
-  if (path === lastRecordedPath && now - lastRecordTime < 1000) {
-    console.log('[Stats] throttled:', path)
-    return
-  }
+  if (path === lastRecordedPath && now - lastRecordTime < 1000) return
   lastRecordedPath = path
   lastRecordTime = now
 
-  console.log('[Stats] recording visit:', path)
   try {
-    const res = await fetch('/api/stats/visit', {
+    await fetch('/api/stats/visit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ path, visitorId: getVisitorId() }),
     })
-    const data = await res.json()
-    console.log('[Stats] recorded:', data)
-  } catch (err) {
-    console.error('[Stats] fetch failed:', err)
+  } catch {
+    // 后端未启动时静默失败
   }
 }
 
