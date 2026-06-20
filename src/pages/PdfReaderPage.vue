@@ -1,5 +1,5 @@
 <template>
-  <div class="reader-page">
+  <div class="reader-page" :class="{ 'reader-page--reading': selectedFile }">
     <div v-if="!selectedFile" class="upload-area container">
       <h1 class="tool-title">{{ $t('reader.title') }}</h1>
       <p class="tool-desc">{{ $t('reader.desc') }}</p>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, watch } from 'vue'
+import { ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as pdfjsLib from 'pdfjs-dist'
 import FileDropZone from '@/components/FileDropZone.vue'
@@ -118,15 +118,39 @@ function nextPage() {
 watch(zoom, () => {
   if (pdfDoc) renderPage()
 })
+
+// Hide body scrollbar when reader is active
+watch(selectedFile, (val) => {
+  document.body.classList.toggle('reader-open', !!val)
+})
+onUnmounted(() => {
+  document.body.classList.remove('reader-open')
+})
+
+// Keyboard navigation
+function onKeydown(e: KeyboardEvent) {
+  if (!selectedFile.value) return
+  // Ignore if typing in an input/select
+  if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prevPage() }
+  else if (e.key === 'ArrowRight') { e.preventDefault(); nextPage() }
+}
+onMounted(() => window.addEventListener('keydown', onKeydown))
+onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 </script>
 
 <style scoped>
-.reader-page { min-height: calc(100vh - 80px); }
+/* Reading mode: fill viewport, no scrollbar */
+.reader-page--reading {
+  margin: calc(-1 * var(--spacing-2xl)) 0;
+  height: calc(100vh - 65px);
+  overflow: hidden;
+}
 .upload-area { max-width: 640px; margin: 0 auto; padding-top: var(--spacing-3xl); }
 .tool-title { font-size: 1.75rem; font-weight: 700; text-align: center; margin-bottom: var(--spacing-sm); }
 .tool-desc { text-align: center; color: var(--color-text-secondary); margin-bottom: var(--spacing-xl); }
 
-.reader { display: flex; flex-direction: column; height: calc(100vh - 80px); }
+.reader { display: flex; flex-direction: column; height: 100%; }
 .reader__toolbar {
   display: flex; align-items: center; gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-lg);
@@ -152,8 +176,18 @@ watch(zoom, () => {
 .reader__canvas-wrap {
   flex: 1; overflow: auto; display: flex; justify-content: center;
   padding: var(--spacing-xl); background: #e5e7eb;
+  /* Hide scrollbar, keep scroll functionality */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.reader__canvas-wrap::-webkit-scrollbar {
+  display: none;
 }
 .reader__canvas { box-shadow: 0 4px 24px rgba(0,0,0,.15); background: white; max-width: 100%; }
 .reader__loading { text-align: center; padding: var(--spacing-lg); color: var(--color-text-secondary); font-size: 0.875rem; }
 .error { margin-top: var(--spacing-md); color: var(--color-error); font-size: 0.875rem; text-align: center; }
+</style>
+
+<style>
+body.reader-open { overflow: hidden; }
 </style>

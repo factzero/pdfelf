@@ -411,21 +411,25 @@ async function convert() {
   align-items: center;
   gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
+  background: var(--color-bg);
   cursor: pointer;
   font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
   transition: all var(--transition-fast);
 }
 
 .option-chip:hover {
   border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .option-chip:has(input:checked) {
   border-color: var(--color-primary);
-  background: var(--color-primary-light);
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
 }
 
 .option-chip input[type='radio'] {
