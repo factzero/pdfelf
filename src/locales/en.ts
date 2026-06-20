@@ -178,6 +178,9 @@ export default {
     desc: 'Convert PDF files to editable Word documents',
     convertBtn: 'Convert to Word',
     converting: 'Converting PDF → Word...',
+    completed: 'Conversion Complete',
+    before: 'Before',
+    after: 'After',
     failed: 'Conversion failed, please try again',
   },
   pdfToExcel: {

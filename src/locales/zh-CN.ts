@@ -178,6 +178,9 @@ export default {
     desc: '将 PDF 文件转换为可编辑的 Word 文档',
     convertBtn: '转换为 Word',
     converting: '正在转换 PDF → Word...',
+    completed: '转换完成',
+    before: '转换前',
+    after: '转换后',
     failed: '转换失败，请重试',
   },
   pdfToExcel: {
