@@ -205,6 +205,9 @@ export default {
     resolution: '分辨率',
     convertBtn: '转换为图片',
     converting: '正在转换 PDF → 图片...',
+    completed: '转换完成',
+    before: '转换前',
+    after: '转换后',
     failed: '转换失败，请重试',
   },
   wordToPdf: {

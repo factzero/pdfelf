@@ -205,6 +205,9 @@ export default {
     resolution: 'Resolution',
     convertBtn: 'Convert to Image',
     converting: 'Converting PDF → Image...',
+    completed: 'Conversion Complete',
+    before: 'Before',
+    after: 'After',
     failed: 'Conversion failed, please try again',
   },
   wordToPdf: {
