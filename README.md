@@ -44,16 +44,7 @@ npm run dev:all
 
 ## 📊 访问统计
 
-项目内置一个轻量级 Express 后台用于统计网站访问量：
-
-```bash
-# 单独启动统计后台
-npm run dev:server
-
-# 生产环境启动（托管前端 + API）
-npm run build
-npm run start
-```
+项目内置一个轻量级 Express 后台用于统计网站访问量。
 
 统计 API：
 - `GET /api/stats` — 获取统计数据（总访问量、今日访问、独立访客）
@@ -61,11 +52,83 @@ npm run start
 
 数据存储在 `server/statsData.json` 文件中（已加入 .gitignore）。
 
-## 🏗️ 构建
+### 本地开发
 
 ```bash
+# 仅前端
+npm run dev
+
+# 前端 + 统计后台（推荐）
+npm run dev:all
+
+# 预览生产构建（单进程，同源无代理）
 npm run build
-npm run preview
+npm run preview:all
+```
+
+## 🚀 部署
+
+生产环境由 **Nginx 托管静态文件** + **PM2 守护 stats server** 组成：
+
+### 1. 服务器初始配置
+
+```bash
+# 安装 PM2（守护进程 + 开机自启）
+npm install -g pm2
+
+# 启动 stats server
+cd /home/admin/pdfelf
+pm2 start "npm run start" --name pdfelf-stats
+
+# 设置开机自启
+pm2 save
+pm2 startup
+```
+
+### 2. Nginx 配置
+
+在 HTTPS server 块中加入 `/api/` 代理：
+
+```nginx
+server {
+    server_name your-domain.com;
+
+    root /home/admin/pdfelf/dist;
+    index index.html;
+
+    # API 代理到 stats server
+    location /api/ {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # 静态资源（带 hash，可长期缓存）
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # SPA 路由回退
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    listen 443 ssl;
+    # ... SSL 证书配置
+}
+```
+
+### 3. 更新部署
+
+```bash
+cd /home/admin/pdfelf
+git pull
+npm install && npm run build
+pm2 restart pdfelf-stats
+nginx -s reload
 ```
 
 ## 🛠️ 技术栈
