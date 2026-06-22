@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "dev:server": "tsx server/index.ts",
-    "dev:all": "concurrently --names front,stats \"vite\" \"tsx server/index.ts\"",
+    "dev:all": "concurrently --names front,stats \"wait-on http://localhost:3001 && vite\" \"tsx server/index.ts\"",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
+    "preview:all": "concurrently --names front,stats \"wait-on http://localhost:3001 && vite preview\" \"tsx server/index.ts\"",
     "start": "cross-env NODE_ENV=production tsx server/index.ts"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "typescript": "~6.0.2",
     "vite": "^8.0.12",
     "vite-plugin-prerender": "^1.0.8",
-    "vue-tsc": "^3.2.8"
+    "vue-tsc": "^3.2.8",
+    "wait-on": "^9.0.10"
   }
 }
