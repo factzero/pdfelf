@@ -93,7 +93,7 @@ import FileDropZone from '@/components/FileDropZone.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
-import { rotatePDF, getPageCount } from '@/services/pdfService'
+import { rotatePDF } from '@/services/pdfService'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -175,7 +175,7 @@ async function onFileSelected(file: File | File[]) {
       canvas.height = Math.floor(viewport.height)
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        await page.render({ canvasContext: ctx, viewport }).promise
+        await page.render({ canvas, canvasContext: ctx, viewport }).promise
         const blob = await new Promise<Blob | null>((resolve) => {
           canvas.toBlob((b) => resolve(b), 'image/png')
         })

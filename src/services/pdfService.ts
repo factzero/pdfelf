@@ -40,7 +40,7 @@ export async function compressPDF(
   })
 
   onProgress?.(90)
-  const blob = new Blob([compressedBytes], { type: 'application/pdf' })
+  const blob = new Blob([new Uint8Array(compressedBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -64,7 +64,7 @@ export async function mergePDFs(
 
   onProgress?.(95)
   const resultBytes = await mergedDoc.save()
-  const blob = new Blob([resultBytes], { type: 'application/pdf' })
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -186,7 +186,7 @@ export async function rotatePDF(
   onProgress?.(80)
   const resultBytes = await pdfDoc.save()
   // Use resultBytes directly to avoid SharedArrayBuffer view issues
-  const blob = new Blob([resultBytes], { type: 'application/pdf' })
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -224,7 +224,7 @@ export async function deletePages(
 
   onProgress?.(80)
   const resultBytes = await newDoc.save()
-  const blob = new Blob([resultBytes], { type: 'application/pdf' })
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -262,7 +262,7 @@ export async function extractPages(
 
   onProgress?.(80)
   const resultBytes = await newDoc.save()
-  const blob = new Blob([resultBytes], { type: 'application/pdf' })
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -340,7 +340,7 @@ export async function addWatermark(
 
   onProgress?.(95)
   const resultBytes = await pdfDoc.save()
-  const blob = new Blob([resultBytes], { type: 'application/pdf' })
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }

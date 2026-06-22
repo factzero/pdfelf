@@ -25,7 +25,6 @@ export async function wordToPdf(
   onProgress?.(50)
   const pdfDoc = await PDFDocument.create()
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
-  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
   const pageWidth = PageSizes.A4[0]
   const pageHeight = PageSizes.A4[1]

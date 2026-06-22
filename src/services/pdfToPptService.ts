@@ -30,7 +30,7 @@ export async function pdfToPpt(
   const pres = new PptxGenJS()
 
   // Set slide size to standard 16:9
-  pres.defineLayout({ name: 'CUSTOM', width: '13.333', height: '7.5' })
+  pres.defineLayout({ name: 'CUSTOM', width: 13.333, height: 7.5 })
   pres.layout = 'CUSTOM'
 
   // Slide dimensions in inches (standard 16:9)
@@ -61,6 +61,7 @@ export async function pdfToPpt(
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     await page.render({
+      canvas,
       canvasContext: ctx,
       viewport: viewport,
     }).promise

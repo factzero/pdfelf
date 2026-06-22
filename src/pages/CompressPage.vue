@@ -219,7 +219,7 @@ async function onFileSelected(file: File | File[]) {
       canvas.height = Math.floor(viewport.height)
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        await page.render({ canvasContext: ctx, viewport }).promise
+        await page.render({ canvas, canvasContext: ctx, viewport }).promise
         // Use toBlob + createObjectURL for better compatibility
         const blob = await new Promise<Blob | null>((resolve) => {
           canvas.toBlob((b) => resolve(b), 'image/png')

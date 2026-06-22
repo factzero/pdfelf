@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as pdfjsLib from 'pdfjs-dist'
 import FileDropZone from '@/components/FileDropZone.vue'
@@ -46,7 +46,6 @@ const { t } = useI18n()
 const selectedFile = ref<File | null>(null)
 const errorMsg = ref('')
 const canvasEl = ref<HTMLCanvasElement>()
-const canvasWrap = ref<HTMLDivElement>()
 
 const totalPages = ref(0)
 const currentPage = ref(1)
@@ -90,7 +89,7 @@ async function renderPage() {
   canvas.width = Math.floor(viewport.width)
   canvas.height = Math.floor(viewport.height)
   const ctx = canvas.getContext('2d')!
-  await page.render({ canvasContext: ctx, viewport }).promise
+  await page.render({ canvas, canvasContext: ctx, viewport }).promise
   isLoading.value = false
 }
 

@@ -1,4 +1,4 @@
-import { PDFDocument, PageSizes } from 'pdf-lib'
+import { PDFDocument } from 'pdf-lib'
 
 const PAGE_SIZES: Record<string, [number, number]> = {
   a4: [595.28, 841.89],

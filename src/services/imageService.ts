@@ -38,12 +38,12 @@ async function renderPageToBlob(
     ctx.fillRect(0, 0, canvas.width, canvas.height)
   }
 
-  await page.render({ canvasContext: ctx, viewport }).promise
+  await page.render({ canvas, canvasContext: ctx, viewport }).promise
 
   const mimeType = format === 'png' ? 'image/png' : 'image/jpeg'
   const quality = format === 'jpeg' ? 0.92 : undefined
 
-  return new Promise<Blob>((resolve, reject) => {
+  return new Promise<Blob>((resolve) => {
     canvas.toBlob(
       (b) => {
         if (b && b.size > 0) {

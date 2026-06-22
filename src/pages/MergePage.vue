@@ -47,7 +47,7 @@
                 {{ item.pageCount === 1 ? $t('merge.blankPage') : $t('merge.blankPages', { n: item.pageCount }) }}
               </template>
               <template v-else>
-                {{ formatFileSize(item.file.size) }}
+                {{ formatFileSize(item.file?.size ?? 0) }}
                 <span v-if="item.pageCount > 0"> · {{ $t('common.pages', { n: item.pageCount }) }}</span>
               </template>
             </span>
@@ -191,12 +191,6 @@ const insertAtIndex = ref(-1)
 // 用 Set 追踪所有已创建的 objectUrl，统一释放
 const allObjectUrls = new Set<string>()
 
-function createObjectUrl(blob: Blob): string {
-  const url = URL.createObjectURL(blob)
-  allObjectUrls.add(url)
-  return url
-}
-
 function revokeObjectUrl(url: string | null | undefined) {
   if (url && allObjectUrls.has(url)) {
     URL.revokeObjectURL(url)
@@ -226,7 +220,7 @@ async function renderThumbnail(file: File): Promise<{ previewUrl: string; pageCo
       canvas.height = Math.floor(viewport.height)
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        await page.render({ canvasContext: ctx, viewport }).promise
+        await page.render({ canvas, canvasContext: ctx, viewport }).promise
         const dataUrl = canvas.toDataURL('image/jpeg', 0.7)
         return { previewUrl: dataUrl, pageCount }
       }
