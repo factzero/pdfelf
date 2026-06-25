@@ -42,9 +42,18 @@ let workerReady = false
 let initResolve: (() => void) | null = null
 let initReject: ((err: Error) => void) | null = null
 let initTimer: ReturnType<typeof setTimeout> | null = null
-const INIT_TIMEOUT = 120_000 // 2 分钟超时（首次加载 pyodide + 包安装较慢）
+const INIT_TIMEOUT = 300_000 // 5 分钟超时（pyodide ~9MB wasm + 包安装，慢速网络需要较长时间）
 let requestId = 0
 const pending = new Map<string, PendingRequest>()
+
+/** 彻底销毁当前 worker */
+function destroyWorker() {
+  if (worker) {
+    try { worker.terminate() } catch (_) { /* ok */ }
+    worker = null
+  }
+  workerReady = false
+}
 
 function clearInitState(reason?: string) {
   if (initTimer) { clearTimeout(initTimer); initTimer = null }
@@ -53,6 +62,9 @@ function clearInitState(reason?: string) {
     initResolve = null
     initReject = null
   }
+  // 超时 / 失败时终止 worker，避免它继续在后台消耗资源
+  // 下次调用 ensureWorker 时会创建新 worker 重试
+  destroyWorker()
 }
 
 function getWorker(): Worker {
@@ -96,7 +108,7 @@ function getWorker(): Worker {
 
     if (type === 'progress') {
       req.onProgress?.({ percent: percent ?? 0, stage: stage ?? 'preparing', params })
-    } else     if (type === 'result') {
+    } else if (type === 'result') {
       pending.delete(id)
       if (data) {
         req.resolve(new Blob([data], { type: req.mimeType }))
@@ -118,16 +130,12 @@ function getWorker(): Worker {
       req.reject(new Error(msg))
     }
     pending.clear()
-
-    // 清空 worker 以便下次重建
-    worker = null
-    workerReady = false
   }
 
   return worker
 }
 
-/** 确保 Worker 中的 pyodide 已初始化（预加载用） */
+/** 确保 Worker 中的 pyodide 已初始化（预加载用，支持自动重试） */
 export function ensureWorker(): Promise<void> {
   const w = getWorker()
   if (workerReady) return Promise.resolve()
@@ -135,9 +143,9 @@ export function ensureWorker(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     initResolve = resolve
     initReject = reject
-    // 超时保护：如果 Worker 长时间没返回 ready，自动失败
+    // 超时保护：如果 Worker 长时间没返回 ready，销毁 worker 并 reject
     initTimer = setTimeout(() => {
-      clearInitState('Worker init timed out (pyodide loading may have stalled)')
+      clearInitState('Worker init timed out (pyodide loading may have stalled. 9MB wasm + packages could take several minutes on slow network)')
     }, INIT_TIMEOUT)
     w.postMessage({ type: 'init' })
   })

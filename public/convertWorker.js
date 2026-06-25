@@ -80,16 +80,20 @@ async function doInit() {
     var pyodideModule = await import(PYODIDE_BASE + 'pyodide.esm.js')
   } catch (err) {
     logErr('import pyodide.esm.js 失败:', err)
-    throw new Error('加载 pyodide.esm.js 失败: ' + (err && err.message ? err.message : String(err)))
+    throw new Error('加载 pyodide 入口脚本失败: ' + (err && err.message ? err.message : String(err)))
   }
 
-  // 2. 初始化 pyodide 实例
+  // 2. 初始化 pyodide 实例（下载 ~9MB wasm + 加载 stdlib）
   post({ type: 'progress', id: '__init__', percent: 8, stage: 'preparing' })
   try {
     pyodide = await pyodideModule.loadPyodide({ indexURL: PYODIDE_BASE })
   } catch (err) {
     logErr('loadPyodide 失败:', err)
-    throw new Error('初始化 pyodide 运行时失败: ' + (err && err.message ? err.message : String(err)))
+    var wasmMsg = ''
+    if (err && err.message && /wasm|WebAssembly|Network|aborted/i.test(err.message)) {
+      wasmMsg = '（WebAssembly 加载失败，请检查网络或服务端是否有反向代理超时配置）'
+    }
+    throw new Error('初始化 pyodide 运行时失败: ' + (err && err.message ? err.message : String(err)) + wasmMsg)
   }
 
   // 3. 加载 micropip

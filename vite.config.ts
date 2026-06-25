@@ -84,6 +84,36 @@ function copyCmapsPlugin(): Plugin {
   }
 }
 
+/**
+ * 插件：为 dev/preview 模式添加 COOP/COEP 头 + wasm MIME 类型
+ *
+ * - Pyodide 在 module worker 中通过 fetch 加载 9MB wasm，浏览器要求
+ *   服务端返回正确的 Content-Type: application/wasm
+ * - COOP/COEP 头确保跨域隔离环境下 WebAssembly 稳定工作
+ */
+function wasmHeadersPlugin(): Plugin {
+  return {
+    name: 'wasm-headers',
+    configureServer(server) {
+      server.middlewares.use((_req, res, next) => {
+        // COOP/COEP：保障 Worker 内 WebAssembly 加载的稳定性
+        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+        res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
+
+        // 确保 .wasm 文件有正确的 Content-Type
+        const url = _req.url || ''
+        if (url.endsWith('.wasm')) {
+          res.setHeader('Content-Type', 'application/wasm')
+        } else if (url.endsWith('.mjs')) {
+          res.setHeader('Content-Type', 'application/javascript')
+        }
+
+        next()
+      })
+    },
+  }
+}
+
 // 插件：将构建产物中的 .mjs 重命名为 .js，彻底避免服务器 MIME 类型问题
 function renameMjsPlugin(): Plugin {
   return {
@@ -137,7 +167,7 @@ function renameMjsPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [vue(), copyCmapsPlugin(), renameMjsPlugin()],
+  plugins: [vue(), copyCmapsPlugin(), wasmHeadersPlugin(), renameMjsPlugin()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
