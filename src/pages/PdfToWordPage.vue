@@ -46,14 +46,40 @@
         {{ $t('pdfToWord.convertBtn') }}
       </button>
 
-      <!-- 处理中：进度条替代按钮 -->
+      <!-- 处理中：进度 + 心跳动画 -->
       <div v-if="isProcessing" class="action-card__progress">
         <div class="progress-bar">
-          <div class="progress-bar__fill" :style="{ width: `${progress}%` }"></div>
+          <div class="progress-bar__fill" :style="{ width: `${progress}%` }">
+            <div class="progress-bar__shimmer"></div>
+          </div>
         </div>
         <div class="progress-info">
-          <span class="progress-text">{{ progressText }}</span>
+          <span class="progress-text">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            {{ progressText }}
+          </span>
           <span class="progress-percent">{{ progress }}%</span>
+        </div>
+        <!-- 环形进度心跳 -->
+        <div class="heartbeat-ring" aria-hidden="true">
+          <svg viewBox="0 0 36 36" class="heartbeat-svg">
+            <path class="heartbeat-bg"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none"
+              stroke="var(--color-bg-tertiary)"
+              stroke-width="3" />
+            <path class="heartbeat-fill"
+              :stroke-dasharray="`${Math.max(progress, 2)}, 100`"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none"
+              stroke="var(--color-primary)"
+              stroke-width="3"
+              stroke-linecap="round" />
+          </svg>
         </div>
       </div>
 
@@ -75,13 +101,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
-import { pdfToWord } from '@/services/wordService'
+import { pdfToWord, ensureWorker } from '@/services/wordService'
 import * as pdfjsLib from 'pdfjs-dist'
 
 // Use bundled worker
@@ -133,6 +159,13 @@ onUnmounted(() => {
     URL.revokeObjectURL(objectUrl)
     objectUrl = null
   }
+})
+
+// Pre-warm pyodide worker in background (avoids wait on first conversion)
+onMounted(() => {
+  ensureWorker().catch(() => {
+    // Will retry during actual conversion
+  })
 })
 
 async function onFileSelected(file: File | File[]) {
@@ -188,17 +221,22 @@ function onError(message: string) {
 
 async function convert() {
   if (!selectedFile.value) return
-  store.startProcessing(t('pdfToWord.converting'))
+  store.startProcessing(t('pdfToWord.stages.preparing'))
   try {
     const blob = await pdfToWord(
       selectedFile.value,
-      (p) => store.updateProgress(p)
+      (info) => {
+        const text = t(`pdfToWord.stages.${info.stage}`, info.params ?? {})
+        store.updateProgress(info.percent, text)
+      }
     )
     resultBlob.value = blob
     store.finishProcessing()
   } catch (e) {
-    store.setError(e instanceof Error ? e.message : t('pdfToWord.failed'))
-    errorMsg.value = t('pdfToWord.failed')
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error('[PdfToWord]', msg, e)
+    store.setError(msg)
+    errorMsg.value = msg || t('pdfToWord.failed')
   }
 }
 </script>
@@ -351,12 +389,15 @@ async function convert() {
   cursor: not-allowed;
 }
 
-/* 进度条（内嵌版） */
+/* ====== 进度条 + 心跳动画 ====== */
+
 .action-card__progress {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
 }
+
+/* --- 进度条 --- */
 
 .progress-bar {
   width: 100%;
@@ -367,26 +408,97 @@ async function convert() {
 }
 
 .progress-bar__fill {
+  position: relative;
   height: 100%;
+  min-width: 0;
   background: linear-gradient(90deg, var(--color-primary), #60a5fa);
   border-radius: 4px;
-  transition: width 0.3s ease;
+  transition: width 0.4s ease;
 }
+
+/* 闪光条 — 从左到右扫过，表示系统仍在工作中 */
+.progress-bar__shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer-sweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* --- 进度文字区 --- */
 
 .progress-info {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .progress-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.875rem;
   color: var(--color-text-secondary);
+}
+
+/* 脉冲圆点 — 心跳呼吸动画 */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+  animation: pulse-dot-breath 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot-breath {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.8); opacity: 0.4; }
 }
 
 .progress-percent {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 环形进度心跳 — 参考 pdfkoi 的 progress-ring --- */
+
+.heartbeat-ring {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-sm);
+}
+
+.heartbeat-svg {
+  width: 40px;
+  height: 40px;
+  animation: heartbeat-rotate 3s linear infinite;
+}
+
+@keyframes heartbeat-rotate {
+  100% { transform: rotate(360deg); }
+}
+
+.heartbeat-bg {
+  opacity: 0.4;
+}
+
+.heartbeat-fill {
+  transition: stroke-dasharray 0.4s ease;
 }
 
 /* 结果区 */

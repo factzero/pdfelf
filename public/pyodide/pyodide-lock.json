@@ -1,0 +1,174 @@
+{
+  "info": {
+    "abi_version": "2026_0",
+    "arch": "wasm32",
+    "platform": "emscripten_5_0_3",
+    "python": "3.14.0"
+  },
+  "packages": {
+    "cryptography": {
+      "depends": [
+        "six",
+        "cffi"
+      ],
+      "file_name": "whl/cryptography-47.0.0-cp314-abi3-pyemscripten_2026_0_wasm32.whl",
+      "imports": [
+        "cryptography"
+      ],
+      "install_dir": "site",
+      "name": "cryptography",
+      "package_type": "package",
+      "sha256": "60b0d6def2b7076256d6a6da0f872a6c297c5af8659be6206aa530767d03c3db",
+      "unvendored_tests": false,
+      "version": "47.0.0"
+    },
+    "fonttools": {
+      "depends": [],
+      "file_name": "whl/fonttools-4.62.1-py3-none-any.whl",
+      "imports": [
+        "fontTools"
+      ],
+      "install_dir": "site",
+      "name": "fonttools",
+      "package_type": "package",
+      "sha256": "18562e67ce36327ce9847d689798c152f38db352feb9773a8c2bc79932c036a2",
+      "unvendored_tests": false,
+      "version": "4.62.1"
+    },
+    "lxml": {
+      "depends": [],
+      "file_name": "whl/lxml-6.0.2-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+      "imports": [
+        "lxml"
+      ],
+      "install_dir": "site",
+      "name": "lxml",
+      "package_type": "package",
+      "sha256": "01e1f6302757f5913b9f944ec6f5277c5e9257fddb0e19fdff49e525567648a3",
+      "unvendored_tests": false,
+      "version": "6.0.2"
+    },
+    "micropip": {
+      "depends": [],
+      "file_name": "whl/micropip-0.11.1-py3-none-any.whl",
+      "imports": [
+        "micropip"
+      ],
+      "install_dir": "site",
+      "name": "micropip",
+      "package_type": "package",
+      "sha256": "80bd0a62a8bbadb7aa4ba2eb00423d3735523a508bdd4aea54ad79b65fd4ebbf",
+      "unvendored_tests": false,
+      "version": "0.11.1"
+    },
+    "numpy": {
+      "depends": [],
+      "file_name": "whl/numpy-2.4.3-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+      "imports": [
+        "numpy"
+      ],
+      "install_dir": "site",
+      "name": "numpy",
+      "package_type": "package",
+      "sha256": "c90162c4b09a5d8ac3ce975e0b4282ed5df06de446e3d0aec7406821fc5346e1",
+      "unvendored_tests": false,
+      "version": "2.4.3"
+    },
+    "opencv-python": {
+      "depends": [
+        "numpy"
+      ],
+      "file_name": "whl/opencv_python-4.11.0.86-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+      "imports": [
+        "cv2"
+      ],
+      "install_dir": "site",
+      "name": "opencv-python",
+      "package_type": "package",
+      "sha256": "718f29fc494b2fb5a19df92b9c60bc5ee863c045f18dcacab1b81b38884decfa",
+      "unvendored_tests": false,
+      "version": "4.11.0.86"
+    },
+    "pillow": {
+      "depends": [],
+      "file_name": "whl/pillow-12.2.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+      "imports": [
+        "PIL"
+      ],
+      "install_dir": "site",
+      "name": "Pillow",
+      "package_type": "package",
+      "sha256": "ad1d3e66fd135d4fc86d7b7ab53241ea00aa187b4be8e16901d35332859c7936",
+      "unvendored_tests": false,
+      "version": "12.2.0"
+    },
+    "pymupdf": {
+      "depends": [],
+      "file_name": "whl/pymupdf-1.27.2.2-cp314-abi3-pyemscripten_2026_0_wasm32.whl",
+      "imports": [
+        "pymupdf",
+        "fitz"
+      ],
+      "install_dir": "site",
+      "name": "PyMuPDF",
+      "package_type": "package",
+      "sha256": "28911bc77fd80fbe0ea6e31f7526120707195f8e7afc0db5efced97aab9d8965",
+      "unvendored_tests": false,
+      "version": "1.27.2.2"
+    },
+    "typing-extensions": {
+      "depends": [],
+      "file_name": "whl/typing_extensions-4.15.0-py3-none-any.whl",
+      "imports": [
+        "typing_extensions"
+      ],
+      "install_dir": "site",
+      "name": "typing-extensions",
+      "package_type": "package",
+      "sha256": "23cac6ed70a5d6334eaf1e640ae6a123ce2b4d1bb60aa999df7267f53bc7197e",
+      "unvendored_tests": false,
+      "version": "4.15.0"
+    },
+    "cffi": {
+      "depends": [
+        "pycparser"
+      ],
+      "file_name": "whl/cffi-2.0.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+      "imports": [
+        "cffi"
+      ],
+      "install_dir": "site",
+      "name": "cffi",
+      "package_type": "package",
+      "sha256": "8bd9db5f92f20f4f208e8f6ef7a73da624b7a7bb029171ea923787cda5b1939a",
+      "unvendored_tests": false,
+      "version": "2.0.0"
+    },
+    "pycparser": {
+      "depends": [],
+      "file_name": "whl/pycparser-3.0-py3-none-any.whl",
+      "imports": [
+        "pycparser"
+      ],
+      "install_dir": "site",
+      "name": "pycparser",
+      "package_type": "package",
+      "sha256": "a65cca8b4b42a962e32631c039fb041b9aae01004711acb03a28dc5a57d6fd62",
+      "unvendored_tests": false,
+      "version": "3.0"
+    },
+    "six": {
+      "depends": [],
+      "file_name": "whl/six-1.17.0-py2.py3-none-any.whl",
+      "imports": [
+        "six"
+      ],
+      "install_dir": "site",
+      "name": "six",
+      "package_type": "package",
+      "sha256": "5c374ab334e1ba21c64eaaff3024259b69b0533edb5b782a077c616d5f3e61b3",
+      "unvendored_tests": false,
+      "version": "1.17.0"
+    }
+  }
+}

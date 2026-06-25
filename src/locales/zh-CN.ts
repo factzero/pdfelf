@@ -182,6 +182,16 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '转换失败，请重试',
+    stages: {
+      preparing: '正在准备转换环境…',
+      loadingDeps: '正在加载转换组件…',
+      readingPdf: '正在读取 PDF 文件…',
+      openingDoc: '正在打开 PDF 文档…',
+      analyzingDoc: '正在分析文档结构…',
+      parsingPages: '正在解析页面（{current}/{total}）…',
+      creatingDocx: '正在生成 Word 文档…',
+      finalizing: '正在完成转换…',
+    },
   },
   pdfToExcel: {
     title: '📊 PDF 转 Excel',

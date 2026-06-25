@@ -182,6 +182,16 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Conversion failed, please try again',
+    stages: {
+      preparing: 'Preparing conversion environment…',
+      loadingDeps: 'Loading conversion components…',
+      readingPdf: 'Reading PDF file…',
+      openingDoc: 'Opening PDF document…',
+      analyzingDoc: 'Analyzing document structure…',
+      parsingPages: 'Parsing pages ({current}/{total})…',
+      creatingDocx: 'Generating Word document…',
+      finalizing: 'Finalizing conversion…',
+    },
   },
   pdfToExcel: {
     title: '📊 PDF to Excel',
