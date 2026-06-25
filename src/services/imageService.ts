@@ -1,12 +1,6 @@
-import * as pdfjsLib from 'pdfjs-dist'
+import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import JSZip from 'jszip'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
-
-// Use bundled worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
 
 /**
  * Render a single PDF page to an image Blob
@@ -84,7 +78,7 @@ export async function pdfToImage(
   const buffer = await readFileAsArrayBuffer(file)
 
   onProgress?.(20)
-  const loadingTask = pdfjsLib.getDocument({ data: buffer })
+  const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
   const pdf = await loadingTask.promise
   const totalPages = pdf.numPages
 

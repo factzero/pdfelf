@@ -111,13 +111,7 @@ import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { splitPDF } from '@/services/pdfService'
 import { readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
-import * as pdfjsLib from 'pdfjs-dist'
-
-// Use bundled worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
+import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 
 const { t } = useI18n()
 const store = useToolStore()
@@ -181,7 +175,7 @@ async function onFileSelected(file: File | File[]) {
 
   try {
     const buffer = await readFileAsArrayBuffer(selectedFile.value)
-    const loadingTask = pdfjsLib.getDocument({ data: buffer })
+    const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
     const pdf = await loadingTask.promise
     totalPages.value = pdf.numPages
 

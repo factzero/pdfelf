@@ -32,14 +32,9 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import * as pdfjsLib from 'pdfjs-dist'
+import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
 
 const { t } = useI18n()
 
@@ -67,7 +62,7 @@ async function loadPdf(file: File) {
   isLoading.value = true
   try {
     const buffer = await readFileAsArrayBuffer(file)
-    const task = pdfjsLib.getDocument({ data: buffer })
+    const task = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
     pdfDoc = await task.promise
     totalPages.value = pdfDoc.numPages
     currentPage.value = 1

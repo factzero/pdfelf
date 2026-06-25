@@ -23,6 +23,67 @@ const proxyConfig = {
   },
 }
 
+/** 复制目录（递归） */
+function copyDirSync(src: string, dst: string) {
+  if (!fs.existsSync(src)) return
+  fs.mkdirSync(dst, { recursive: true })
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const srcPath = path.join(src, entry.name)
+    const dstPath = path.join(dst, entry.name)
+    if (entry.isDirectory()) {
+      copyDirSync(srcPath, dstPath)
+    } else {
+      fs.copyFileSync(srcPath, dstPath)
+    }
+  }
+}
+
+/**
+ * 插件：复制 pdfjs-dist cmaps 到输出目录
+ *
+ * pdfjs 加载中文字体时需要 cMap 二进制文件；如果不提供 cMapUrl，
+ * 含 CJK 字体的 PDF 在渲染时会输出大量 "cMapUrl is not provided" 警告。
+ *
+ * - dev  模式：通过 configureServer 中间件直接从 node_modules 提供
+ * - build 模式：在 closeBundle 中复制到 dist/cmaps/
+ */
+function copyCmapsPlugin(): Plugin {
+  const CMAPS_SRC = resolve(__dirname, 'node_modules/pdfjs-dist/cmaps')
+
+  return {
+    name: 'copy-pdfjs-cmaps',
+    configureServer(server) {
+      // dev 模式下从 node_modules 提供 cmaps
+      if (!fs.existsSync(CMAPS_SRC)) return
+      server.middlewares.use('/cmaps', (_req, res, next) => {
+        const url = new URL(_req.url!, 'http://localhost')
+        const filePath = path.join(CMAPS_SRC, url.pathname)
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          const ext = path.extname(filePath).toLowerCase()
+          const mimeMap: Record<string, string> = {
+            '.bcmap': 'application/octet-stream',
+          }
+          res.setHeader('Content-Type', mimeMap[ext] || 'application/octet-stream')
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
+          fs.createReadStream(filePath).pipe(res)
+        } else {
+          next()
+        }
+      })
+    },
+
+    async closeBundle() {
+      if (!fs.existsSync(CMAPS_SRC)) {
+        console.warn('  [copy-cmaps] cmaps source not found, skip')
+        return
+      }
+      const dst = resolve(__dirname, 'dist/cmaps')
+      copyDirSync(CMAPS_SRC, dst)
+      console.log(`  [copy-cmaps] copied cmaps to dist/cmaps/`)
+    },
+  }
+}
+
 // 插件：将构建产物中的 .mjs 重命名为 .js，彻底避免服务器 MIME 类型问题
 function renameMjsPlugin(): Plugin {
   return {
@@ -76,7 +137,7 @@ function renameMjsPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [vue(), renameMjsPlugin()],
+  plugins: [vue(), copyCmapsPlugin(), renameMjsPlugin()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

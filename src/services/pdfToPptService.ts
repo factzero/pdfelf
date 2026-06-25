@@ -1,11 +1,5 @@
-import * as pdfjsLib from 'pdfjs-dist'
+import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
-
-// Use bundled worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
 
 /**
  * Convert PDF to PowerPoint (.pptx)
@@ -20,7 +14,7 @@ export async function pdfToPpt(
   const buffer = await readFileAsArrayBuffer(file)
 
   onProgress?.(10)
-  const loadingTask = pdfjsLib.getDocument({ data: buffer })
+  const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
   const pdf = await loadingTask.promise
   const totalPages = pdf.numPages
 

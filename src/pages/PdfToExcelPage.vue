@@ -98,12 +98,7 @@ import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
 import { pdfToExcel } from '@/services/pdfToExcelService'
 import { ensureWorker } from '@/services/wordService'
-import * as pdfjsLib from 'pdfjs-dist'
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
+import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 
 const { t } = useI18n()
 const store = useToolStore()
@@ -169,7 +164,7 @@ async function onFileSelected(file: File | File[]) {
 
   try {
     const buffer = await readFileAsArrayBuffer(selectedFile.value)
-    const loadingTask = pdfjsLib.getDocument({ data: buffer })
+    const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
     const pdf = await loadingTask.promise
     totalPages.value = pdf.numPages
 
