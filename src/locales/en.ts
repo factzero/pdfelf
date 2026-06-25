@@ -198,7 +198,16 @@ export default {
     desc: 'Convert PDF files to Excel spreadsheets, each page becomes a sheet',
     convertBtn: 'Convert to Excel',
     converting: 'Converting PDF → Excel...',
+    completed: 'Conversion Complete',
     failed: 'Conversion failed, please try again',
+    stages: {
+      preparing: 'Preparing conversion environment…',
+      loadingDeps: 'Loading conversion components…',
+      readingPdf: 'Reading PDF file…',
+      parsingPages: 'Extracting table data ({current}/{total})…',
+      creatingDocx: 'Generating Excel file…',
+      finalizing: 'Finalizing conversion…',
+    },
   },
   pdfToPpt: {
     title: '📽️ PDF to PPT',

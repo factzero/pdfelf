@@ -1,5 +1,5 @@
 /**
- * PDF → Word 转换服务
+ * PDF 转换服务（Word / Excel）
  *
  * 将 pyodide 转换在后端 Web Worker 中运行，避免长时间转换阻塞主线程，
  * 防止浏览器对大型 PDF 显示"页面无响应"警告。
@@ -23,12 +23,18 @@ export interface ProgressInfo {
   params?: Record<string, unknown>
 }
 
+// ---- MIME 类型 ----------------------------------------------------------
+
+const MIME_WORD = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+const MIME_EXCEL = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
 // ---- Worker 管理 --------------------------------------------------------
 
 interface PendingRequest {
   resolve: (blob: Blob) => void
   reject: (err: Error) => void
   onProgress?: (info: ProgressInfo) => void
+  mimeType: string
 }
 
 let worker: Worker | null = null
@@ -90,12 +96,10 @@ function getWorker(): Worker {
 
     if (type === 'progress') {
       req.onProgress?.({ percent: percent ?? 0, stage: stage ?? 'preparing', params })
-    } else if (type === 'result') {
+    } else     if (type === 'result') {
       pending.delete(id)
       if (data) {
-        req.resolve(new Blob([data], {
-          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        }))
+        req.resolve(new Blob([data], { type: req.mimeType }))
       } else {
         req.reject(new Error('Worker returned empty result'))
       }
@@ -151,20 +155,31 @@ export async function pdfToWord(
   file: File,
   onProgress?: (info: ProgressInfo) => void,
 ): Promise<Blob> {
-  // 1. 确保 Worker 和 pyodide 已就绪
   await ensureWorker()
-
-  // 2. 读取 PDF 到 ArrayBuffer
   const pdfBuffer = await file.arrayBuffer()
-
-  // 3. 发送转换请求
   const id = `req_${++requestId}`
 
   return new Promise<Blob>((resolve, reject) => {
-    pending.set(id, { resolve, reject, onProgress })
-
+    pending.set(id, { resolve, reject, onProgress, mimeType: MIME_WORD })
     const w = getWorker()
-    // Transferable: 零拷贝传输 PDF 数据到 Worker
-    w.postMessage({ type: 'convert', id, data: pdfBuffer }, [pdfBuffer])
+    w.postMessage({ type: 'convert', id, data: pdfBuffer, convertType: 'word' }, [pdfBuffer])
+  })
+}
+
+/**
+ * 将 PDF File 转换为 Excel Blob（通过 pyodide Worker）
+ */
+export async function pdfToExcel(
+  file: File,
+  onProgress?: (info: ProgressInfo) => void,
+): Promise<Blob> {
+  await ensureWorker()
+  const pdfBuffer = await file.arrayBuffer()
+  const id = `req_${++requestId}`
+
+  return new Promise<Blob>((resolve, reject) => {
+    pending.set(id, { resolve, reject, onProgress, mimeType: MIME_EXCEL })
+    const w = getWorker()
+    w.postMessage({ type: 'convert', id, data: pdfBuffer, convertType: 'excel' }, [pdfBuffer])
   })
 }

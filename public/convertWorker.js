@@ -1,12 +1,13 @@
 /**
- * PDF → Word 转换 Web Worker
+ * PDF 转换 Web Worker
  *
- * 在后台线程中运行 pyodide + pdf2docx，避免阻塞主线程，防止浏览器
- * 对大型 PDF（100+ 页）显示"页面无响应"的警告。
+ * 在后台线程中运行 pyodide，支持：
+ *   - PDF → Word  (pdf2docx)
+ *   - PDF → Excel (pymupdf + openpyxl)
  *
  * 消息协议:
  *   Main → Worker: { type: 'init' }
- *   Main → Worker: { type: 'convert', id: string, data: ArrayBuffer }
+ *   Main → Worker: { type: 'convert', id: string, data: ArrayBuffer, convertType?: 'word'|'excel' }
  *   Worker → Main: { type: 'ready' }
  *   Worker → Main: { type: 'progress', id, percent, stage, params? }
  *   Worker → Main: { type: 'result',  id, data: ArrayBuffer }
@@ -41,7 +42,9 @@ const WHL_PKGS = {
   'charset-normalizer': 'charset_normalizer-3.4.7-py3-none-any.whl',  // pdfminer.six 依赖
   'pdfminer-six':       'pdfminer_six-20260107-py3-none-any.whl',      // pdf2docx 依赖
   'python-docx':        'python_docx-1.2.0-py3-none-any.whl',          // pdf2docx 依赖
-  'pdf2docx':           'pdf2docx-0.5.13-py3-none-any.whl',            // 主包
+  'pdf2docx':           'pdf2docx-0.5.13-py3-none-any.whl',            // PDF→Word
+  'et-xmlfile':         'et_xmlfile-2.0.0-py3-none-any.whl',           // openpyxl 依赖
+  'openpyxl':           'openpyxl-3.1.5-py2.py3-none-any.whl',         // PDF→Excel
 }
 
 /* ---- 工具函数 ---- */
@@ -135,7 +138,14 @@ async function doInit() {
 }
 
 /* ---- 执行转换 ---- */
-async function doConvert(id, pdfData) {
+async function doConvert(id, pdfData, convertType) {
+  if (convertType === 'excel') {
+    return doConvertPdfToExcel(id, pdfData)
+  }
+  return doConvertPdfToWord(id, pdfData)
+}
+
+async function doConvertPdfToWord(id, pdfData) {
   post({ type: 'progress', id, percent: 5, stage: 'preparing' })
 
   // 写入输入 PDF（到 pyodide 虚拟文件系统）
@@ -221,6 +231,127 @@ async function doConvert(id, pdfData) {
   return outputBytes.buffer
 }
 
+async function doConvertPdfToExcel(id, pdfData) {
+  post({ type: 'progress', id, percent: 5, stage: 'preparing' })
+
+  // 写入输入 PDF
+  try {
+    pyodide.FS.writeFile('/input.pdf', pdfData)
+  } catch (err) {
+    logErr('写入 PDF 失败:', err)
+    throw new Error('写入 PDF 文件失败: ' + (err && err.message ? err.message : String(err)))
+  }
+  post({ type: 'progress', id, percent: 15, stage: 'readingPdf' })
+
+  // 捕获 stderr，提取进度信息
+  pyodide.setStderr({
+    batched: function (str) {
+      var lines = str.split('\n')
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim()
+        if (!line) continue
+
+        // 逐页进度: "[EXCEL] page 3/10"
+        var pageMatch = line.match(/\[EXCEL\]\s*page\s*(\d+)\/(\d+)/i)
+        if (pageMatch) {
+          var current = parseInt(pageMatch[1], 10)
+          var total = parseInt(pageMatch[2], 10)
+          var ratio = total > 0 ? current / total : 0
+          post({
+            type: 'progress', id,
+            percent: Math.round(25 + ratio * 68),
+            stage: 'parsingPages',
+            params: { current: current, total: total },
+          })
+        }
+      }
+    },
+  })
+
+  // 运行 Python 转换
+  try {
+    await pyodide.runPythonAsync(
+      'import fitz\n' +
+      'from openpyxl import Workbook\n' +
+      'from openpyxl.utils import get_column_letter\n' +
+      '\n' +
+      "doc = fitz.open('/input.pdf')\n" +
+      'total = len(doc)\n' +
+      'wb = Workbook()\n' +
+      'if "Sheet" in wb.sheetnames and total > 1:\n' +
+      '    del wb["Sheet"]\n' +
+      '\n' +
+      'for pn in range(total):\n' +
+      '    page = doc[pn]\n' +
+      '    words = page.get_text("words")\n' +
+      '    if not words:\n' +
+      '        ws = wb.create_sheet(title=f"Page {pn+1}") if total > 1 else wb.active\n' +
+      '        continue\n' +
+      '\n' +
+      '    # Group words by Y position (tolerance 5pt)\n' +
+      '    lines = {}\n' +
+      '    for w in words:\n' +
+      '        y = round(w[1])  # y0\n' +
+      '        found = None\n' +
+      '        for ky in lines:\n' +
+      '            if abs(ky - y) <= 5:\n' +
+      '                found = ky\n' +
+      '                break\n' +
+      '        if found is not None:\n' +
+      '            lines[found].append(w)\n' +
+      '        else:\n' +
+      '            lines[y] = [w]\n' +
+      '\n' +
+      '    sorted_ys = sorted(lines.keys())\n' +
+      '    sheet_name = f"Page {pn+1}" if total > 1 else "Sheet1"\n' +
+      '    ws = wb.create_sheet(title=sheet_name)\n' +
+      '\n' +
+      '    for row_idx, y in enumerate(sorted_ys, 1):\n' +
+      '        line = sorted(lines[y], key=lambda w: w[0])\n' +
+      '        for col_idx, w in enumerate(line, 1):\n' +
+      '            ws.cell(row=row_idx, column=col_idx, value=w[4])\n' +
+      '\n' +
+      '    # Auto-fit column widths\n' +
+      '    for col_cells in ws.columns:\n' +
+      '        max_len = 0\n' +
+      '        col_letter = get_column_letter(col_cells[0].column)\n' +
+      '        for cell in col_cells:\n' +
+      '            if cell.value:\n' +
+      '                max_len = max(max_len, len(str(cell.value)))\n' +
+      '        ws.column_dimensions[col_letter].width = min(max_len + 3, 50)\n' +
+      '\n' +
+      '    import sys\n' +
+      '    print(f"[EXCEL] page {pn+1}/{total}", file=sys.stderr)\n' +
+      '\n' +
+      "wb.save('/output.xlsx')\n" +
+      'doc.close()\n'
+    )
+  } catch (err) {
+    logErr('PDF→Excel 转换失败:', err)
+    throw new Error('PDF 转 Excel 失败: ' + (err && err.message ? err.message : String(err)))
+  } finally {
+    pyodide.setStderr({ batched: function () {} })
+  }
+
+  post({ type: 'progress', id, percent: 95, stage: 'finalizing' })
+
+  // 读取输出
+  var outputBytes
+  try {
+    outputBytes = pyodide.FS.readFile('/output.xlsx')
+  } catch (err) {
+    logErr('读取输出文件失败:', err)
+    throw new Error('读取生成的 xlsx 文件失败: ' + (err && err.message ? err.message : String(err)))
+  }
+
+  // 清理虚拟文件系统
+  try { pyodide.FS.unlink('/input.pdf') } catch (_) { /* ok */ }
+  try { pyodide.FS.unlink('/output.xlsx') } catch (_) { /* ok */ }
+
+  post({ type: 'progress', id, percent: 100, stage: 'finalizing' })
+  return outputBytes.buffer
+}
+
 /* ---- 消息处理 ---- */
 self.onmessage = async function (e) {
   var msg = e.data
@@ -247,7 +378,7 @@ self.onmessage = async function (e) {
       }
       await initPromise
 
-      var buffer = await doConvert(id, msg.data)
+      var buffer = await doConvert(id, msg.data, msg.convertType || 'word')
       // Transferable: 零拷贝传输 ArrayBuffer 回主线程
       post({ type: 'result', id: id, data: buffer }, [buffer])
     } else {

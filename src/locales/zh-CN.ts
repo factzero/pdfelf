@@ -198,7 +198,16 @@ export default {
     desc: '将 PDF 文件转换为 Excel 电子表格，每页 PDF 对应一个工作表',
     convertBtn: '转换为 Excel',
     converting: '正在转换 PDF → Excel...',
+    completed: '转换完成',
     failed: '转换失败，请重试',
+    stages: {
+      preparing: '正在准备转换环境…',
+      loadingDeps: '正在加载转换组件…',
+      readingPdf: '正在读取 PDF 文件…',
+      parsingPages: '正在提取表格数据（{current}/{total}）…',
+      creatingDocx: '正在生成 Excel 文件…',
+      finalizing: '正在完成转换…',
+    },
   },
   pdfToPpt: {
     title: '📽️ PDF 转 PPT',
