@@ -36,7 +36,16 @@ app.post('/api/stats/visit', (req, res) => {
 // 生产环境：托管前端静态文件
 if (process.env.NODE_ENV === 'production') {
   const distPath = join(__dirname, '..', 'dist')
-  app.use(express.static(distPath))
+  app.use(express.static(distPath, {
+    setHeaders(res, filePath) {
+      // Express 默认不识别 .mjs / .wasm 的 MIME 类型
+      if (filePath.endsWith('.mjs')) {
+        res.setHeader('Content-Type', 'application/javascript')
+      } else if (filePath.endsWith('.wasm')) {
+        res.setHeader('Content-Type', 'application/wasm')
+      }
+    },
+  }))
   app.use((_req, res) => {
     res.sendFile(join(distPath, 'index.html'))
   })
