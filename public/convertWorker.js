@@ -74,10 +74,10 @@ async function doInit() {
 
   // 1. 加载 pyodide runtime（Module Worker 使用 dynamic import）
   try {
-    var pyodideModule = await import(PYODIDE_BASE + 'pyodide.mjs')
+    var pyodideModule = await import(PYODIDE_BASE + 'pyodide.esm.js')
   } catch (err) {
-    logErr('import pyodide.mjs 失败:', err)
-    throw new Error('加载 pyodide.mjs 失败: ' + (err && err.message ? err.message : String(err)))
+    logErr('import pyodide.esm.js 失败:', err)
+    throw new Error('加载 pyodide.esm.js 失败: ' + (err && err.message ? err.message : String(err)))
   }
 
   // 2. 初始化 pyodide 实例
