@@ -29,7 +29,6 @@ function renameMjsPlugin(): Plugin {
     name: 'rename-mjs-to-js',
     apply: 'build',
     async closeBundle() {
-      const assetsDir = resolve(__dirname, 'dist/assets')
       const dirs = ['dist/assets', 'dist']
       const replacements: [string, string][] = []
 
