@@ -38,6 +38,6 @@ export default defineConfig({
     proxy: proxyConfig,
   },
   worker: {
-    format: 'es',
+    format: 'iife',
   },
 })
