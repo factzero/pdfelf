@@ -378,7 +378,32 @@ export function buildJsonLd(seo: SeoEntry): string {
   const graph: Record<string, unknown>[] = []
 
   if (isHome) {
-    // 首页：WebApplication
+    // 首页：Organization — 告诉 Google 这是一个真实实体
+    graph.push({
+      '@type': 'Organization',
+      name: 'PDF Elf',
+      url: 'https://pdfelf.online/',
+      description: '免费在线 PDF 处理工具，提供压缩、合并、拆分、转换等 20+ PDF 功能',
+      logo: 'https://pdfelf.online/favicon.svg',
+    })
+
+    // WebSite + SearchAction — 告诉 Google 这是一个可搜索的功能性网站
+    graph.push({
+      '@type': 'WebSite',
+      name: 'PDF Elf',
+      url: 'https://pdfelf.online/',
+      description: seo.description,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: 'https://pdfelf.online/?q={search_term_string}',
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    })
+
+    // WebApplication
     graph.push({
       '@type': 'WebApplication',
       name: seo.applicationName,

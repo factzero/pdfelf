@@ -35,6 +35,59 @@ app.post('/api/stats/visit', (req, res) => {
   res.json(stats)
 })
 
+// 静态信息页面（SEO 信任信号：隐私、联系、关于）
+function staticPage(title: string, h1: string, content: string): string {
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="index, follow" />
+<title>${title} - PDF Elf</title>
+<style>body{font-family:system-ui,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.8;color:#333}h1{font-size:1.8em;margin-bottom:.5em}</style>
+</head>
+<body><h1>${h1}</h1>${content}</body>
+</html>`
+}
+
+app.get('/privacy', (_req, res) => {
+  res.type('html').send(staticPage(
+    '隐私政策',
+    '隐私政策',
+    `<p>PDF Elf 高度重视您的隐私安全。</p>
+<p><strong>文件不会上传：</strong>所有 PDF 处理均在您的浏览器本地完成，文件自始至终不会离开您的设备，不会被上传到任何服务器。</p>
+<p><strong>收集的信息：</strong>我们仅通过 Plausible 匿名统计页面访问量（不设 Cookie、不追踪个人），用于了解功能使用情况。</p>
+<p><strong>第三方服务：</strong>本站不使用任何第三方广告或追踪脚本。</p>
+<p>如有疑问，请联系：pdfelf@proton.me</p>`
+  ))
+})
+
+app.get('/contact', (_req, res) => {
+  res.type('html').send(staticPage(
+    '联系我们',
+    '联系我们',
+    `<p>如有反馈、建议或合作意向，欢迎通过以下方式联系：</p>
+<p>📧 邮箱：<a href="mailto:pdfelf@proton.me">pdfelf@proton.me</a></p>
+<p>🐙 GitHub：<a href="https://github.com/factzero/pdfelf" target="_blank">github.com/factzero/pdfelf</a></p>
+<p>💡 功能建议或 Bug 反馈，也欢迎在 GitHub 提交 Issue。</p>`
+  ))
+})
+
+app.get('/about', (_req, res) => {
+  res.type('html').send(staticPage(
+    '关于 PDF Elf',
+    '关于 PDF Elf',
+    `<p>PDF Elf 是一款完全免费的在线 PDF 处理工具，提供 20+ PDF 功能，包括压缩、合并、拆分、转换、旋转、提取、重排等。</p>
+<p><strong>核心特色：</strong></p>
+<ul>
+<li>所有处理在浏览器本地完成，无需上传文件到服务器</li>
+<li>集成 Pyodide，支持高级文档格式转换（Word/Excel/PPT 互转）</li>
+<li>完全免费，无需注册，无需下载安装</li>
+<li>支持桌面和移动端浏览器</li>
+</ul>`
+  ))
+})
+
 // 生产环境：托管前端静态文件（nginx 在前面做了主要托管，这里仅作为 API 兜底）
 if (process.env.NODE_ENV === 'production') {
   const distPath = join(__dirname, '..', 'dist')
