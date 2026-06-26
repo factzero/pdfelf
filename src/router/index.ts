@@ -39,6 +39,11 @@ const router = createRouter({
       name: 'extract-pages',
       component: () => import('@/pages/ExtractPage.vue'),
     },
+    {
+      path: '/reorder-pages',
+      name: 'reorder-pages',
+      component: () => import('@/pages/PdfReorderPage.vue'),
+    },
     // 编辑
     {
       path: '/add-watermark',

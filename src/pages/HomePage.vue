@@ -33,6 +33,7 @@ const categories = [
       { icon: '🔄', titleKey: 'tools.rotatePdf.title', descKey: 'tools.rotatePdf.desc', route: '/rotate-pdf' },
       { icon: '🗑️', titleKey: 'tools.deletePages.title', descKey: 'tools.deletePages.desc', route: '/delete-pages' },
       { icon: '📋', titleKey: 'tools.extractPages.title', descKey: 'tools.extractPages.desc', route: '/extract-pages' },
+      { icon: '🔀', titleKey: 'tools.reorderPages.title', descKey: 'tools.reorderPages.desc', route: '/reorder-pages' },
     ],
   },
   {
