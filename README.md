@@ -11,6 +11,7 @@
 - 🔄 **旋转 PDF** — 旋转 PDF 页面，每页独立设置角度
 - 🗑️ **删除页面** — 从 PDF 中删除不需要的页面
 - 📋 **提取页面** — 从 PDF 中提取指定页面为新文件
+- 🔀 **重排页面顺序** — 拖拽调整 PDF 页面顺序后重新导出
 
 ### ✏️ 编辑 PDF
 - 🔏 **添加水印** — 给 PDF 每一页添加文字水印，支持自定义字体大小、透明度、颜色、角度
@@ -20,6 +21,12 @@
 - 📊 **PDF 转 Excel** — 转换为 Excel 电子表格，每页对应一个工作表
 - 📽️ **PDF 转 PPT** — 转换为 PowerPoint 演示文稿，每页对应一张幻灯片
 - 🖼️ **PDF 转图片** — 导出为 PNG/JPEG，支持 72/150/300 DPI
+- 🖼️ **PDF 转 JPG** — 将所有页面导出为 JPG 图片
+- 🖼️ **PDF 转 PNG** — 将所有页面导出为 PNG 图片
+- 🖼️ **PDF 转 TIFF** — 将所有页面导出为 TIFF 图片
+- 🖼️ **PDF 转 SVG** — 将页面转换为 SVG 矢量图
+- 📝 **PDF 转 Text** — 提取 PDF 中的纯文本内容
+- 🌐 **PDF 转 HTML** — 将 PDF 页面转换为 HTML 文件
 
 ### 📥 转换成 PDF
 - 📝 **Word 转 PDF** — 将 Word 文档 (.docx) 转为 PDF
@@ -137,15 +144,16 @@ nginx -s reload
 src/
 ├── pages/         # 页面组件
 ├── components/    # 共享组件
-├── services/      # PDF/Word/图片处理服务
+├── services/      # PDF/Word/图片/HTML/SVG 处理服务
 ├── stores/        # Pinia 状态管理
 ├── router/        # 路由配置
-├── i18n/          # 国际化配置
 ├── locales/       # 语言文件 (zh-CN, en)
 ├── utils/         # 工具函数
 └── styles/        # 全局样式
+public/
+└── pyodide/       # Pyodide 运行时 (Python → TIFF/SVG)
 server/
-└── statsStore/    # 访问统计后台 (Express)
+└── *.ts           # 访问统计后台 (Express)
 ```
 
 ## 🔒 隐私
