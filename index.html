@@ -10,84 +10,82 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="PDF Elf" />
 
+    <!-- hreflang — 路由级注入 -->
+    <link rel="alternate" hreflang="zh-CN" href="__HREFLANG_ZH__" />
+    <link rel="alternate" hreflang="en" href="__HREFLANG_EN__" />
+    <link rel="alternate" hreflang="x-default" href="__HREFLANG_DEFAULT__" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content="PDF Elf — 免费在线 PDF 工具" />
     <meta property="og:description" content="免费在线 PDF 处理工具，支持压缩、合并、拆分、转换、旋转、提取、重排等，所有处理在浏览器本地完成，无需上传，安全可靠。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://pdfelf.online/" />
-    <meta property="og:image" content="https://pdfelf.online/favicon.svg" />
-    <meta property="og:image:width" content="512" />
-    <meta property="og:image:height" content="512" />
+    <meta property="og:image" content="https://pdfelf.online/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:site_name" content="PDF Elf" />
     <meta property="og:locale" content="zh_CN" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="PDF Elf — 免费在线 PDF 工具" />
     <meta name="twitter:description" content="免费在线 PDF 处理工具，压缩、合并、拆分、转换、旋转、提取、重排等，全浏览器本地处理。" />
-    <meta name="twitter:image" content="https://pdfelf.online/favicon.svg" />
+    <meta name="twitter:image" content="https://pdfelf.online/og-image.png" />
 
     <title>PDF Elf — 免费在线 PDF 工具 | 压缩 合并 拆分 转换</title>
 
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "PDF Elf",
-      "url": "https://pdfelf.online/",
-      "description": "免费在线 PDF 处理工具，支持压缩、合并、拆分、转换、旋转、提取、重排页面等功能，所有处理在浏览器本地完成，无需上传文件。",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "All",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
-      "browserRequirements": "Requires JavaScript"
-    }
-    </script>
+    <!-- JSON-LD Structured Data — 服务端注入 -->
+    <!--JSON_LD_PLACEHOLDER-->
   </head>
   <body>
     <div id="app"></div>
     <!-- fallback for crawlers without JavaScript -->
     <noscript>
-      <h1>PDF Elf — 免费在线 PDF 工具</h1>
-      <p>免费在线 PDF 处理工具，支持压缩、合并、拆分、转换、旋转、提取、重排页面等。所有处理在浏览器本地完成，安全可靠。</p>
-      <h2>整理 PDF</h2>
-      <ul>
-        <li><a href="/compress-pdf">压缩 PDF</a></li>
-        <li><a href="/merge-pdf">合并 PDF</a></li>
-        <li><a href="/split-pdf">分割 PDF</a></li>
-        <li><a href="/rotate-pdf">旋转 PDF</a></li>
-        <li><a href="/delete-pages">删除页面</a></li>
-        <li><a href="/extract-pages">提取页面</a></li>
-        <li><a href="/reorder-pages">重排页面顺序</a></li>
-      </ul>
-      <h2>编辑 PDF</h2>
-      <ul>
-        <li><a href="/add-watermark">添加水印</a></li>
-      </ul>
-      <h2>从 PDF 转换</h2>
-      <ul>
-        <li><a href="/pdf-to-word">PDF 转 Word</a></li>
-        <li><a href="/pdf-to-excel">PDF 转 Excel</a></li>
-        <li><a href="/pdf-to-ppt">PDF 转 PPT</a></li>
-        <li><a href="/pdf-to-image">PDF 转图片</a></li>
-        <li><a href="/pdf-to-jpg">PDF 转 JPG</a></li>
-        <li><a href="/pdf-to-png">PDF 转 PNG</a></li>
-        <li><a href="/pdf-to-tiff">PDF 转 TIFF</a></li>
-        <li><a href="/pdf-to-svg">PDF 转 SVG</a></li>
-        <li><a href="/pdf-to-text">PDF 转文本</a></li>
-        <li><a href="/pdf-to-html">PDF 转 HTML</a></li>
-      </ul>
-      <h2>转换成 PDF</h2>
-      <ul>
-        <li><a href="/word-to-pdf">Word 转 PDF</a></li>
-        <li><a href="/excel-to-pdf">Excel 转 PDF</a></li>
-        <li><a href="/ppt-to-pdf">PPT 转 PDF</a></li>
-        <li><a href="/image-to-pdf">图片转 PDF</a></li>
-      </ul>
-      <h2>阅读器</h2>
-      <ul>
-        <li><a href="/pdf-reader">PDF 阅读器</a></li>
-      </ul>
+      <main>
+        <h1>PDF Elf — 免费在线 PDF 工具</h1>
+        <p>免费在线 PDF 处理工具，支持压缩、合并、拆分、转换、旋转、提取、重排页面等。所有处理在浏览器本地完成，安全可靠。</p>
+        <nav aria-label="工具分类导航">
+          <h2>整理 PDF</h2>
+          <ul>
+            <li><a href="/compress-pdf">压缩 PDF</a></li>
+            <li><a href="/merge-pdf">合并 PDF</a></li>
+            <li><a href="/split-pdf">分割 PDF</a></li>
+            <li><a href="/rotate-pdf">旋转 PDF</a></li>
+            <li><a href="/delete-pages">删除页面</a></li>
+            <li><a href="/extract-pages">提取页面</a></li>
+            <li><a href="/reorder-pages">重排页面顺序</a></li>
+          </ul>
+          <h2>编辑 PDF</h2>
+          <ul>
+            <li><a href="/add-watermark">添加水印</a></li>
+          </ul>
+          <h2>从 PDF 转换</h2>
+          <ul>
+            <li><a href="/pdf-to-word">PDF 转 Word</a></li>
+            <li><a href="/pdf-to-excel">PDF 转 Excel</a></li>
+            <li><a href="/pdf-to-ppt">PDF 转 PPT</a></li>
+            <li><a href="/pdf-to-image">PDF 转图片</a></li>
+            <li><a href="/pdf-to-jpg">PDF 转 JPG</a></li>
+            <li><a href="/pdf-to-png">PDF 转 PNG</a></li>
+            <li><a href="/pdf-to-tiff">PDF 转 TIFF</a></li>
+            <li><a href="/pdf-to-svg">PDF 转 SVG</a></li>
+            <li><a href="/pdf-to-text">PDF 转文本</a></li>
+            <li><a href="/pdf-to-html">PDF 转 HTML</a></li>
+          </ul>
+          <h2>转换成 PDF</h2>
+          <ul>
+            <li><a href="/word-to-pdf">Word 转 PDF</a></li>
+            <li><a href="/excel-to-pdf">Excel 转 PDF</a></li>
+            <li><a href="/ppt-to-pdf">PPT 转 PDF</a></li>
+            <li><a href="/image-to-pdf">图片转 PDF</a></li>
+          </ul>
+          <h2>阅读器</h2>
+          <ul>
+            <li><a href="/pdf-reader">PDF 阅读器</a></li>
+          </ul>
+        </nav>
+      </main>
     </noscript>
     <script type="module" src="/src/main.ts"></script>
   </body>

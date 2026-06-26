@@ -3,7 +3,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { readFileSync } from 'fs'
 import { getStats, recordVisit, initStore } from './statsStore'
-import { seoMap } from './seoMeta.js'
+import { seoMap, buildJsonLd, homeSeo } from './seoMeta.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -40,47 +40,92 @@ if (process.env.NODE_ENV === 'production') {
   const distPath = join(__dirname, '..', 'dist')
   const indexHtmlPath = join(distPath, 'index.html')
 
-  /** 根据请求 path 注入正确的路由级 meta（title / description / canonical / OG），
+  /** 辅助：HTML 字符串替换（仅在 pattern 存在时替换）*/
+  function replaceInHtml(html: string, pattern: RegExp, replacement: string): string {
+    if (pattern.test(html)) {
+      return html.replace(pattern, replacement)
+    }
+    return html
+  }
+
+  /** 注入路由级 JSON-LD */
+  function injectJsonLd(html: string, path: string): string {
+    const seo = seoMap.get(path) || homeSeo
+    const jsonLd = buildJsonLd(seo)
+    return html.replace(
+      '<!--JSON_LD_PLACEHOLDER-->',
+      `<script type="application/ld+json">\n${jsonLd}\n    </script>`
+    )
+  }
+
+  /** 注入 hreflang 标签 */
+  function injectHreflang(html: string, path: string): string {
+    const canonicalUrl = `https://pdfelf.online${path === '/' ? '/' : path}`
+    const enUrl = path === '/' 
+      ? 'https://pdfelf.online/en/' 
+      : `https://pdfelf.online/en${path}`
+
+    html = html.replace('__HREFLANG_ZH__', canonicalUrl)
+    html = html.replace('__HREFLANG_EN__', enUrl)
+    html = html.replace('__HREFLANG_DEFAULT__', canonicalUrl)
+
+    return html
+  }
+
+  /** 根据请求 path 注入正确的路由级 meta（title / description / canonical / OG / JSON-LD / hreflang），
    *  解决 SPA 对所有路由返回同一份首页 HTML 的 SEO 问题。 */
   function injectRouteMeta(rawHtml: string, path: string): string {
     const seo = seoMap.get(path)
-    if (!seo) return rawHtml
+    if (!seo) {
+      // 未匹配到路由 → 注入 hreflang + JSON-LD（用首页兜底），不注入 title/description
+      let html = injectHreflang(rawHtml, path)
+      html = injectJsonLd(html, '/')
+      return html
+    }
 
     let html = rawHtml
 
-    // === 注入函数 ===
-    const replaceTag = (tag: string, pattern: RegExp, replacement: string) => {
-      if (pattern.test(html)) {
-        html = html.replace(pattern, replacement)
-      }
-    }
-
     // title
-    replaceTag('title', /<title>.*?<\/title>/,
+    html = replaceInHtml(html, /<title>.*?<\/title>/,
       `<title>${seo.title}</title>`)
 
     // meta description
-    replaceTag('description', /<meta name="description" content="[^"]*"[^>]*>/,
+    html = replaceInHtml(html, /<meta name="description" content="[^"]*"[^>]*>/,
       `<meta name="description" content="${seo.description}" />`)
+
+    // meta keywords (路由级)
+    const keywords = seo.applicationName.replace('PDF Elf — ', '') + ',PDF工具,PDF Elf'
+    html = replaceInHtml(html, /<meta name="keywords" content="[^"]*"[^>]*>/,
+      `<meta name="keywords" content="${keywords}" />`)
 
     // canonical
     const canonicalUrl = `https://pdfelf.online${path === '/' ? '/' : path}`
-    replaceTag('canonical', /<link rel="canonical" href="[^"]*"[^>]*>/,
+    html = replaceInHtml(html, /<link rel="canonical" href="[^"]*"[^>]*>/,
       `<link rel="canonical" href="${canonicalUrl}" />`)
 
     // Open Graph
-    replaceTag('og:title', /<meta property="og:title" content="[^"]*"[^>]*>/,
+    html = replaceInHtml(html, /<meta property="og:title" content="[^"]*"[^>]*>/,
       `<meta property="og:title" content="${seo.title}" />`)
-    replaceTag('og:description', /<meta property="og:description" content="[^"]*"[^>]*>/,
+    html = replaceInHtml(html, /<meta property="og:description" content="[^"]*"[^>]*>/,
       `<meta property="og:description" content="${seo.description}" />`)
-    replaceTag('og:url', /<meta property="og:url" content="[^"]*"[^>]*>/,
+    html = replaceInHtml(html, /<meta property="og:url" content="[^"]*"[^>]*>/,
       `<meta property="og:url" content="${canonicalUrl}" />`)
+    html = replaceInHtml(html, /<meta property="og:image" content="[^"]*"[^>]*>/,
+      `<meta property="og:image" content="https://pdfelf.online/og-image.png" />`)
 
     // Twitter Card
-    replaceTag('twitter:title', /<meta name="twitter:title" content="[^"]*"[^>]*>/,
+    html = replaceInHtml(html, /<meta name="twitter:title" content="[^"]*"[^>]*>/,
       `<meta name="twitter:title" content="${seo.title}" />`)
-    replaceTag('twitter:description', /<meta name="twitter:description" content="[^"]*"[^>]*>/,
+    html = replaceInHtml(html, /<meta name="twitter:description" content="[^"]*"[^>]*>/,
       `<meta name="twitter:description" content="${seo.description}" />`)
+    html = replaceInHtml(html, /<meta name="twitter:image" content="[^"]*"[^>]*>/,
+      `<meta name="twitter:image" content="https://pdfelf.online/og-image.png" />`)
+
+    // JSON-LD
+    html = injectJsonLd(html, path)
+
+    // hreflang
+    html = injectHreflang(html, path)
 
     return html
   }
@@ -104,7 +149,7 @@ if (process.env.NODE_ENV === 'production') {
     },
   }))
 
-  // SPA fallback：对每一条路由注入独立的 title / description / canonical / OG
+  // SPA fallback：对每一条路由注入独立的 title / description / canonical / OG / JSON-LD / hreflang
   app.use((req, res) => {
     if (!cachedBaseHtml) {
       try {
