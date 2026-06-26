@@ -1,11 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:mobile="http://www.baidu.com/schemas/sitemap-mobile/1/">
+  <!-- 首页 -->
   <url>
     <loc>https://pdfelf.online/</loc>
-    <lastmod>2026-06-20</lastmod>
+    <lastmod>2026-06-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+
+  <!-- 整理 PDF -->
+  <url>
+    <loc>https://pdfelf.online/compress-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/merge-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/split-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/rotate-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/delete-pages</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/extract-pages</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/reorder-pages</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+
+  <!-- 编辑 PDF -->
+  <url>
+    <loc>https://pdfelf.online/add-watermark</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+
+  <!-- 从 PDF 转换 -->
+  <url>
+    <loc>https://pdfelf.online/pdf-to-word</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-excel</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-ppt</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-image</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-jpg</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-png</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-tiff</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-svg</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-text</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/pdf-to-html</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+
+  <!-- 转换成 PDF -->
+  <url>
+    <loc>https://pdfelf.online/word-to-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/excel-to-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/ppt-to-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+  <url>
+    <loc>https://pdfelf.online/image-to-pdf</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile type="pc,mobile"/>
+  </url>
+
+  <!-- 阅读器 -->
+  <url>
+    <loc>https://pdfelf.online/pdf-reader</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <mobile:mobile type="pc,mobile"/>
   </url>
 </urlset>
