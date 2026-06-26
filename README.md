@@ -131,19 +131,6 @@ pm2 restart pdfelf-stats
 nginx -s reload
 ```
 
-## 🛠️ 技术栈
-
-- **框架**: Vue 3 + TypeScript
-- **构建**: Vite
-- **PDF 操作**: pdf-lib（合并/分割/压缩/旋转/水印等）
-- **PDF 渲染**: pdfjs-dist（文本提取/转图片/阅读器）
-- **Word**: mammoth.js + docx.js（双向转换）
-- **Excel**: SheetJS (xlsx)
-- **PPT**: pptxgenjs（生成 PPTX）
-- **ZIP**: JSZip
-- **状态管理**: Pinia
-- **路由**: Vue Router
-
 ## 📁 项目结构
 
 ```
