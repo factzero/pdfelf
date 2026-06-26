@@ -27,6 +27,7 @@ export interface ProgressInfo {
 
 const MIME_WORD = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 const MIME_EXCEL = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+const MIME_PPT = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
 
 // ---- Worker 管理 --------------------------------------------------------
 
@@ -152,6 +153,24 @@ export function ensureWorker(): Promise<void> {
 }
 
 // ---- 公开 API -----------------------------------------------------------
+
+/**
+ * 将 PDF File 转换为 PPT Blob（通过 pyodide Worker）
+ */
+export async function pdfToPpt(
+  file: File,
+  onProgress?: (info: ProgressInfo) => void,
+): Promise<Blob> {
+  await ensureWorker()
+  const pdfBuffer = await file.arrayBuffer()
+  const id = `req_${++requestId}`
+
+  return new Promise<Blob>((resolve, reject) => {
+    pending.set(id, { resolve, reject, onProgress, mimeType: MIME_PPT })
+    const w = getWorker()
+    w.postMessage({ type: 'convert', id, data: pdfBuffer, convertType: 'ppt' }, [pdfBuffer])
+  })
+}
 
 /**
  * 将 PDF File 转换为 Word Blob

@@ -4,10 +4,11 @@
  * 在后台线程中运行 pyodide，支持：
  *   - PDF → Word  (pdf2docx)
  *   - PDF → Excel (pymupdf + openpyxl)
+ *   - PDF → PPT   (pymupdf + python-pptx)
  *
  * 消息协议:
  *   Main → Worker: { type: 'init' }
- *   Main → Worker: { type: 'convert', id: string, data: ArrayBuffer, convertType?: 'word'|'excel' }
+ *   Main → Worker: { type: 'convert', id: string, data: ArrayBuffer, convertType?: 'word'|'excel'|'ppt' }
  *   Worker → Main: { type: 'ready' }
  *   Worker → Main: { type: 'progress', id, percent, stage, params? }
  *   Worker → Main: { type: 'result',  id, data: ArrayBuffer }
@@ -45,6 +46,7 @@ const WHL_PKGS = {
   'pdf2docx':           'pdf2docx-0.5.13-py3-none-any.whl',            // PDF→Word
   'et-xmlfile':         'et_xmlfile-2.0.0-py3-none-any.whl',           // openpyxl 依赖
   'openpyxl':           'openpyxl-3.1.5-py2.py3-none-any.whl',         // PDF→Excel
+  'python-pptx':        'python_pptx-1.0.2-py3-none-any.whl',          // PDF→PPT
 }
 
 /* ---- 工具函数 ---- */
@@ -145,6 +147,9 @@ async function doInit() {
 async function doConvert(id, pdfData, convertType) {
   if (convertType === 'excel') {
     return doConvertPdfToExcel(id, pdfData)
+  }
+  if (convertType === 'ppt') {
+    return doConvertPdfToPpt(id, pdfData)
   }
   return doConvertPdfToWord(id, pdfData)
 }
@@ -351,6 +356,228 @@ async function doConvertPdfToExcel(id, pdfData) {
   // 清理虚拟文件系统
   try { pyodide.FS.unlink('/input.pdf') } catch (_) { /* ok */ }
   try { pyodide.FS.unlink('/output.xlsx') } catch (_) { /* ok */ }
+
+  post({ type: 'progress', id, percent: 100, stage: 'finalizing' })
+  return outputBytes.buffer
+}
+
+async function doConvertPdfToPpt(id, pdfData) {
+  post({ type: 'progress', id, percent: 5, stage: 'preparing' })
+
+  // 写入输入 PDF
+  try {
+    pyodide.FS.writeFile('/input.pdf', pdfData)
+  } catch (err) {
+    logErr('写入 PDF 失败:', err)
+    throw new Error('写入 PDF 文件失败: ' + (err && err.message ? err.message : String(err)))
+  }
+  post({ type: 'progress', id, percent: 15, stage: 'readingPdf' })
+
+  // 捕获 stderr，提取进度信息
+  pyodide.setStderr({
+    batched: function (str) {
+      var lines = str.split('\n')
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim()
+        if (!line) continue
+
+        // 逐页进度: "[PPT] page 3/10"
+        var pageMatch = line.match(/\[PPT\]\s*page\s*(\d+)\/(\d+)/i)
+        if (pageMatch) {
+          var current = parseInt(pageMatch[1], 10)
+          var total = parseInt(pageMatch[2], 10)
+          var ratio = total > 0 ? current / total : 0
+          post({
+            type: 'progress', id,
+            percent: Math.round(20 + ratio * 75),
+            stage: 'parsingPages',
+            params: { current: current, total: total },
+          })
+        }
+
+        // 文本框数量: "[PPT] 第1页: 12 个文本框"
+        var tbMatch = line.match(/\[PPT\]\s*第\s*(\d+)\s*页[：:]\s*(\d+)\s*个文本框/)
+        if (tbMatch && pageMatch === null) { // 只在不是标准进度行时处理
+          // 阶段信息，已通过逐页进度处理
+        }
+      }
+    },
+  })
+
+  // 运行 Python 转换: 混合模式 — pymupdf redact 去文字渲染背景图 + python-pptx 透明文本框覆盖 → 文字可编辑
+  try {
+    await pyodide.runPythonAsync(
+      'import fitz, io, sys, os\n' +
+      'from pptx import Presentation\n' +
+      'from pptx.util import Inches, Emu, Pt\n' +
+      'from pptx.dml.color import RGBColor\n' +
+      'from pptx.enum.text import MSO_AUTO_SIZE\n' +
+      'from pptx.oxml.ns import qn\n' +
+      '\n' +
+      '# ---- 字体映射 --------------------------------------------------------\n' +
+      'FONT_FALLBACK = {\n' +
+      '    "TimesNewRomanPSMT": "Times New Roman",\n' +
+      '    "TimesNewRomanPS-BoldMT": "Times New Roman",\n' +
+      '    "TimesNewRomanPS-ItalicMT": "Times New Roman",\n' +
+      '    "TimesNewRomanPS-BoldItalicMT": "Times New Roman",\n' +
+      '    "ArialMT": "Arial", "Arial-BoldMT": "Arial",\n' +
+      '    "Arial-ItalicMT": "Arial", "Arial-BoldItalicMT": "Arial",\n' +
+      '    "Courier": "Courier New", "CourierNewPSMT": "Courier New",\n' +
+      '    "Helvetica": "Arial", "Helvetica-Bold": "Arial",\n' +
+      '    "Helvetica-Oblique": "Arial", "Helvetica-BoldOblique": "Arial",\n' +
+      '}\n' +
+      'DEFAULT_FONT = "Arial"\n' +
+      'DEFAULT_CN_FONT = "Microsoft YaHei"\n' +
+      '\n' +
+      'def _is_cn(c):\n' +
+      '    cp = ord(c)\n' +
+      '    return (0x4E00 <= cp <= 0x9FFF or 0x3400 <= cp <= 0x4DBF or\n' +
+      '            0xFF00 <= cp <= 0xFFEF or 0x3000 <= cp <= 0x303F or\n' +
+      '            0x2000 <= cp <= 0x206F)\n' +
+      '\n' +
+      'def _get_font_name(pf, t=""):\n' +
+      '    pf = pf.strip() if pf else ""\n' +
+      '    if pf in FONT_FALLBACK: return FONT_FALLBACK[pf]\n' +
+      '    for k, v in FONT_FALLBACK.items():\n' +
+      '        if k.lower() in pf.lower(): return v\n' +
+      '    if t and any(_is_cn(c) for c in t): return DEFAULT_CN_FONT\n' +
+      '    return DEFAULT_FONT\n' +
+      '\n' +
+      'def _clean_text(text):\n' +
+      '    """移除 XML 不允许的控制字符"""\n' +
+      '    allowed = {0x09, 0x0A, 0x0D}\n' +
+      '    result = []\n' +
+      '    for ch in text:\n' +
+      '        cp = ord(ch)\n' +
+      '        if cp in allowed or (0x20 <= cp <= 0xD7FF) or (0xE000 <= cp <= 0xFFFD) or (cp >= 0x10000):\n' +
+      '            result.append(ch)\n' +
+      '    return "".join(result)\n' +
+      '\n' +
+      'def _parse_flags(flags):\n' +
+      '    return {"bold": bool(flags & 16), "italic": bool(flags & 2),\n' +
+      '            "superscript": bool(flags & 1), "mono": bool(flags & 8)}\n' +
+      '\n' +
+      'def _int_to_rgb(c):\n' +
+      '    return RGBColor((c >> 16) & 0xFF, (c >> 8) & 0xFF, c & 0xFF)\n' +
+      '\n' +
+      'def _add_textbox(slide, block):\n' +
+      '    """在幻灯片上添加透明文本框（无填充、无边框）"""\n' +
+      '    x0, y0, x1, y1 = block["bbox"]\n' +
+      '    pad = 3  # pt\n' +
+      '    left = Emu(int((x0 - pad) * 12700))\n' +
+      '    top = Emu(int((y0 - pad) * 12700))\n' +
+      '    w = Emu(int((x1 - x0 + pad * 2) * 12700))\n' +
+      '    h = Emu(int((y1 - y0 + pad * 2) * 12700))\n' +
+      '    if w < Emu(200) or h < Emu(100): return\n' +
+      '    txBox = slide.shapes.add_textbox(left, top, w, h)\n' +
+      '    txBox.fill.background()\n' +
+      '    txBox.line.fill.background()\n' +
+      '    tf = txBox.text_frame\n' +
+      '    tf.word_wrap = False\n' +
+      '    tf.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT\n' +
+      '    tf.paragraphs[0].clear()\n' +
+      '    lines = block.get("lines", [])\n' +
+      '    first_line = True\n' +
+      '    for line in lines:\n' +
+      '        spans = line.get("spans", [])\n' +
+      '        if not spans: continue\n' +
+      '        p = tf.paragraphs[0] if first_line else tf.add_paragraph()\n' +
+      '        first_line = False\n' +
+      '        for span in spans:\n' +
+      '            text = span.get("text", "")\n' +
+      '            if not text: continue\n' +
+      '            run = p.add_run()\n' +
+      '            run.text = _clean_text(text)\n' +
+      '            fn = _get_font_name(span.get("font", ""), text)\n' +
+      '            run.font.name = fn\n' +
+      '            sz = span.get("size", 12)\n' +
+      '            if sz < 2: sz = 12\n' +
+      '            run.font.size = Pt(sz)\n' +
+      '            fmt = _parse_flags(span.get("flags", 0))\n' +
+      '            run.font.bold = fmt["bold"]\n' +
+      '            run.font.italic = fmt["italic"]\n' +
+      '            try: run.font.color.rgb = _int_to_rgb(span.get("color", 0))\n' +
+      '            except: pass\n' +
+      '            if fmt["mono"]: run.font.name = "Courier New"\n' +
+      '        # 行距 120%\n' +
+      '        pPr = p._p.get_or_add_pPr()\n' +
+      '        lnSpc = pPr.makeelement(qn("a:lnSpc"), {})\n' +
+      '        spcPct = lnSpc.makeelement(qn("a:spcPct"), {"val": "120000"})\n' +
+      '        lnSpc.append(spcPct)\n' +
+      '        pPr.append(lnSpc)\n' +
+      '\n' +
+      '# ---- 主转换逻辑 --------------------------------------------------------\n' +
+      "doc = fitz.open('/input.pdf')\n" +
+      'total = len(doc)\n' +
+      'prs = Presentation()\n' +
+      'prs.slide_width = Inches(13.333)\n' +
+      'prs.slide_height = Inches(7.5)\n' +
+      'layout = prs.slide_layouts[6]  # blank\n' +
+      '\n' +
+      'for pn in range(total):\n' +
+      '    page = doc[pn]\n' +
+      '    # 用第一页尺寸设定幻灯片大小\n' +
+      '    if pn == 0:\n' +
+      '        rect = page.rect\n' +
+      '        prs.slide_width = Emu(int(rect.width * 12700))\n' +
+      '        prs.slide_height = Emu(int(rect.height * 12700))\n' +
+      '\n' +
+      '    # 1) 提取文本信息（必须在 redact 之前）\n' +
+      '    blocks = page.get_text("dict")["blocks"]\n' +
+      '    text_blocks = [b for b in blocks if b.get("type") == 0]\n' +
+      '\n' +
+      '    # 2) 遮盖文字区域 → 渲染无文字背景图\n' +
+      '    for block in text_blocks:\n' +
+      '        bbox = block["bbox"]\n' +
+      '        r = fitz.Rect(*bbox)\n' +
+      '        r.x0 -= 2; r.y0 -= 2; r.x1 += 2; r.y1 += 2\n' +
+      '        page.add_redact_annot(r, fill=None)\n' +
+      '    page.apply_redactions(\n' +
+      '        images=fitz.PDF_REDACT_IMAGE_NONE,\n' +
+      '        graphics=fitz.PDF_REDACT_LINE_ART_NONE)\n' +
+      '\n' +
+      '    # 3) 渲染为 PNG 背景图 (150 DPI)\n' +
+      '    mat = fitz.Matrix(150 / 72, 150 / 72)\n' +
+      '    pix = page.get_pixmap(matrix=mat)\n' +
+      '    with open("/tmp_bg.png", "wb") as f:\n' +
+      '        f.write(pix.tobytes("png"))\n' +
+      '\n' +
+      '    # 4) 创建幻灯片，铺满背景图\n' +
+      '    slide = prs.slides.add_slide(layout)\n' +
+      '    slide.shapes.add_picture("/tmp_bg.png", Emu(0), Emu(0),\n' +
+      '                             prs.slide_width, prs.slide_height)\n' +
+      '\n' +
+      '    # 5) 覆盖透明文本框（可编辑文字）\n' +
+      '    for block in text_blocks:\n' +
+      '        _add_textbox(slide, block)\n' +
+      '\n' +
+      '    os.unlink("/tmp_bg.png")\n' +
+      '    print(f"[PPT] page {pn+1}/{total}", file=sys.stderr)\n' +
+      '\n' +
+      "prs.save('/output.pptx')\n" +
+      'doc.close()\n'
+    )
+  } catch (err) {
+    logErr('PDF→PPT 转换失败:', err)
+    throw new Error('PDF 转 PPT 失败: ' + (err && err.message ? err.message : String(err)))
+  } finally {
+    pyodide.setStderr({ batched: function () {} })
+  }
+
+  post({ type: 'progress', id, percent: 95, stage: 'finalizing' })
+
+  // 读取输出
+  var outputBytes
+  try {
+    outputBytes = pyodide.FS.readFile('/output.pptx')
+  } catch (err) {
+    logErr('读取输出文件失败:', err)
+    throw new Error('读取生成的 pptx 文件失败: ' + (err && err.message ? err.message : String(err)))
+  }
+
+  // 清理虚拟文件系统
+  try { pyodide.FS.unlink('/input.pdf') } catch (_) { /* ok */ }
+  try { pyodide.FS.unlink('/output.pptx') } catch (_) { /* ok */ }
 
   post({ type: 'progress', id, percent: 100, stage: 'finalizing' })
   return outputBytes.buffer

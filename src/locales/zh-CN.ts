@@ -212,10 +212,18 @@ export default {
   pdfToPpt: {
     title: '📽️ PDF 转 PPT',
     desc: '将 PDF 文件转换为 PowerPoint 演示文稿，每页 PDF 对应一张幻灯片',
-    renderNote: '每页 PDF 将渲染为图片嵌入到对应的幻灯片中',
+    renderNote: '文字可编辑 — 保留背景外观，文字作为透明文本框覆盖在幻灯片上',
     convertBtn: '转换为 PPT',
     converting: '正在转换 PDF → PPT...',
+    completed: '转换完成',
     failed: '转换失败，请重试',
+    stages: {
+      preparing: '正在准备转换环境…',
+      loadingDeps: '正在加载转换组件…',
+      readingPdf: '正在读取 PDF 文件…',
+      parsingPages: '正在处理幻灯片（{current}/{total}）…',
+      finalizing: '正在完成转换…',
+    },
   },
   pdfToImage: {
     title: '🖼️ PDF 转图片',

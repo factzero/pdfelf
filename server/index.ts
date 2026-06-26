@@ -33,7 +33,7 @@ app.post('/api/stats/visit', (req, res) => {
   res.json(stats)
 })
 
-// 生产环境：托管前端静态文件
+// 生产环境：托管前端静态文件（nginx 在前面做了主要托管，这里仅作为 API 兜底）
 if (process.env.NODE_ENV === 'production') {
   const distPath = join(__dirname, '..', 'dist')
   app.use(express.static(distPath, {
@@ -43,16 +43,7 @@ if (process.env.NODE_ENV === 'production') {
         res.setHeader('Content-Type', 'application/javascript')
       } else if (filePath.endsWith('.wasm')) {
         res.setHeader('Content-Type', 'application/wasm')
-        // .wasm 是二进制文件，不应被压缩（保持 WebAssembly.instantiateStreaming 兼容）
-        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
-      } else if (filePath.endsWith('.zip')) {
-        // python_stdlib.zip / whl 文件
-        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
       }
-
-      // COOP/COEP 头：保障 module worker 中 WebAssembly 加载稳定
-      res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-      res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
     },
   }))
   app.use((_req, res) => {

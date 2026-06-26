@@ -212,10 +212,18 @@ export default {
   pdfToPpt: {
     title: '📽️ PDF to PPT',
     desc: 'Convert PDF files to PowerPoint presentations, each page becomes a slide',
-    renderNote: 'Each PDF page will be rendered as an image embedded in the corresponding slide',
+    renderNote: 'Text is editable — background appearance preserved with transparent text boxes overlaid on each slide',
     convertBtn: 'Convert to PPT',
     converting: 'Converting PDF → PPT...',
+    completed: 'Conversion Complete',
     failed: 'Conversion failed, please try again',
+    stages: {
+      preparing: 'Preparing conversion environment…',
+      loadingDeps: 'Loading conversion components…',
+      readingPdf: 'Reading PDF file…',
+      parsingPages: 'Processing slides ({current}/{total})…',
+      finalizing: 'Finalizing conversion…',
+    },
   },
   pdfToImage: {
     title: '🖼️ PDF to Image',
