@@ -138,6 +138,19 @@ if (process.env.NODE_ENV === 'production') {
     // 首次启动时 dist 可能还不存在，会在第一次请求时再读
   }
 
+  // 首页路由：先于 express.static 处理，注入 JSON-LD / hreflang 等 SEO 数据
+  // 如果不拦截，express.static 会直接返回 dist/index.html，绕过 injectRouteMeta
+  app.get('/', (_req, res) => {
+    if (!cachedBaseHtml) {
+      try { cachedBaseHtml = readFileSync(indexHtmlPath, 'utf-8') } catch {
+        res.status(503).send('Service Unavailable'); return
+      }
+    }
+    const html = injectRouteMeta(cachedBaseHtml, '/')
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.send(html)
+  })
+
   app.use(express.static(distPath, {
     setHeaders(res, filePath) {
       // Express 默认不识别 .mjs / .wasm 的 MIME 类型
