@@ -1,8 +1,13 @@
 <template>
   <div class="home container">
     <div class="hero">
+      <h1 class="hero__title">{{ $t('home.heroTitle') }}</h1>
       <p class="hero__subtitle">{{ $t('home.heroSubtitle') }}</p>
     </div>
+
+    <section class="intro-section">
+      <p class="intro__text">{{ $t('home.introText') }}</p>
+    </section>
 
     <section v-for="category in categories" :key="category.nameKey" class="category">
       <h2 class="category__title">{{ $t(category.nameKey) }}</h2>
@@ -99,6 +104,18 @@ const categories = [
 
 .hero__subtitle {
   font-size: 1.125rem;
+  color: var(--color-text-secondary);
+}
+
+.intro-section {
+  max-width: 720px;
+  margin: 0 auto var(--spacing-3xl);
+  text-align: center;
+}
+
+.intro__text {
+  font-size: 0.95rem;
+  line-height: 1.8;
   color: var(--color-text-secondary);
 }
 
