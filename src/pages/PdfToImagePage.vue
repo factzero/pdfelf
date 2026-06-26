@@ -48,6 +48,14 @@
             <input type="radio" v-model="format" value="jpeg" />
             <span>JPEG</span>
           </label>
+          <label class="option-chip">
+            <input type="radio" v-model="format" value="bmp" />
+            <span>BMP</span>
+          </label>
+          <label class="option-chip">
+            <input type="radio" v-model="format" value="tiff" />
+            <span>TIFF</span>
+          </label>
         </div>
       </div>
       <div class="option-group">
@@ -118,7 +126,7 @@ import FileDropZone from '@/components/FileDropZone.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
-import { pdfToImage } from '@/services/imageService'
+import { pdfToImage, type ImageFormat } from '@/services/imageService'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 
 const { t } = useI18n()
@@ -127,7 +135,7 @@ const { isProcessing, progress, progressText } = storeToRefs(store)
 
 const dpiOptions = [72, 150, 300]
 const selectedFile = ref<File | null>(null)
-const format = ref<'png' | 'jpeg'>('png')
+const format = ref<ImageFormat>('png')
 const dpi = ref(150)
 const resultBlob = ref<Blob | null>(null)
 const outputFilename = ref('')

@@ -48,6 +48,12 @@ const categories = [
       { icon: '📊', titleKey: 'tools.pdfToExcel.title', descKey: 'tools.pdfToExcel.desc', route: '/pdf-to-excel' },
       { icon: '📽️', titleKey: 'tools.pdfToPpt.title', descKey: 'tools.pdfToPpt.desc', route: '/pdf-to-ppt' },
       { icon: '🖼️', titleKey: 'tools.pdfToImage.title', descKey: 'tools.pdfToImage.desc', route: '/pdf-to-image' },
+      { icon: '🖼️', titleKey: 'tools.pdfToJpg.title', descKey: 'tools.pdfToJpg.desc', route: '/pdf-to-jpg' },
+      { icon: '🖼️', titleKey: 'tools.pdfToPng.title', descKey: 'tools.pdfToPng.desc', route: '/pdf-to-png' },
+      { icon: '🖼️', titleKey: 'tools.pdfToTiff.title', descKey: 'tools.pdfToTiff.desc', route: '/pdf-to-tiff' },
+      { icon: '📐', titleKey: 'tools.pdfToSvg.title', descKey: 'tools.pdfToSvg.desc', route: '/pdf-to-svg' },
+      { icon: '📝', titleKey: 'tools.pdfToText.title', descKey: 'tools.pdfToText.desc', route: '/pdf-to-text' },
+      { icon: '🌐', titleKey: 'tools.pdfToHtml.title', descKey: 'tools.pdfToHtml.desc', route: '/pdf-to-html' },
     ],
   },
   {

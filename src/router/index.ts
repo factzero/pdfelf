@@ -66,6 +66,36 @@ const router = createRouter({
       name: 'pdf-to-image',
       component: () => import('@/pages/PdfToImagePage.vue'),
     },
+    {
+      path: '/pdf-to-jpg',
+      name: 'pdf-to-jpg',
+      component: () => import('@/pages/PdfToJpgPage.vue'),
+    },
+    {
+      path: '/pdf-to-png',
+      name: 'pdf-to-png',
+      component: () => import('@/pages/PdfToPngPage.vue'),
+    },
+    {
+      path: '/pdf-to-tiff',
+      name: 'pdf-to-tiff',
+      component: () => import('@/pages/PdfToTiffPage.vue'),
+    },
+    {
+      path: '/pdf-to-svg',
+      name: 'pdf-to-svg',
+      component: () => import('@/pages/PdfToSvgPage.vue'),
+    },
+    {
+      path: '/pdf-to-text',
+      name: 'pdf-to-text',
+      component: () => import('@/pages/PdfToTextPage.vue'),
+    },
+    {
+      path: '/pdf-to-html',
+      name: 'pdf-to-html',
+      component: () => import('@/pages/PdfToHtmlPage.vue'),
+    },
     // 转换成 PDF
     {
       path: '/word-to-pdf',
