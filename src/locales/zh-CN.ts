@@ -115,6 +115,32 @@ export default {
     after: '压缩后',
     saved: '节省 {pct}%',
     failed: '压缩失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '完全在浏览器本地处理，文件不会上传到任何服务器，保护您的隐私安全',
+        '提供基本压缩和强压缩两种模式，灵活平衡文件大小与画质',
+        '支持任意大小的 PDF 文件，压缩速度快，质量损失极小',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要压缩的 PDF 文件到上传区域' },
+        { title: '选择压缩模式', desc: '根据需要选择「基本压缩」（推荐，保持高质量）或「强压缩」（更高压缩比）' },
+        { title: '下载压缩文件', desc: '点击「开始压缩」按钮，等待处理完成后即可下载压缩后的 PDF' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'PDF 压缩后文件质量会降低吗？', a: '基本压缩模式下，图像和文字质量几乎不受影响，肉眼难以分辨差异。强压缩模式可能有轻微质量损失，但文件体积会更小，适合对文件大小有严格要求的场景。' },
+        { q: '压缩后的 PDF 文件保存在哪里？', a: '您的文件自始至终只存在于浏览器中，不会被上传到任何服务器。压缩完成后，文件会自动下载到您的设备本地。' },
+        { q: '最大可以压缩多大的 PDF？', a: '理论上没有严格的大小限制，但受浏览器性能影响，建议 100MB 以内的文件处理效果最佳。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '合并 PDF', path: '/merge-pdf' },
+        { label: '分割 PDF', path: '/split-pdf' },
+        { label: 'Word 转 PDF', path: '/word-to-pdf' },
+      ],
+    },
   },
   merge: {
     title: '🔗 合并 PDF',
@@ -132,6 +158,32 @@ export default {
     noFiles: '请至少添加一个 PDF 文件',
     merging: '正在合并 PDF...',
     failed: '合并失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '支持拖拽排序，轻松调整 PDF 文件的合并顺序',
+        '可在任意位置插入空白页或添加新 PDF 文件',
+        '纯浏览器本地合并，无需上传文件，数据安全有保障',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要合并的多个 PDF 文件' },
+        { title: '调整文件顺序', desc: '拖拽缩略图调整合并顺序，也可在任意位置插入新文件或空白页' },
+        { title: '下载合并文件', desc: '点击「合并 PDF」按钮，等待处理完成后即可下载合并后的 PDF' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '一次最多可以合并多少个 PDF 文件？', a: '没有严格的文件数量限制，您可以合并任意多个 PDF 文件。不过文件数量过多时，处理时间可能会相应增加。' },
+        { q: '合并后文件顺序可以调整吗？', a: '可以，上传文件后直接拖拽缩略图即可调整合并顺序，非常直观方便。' },
+        { q: '合并后的文件大小会很大吗？', a: '合并后的文件大小约等于各文件大小之和，建议合并前先用压缩工具将大文件压缩后再合并。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '压缩 PDF', path: '/compress-pdf' },
+        { label: '分割 PDF', path: '/split-pdf' },
+        { label: '重排页面顺序', path: '/reorder-pages' },
+      ],
+    },
   },
   split: {
     title: '✂️ 分割 PDF',
@@ -148,6 +200,32 @@ export default {
     splitting: '正在分割 PDF...',
     invalidRange: '请输入有效的页码范围',
     failed: '分割失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '支持按页码范围提取和按固定页数分割两种模式',
+        '分割后生成多个独立的 PDF 文件，保留原始排版',
+        '所有处理在浏览器本地完成，无需上传服务器，快速安全',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要分割的 PDF 文件' },
+        { title: '选择分割方式', desc: '选择「按范围提取」输入页码范围（如 1-3, 5-8），或选择「每 N 页分割」设置固定页数' },
+        { title: '下载分割文件', desc: '点击「分割 PDF」按钮，等待处理完成后下载所有分割后的文件' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '分割后的文件会丢失格式吗？', a: '不会，分割操作只是将原 PDF 按页拆分，不会改动任何页面内容，排版格式和图片质量都会完整保留。' },
+        { q: '如何只提取 PDF 中的某几页？', a: '使用「按范围提取」模式，输入您需要的页码范围即可。例如输入「1, 3-5」会提取第 1 页和第 3 到 5 页。' },
+        { q: '分割后可以自动命名文件吗？', a: '分割后的文件名会包含原文件名和页码范围，方便您识别每个文件对应的内容。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '合并 PDF', path: '/merge-pdf' },
+        { label: '提取页面', path: '/extract-pages' },
+        { label: '删除页面', path: '/delete-pages' },
+      ],
+    },
   },
   rotate: {
     title: '🔄 旋转 PDF',
@@ -162,6 +240,32 @@ export default {
     completed: '旋转完成',
     rotating: '正在旋转 PDF...',
     failed: '旋转失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '每页独立设置旋转角度（顺时针90°、180°、逆时针90°），精准控制',
+        '可视化缩略图预览，旋转前直观看到每页的当前方向',
+        '浏览器本地处理，零上传，处理速度快，适用于大文件',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要旋转的 PDF 文件' },
+        { title: '设置旋转角度', desc: '为每一页独立选择旋转角度：90°顺时针、180°翻转、或 90°逆时针' },
+        { title: '下载旋转后的 PDF', desc: '点击「旋转并保存」按钮，完成后下载方向调整好的 PDF 文件' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '旋转 PDF 会影响页面内容吗？', a: '不会，旋转只是改变页面的显示方向，不会影响文字、图片等任何页面内容的完整性。' },
+        { q: '扫描件方向错了可以批量旋转吗？', a: '可以，每页独立设置旋转角度，您可以逐一调整为正确的方向，然后一次性导出。' },
+        { q: '旋转后文件大小会变化吗？', a: '基本不会，旋转操作不重新压缩或改变内容，文件大小基本保持不变。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '删除页面', path: '/delete-pages' },
+        { label: '重排页面顺序', path: '/reorder-pages' },
+        { label: '压缩 PDF', path: '/compress-pdf' },
+      ],
+    },
   },
   delete: {
     title: '🗑️ 删除 PDF 页面',
@@ -172,6 +276,32 @@ export default {
     deleting: '正在删除页面...',
     failed: '删除失败，请重试',
     completed: '删除完成',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '可视化页面缩略图，勾选即可精确选择要删除的页面',
+        '支持全选/取消全选，批量操作高效便捷',
+        '纯浏览器本地处理，文件不会离开您的设备',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要删除页面的 PDF 文件' },
+        { title: '勾选要删除的页面', desc: '在页面缩略图中勾选不需要的页面，支持全选和取消全选' },
+        { title: '下载新 PDF', desc: '点击「删除 N 页」按钮，等待处理完成后下载删除了指定页面的新 PDF' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '可以删掉 PDF 中的空白页吗？', a: '可以，查看缩略图找到空白页，勾选后删除即可。目前需要手动确认空白页位置。' },
+        { q: '删除页面后原文件会被修改吗？', a: '不会，删除操作生成的是一个新的 PDF 文件，您的原始文件不受任何影响。' },
+        { q: '不小心删错了可以撤销吗？', a: '勾选阶段只需取消勾选即可调整，操作执行后如需恢复请重新上传原始文件。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '提取页面', path: '/extract-pages' },
+        { label: '旋转 PDF', path: '/rotate-pdf' },
+        { label: '分割 PDF', path: '/split-pdf' },
+      ],
+    },
   },
   extract: {
     title: '📋 提取 PDF 页面',
@@ -181,6 +311,32 @@ export default {
     extracting: '正在提取页面...',
     failed: '提取失败，请重试',
     completed: '提取完成',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '可视化勾选页面，从 PDF 中提取指定页面生成新文件',
+        '支持全选/取消全选，批量提取效率高',
+        '纯浏览器本地处理，提取速度快，文件安全不泄露',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要提取页面的 PDF 文件' },
+        { title: '勾选要提取的页面', desc: '在页面缩略图中勾选需要提取的页面，可以使用全选/取消全选快速操作' },
+        { title: '下载提取的文件', desc: '点击「提取 N 页」按钮，等待处理后下载包含所选页面的新 PDF' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '提取的页面会保持原始排版吗？', a: '是的，提取操作只是从原 PDF 中复制选定页面，排版、格式、图片质量全部保持原样。' },
+        { q: '一次最多能提取多少页？', a: '没有数量限制，您可以提取 PDF 中的任意页面组合，从 1 页到全部页面都可以。' },
+        { q: '提取和分割有什么区别？', a: '提取是从 PDF 中选出若干页组成一个新文件，分割是将 PDF 按规则拆分为多个文件。如果只需要其中几页，用提取更便捷。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '删除页面', path: '/delete-pages' },
+        { label: '分割 PDF', path: '/split-pdf' },
+        { label: '旋转 PDF', path: '/rotate-pdf' },
+      ],
+    },
   },
   reorder: {
     title: '🔀 重排 PDF 页面顺序',
@@ -191,6 +347,32 @@ export default {
     failed: '重排失败，请重试',
     completed: '重排完成',
     note: '原始文件不受影响，新顺序的 PDF 将作为新文件下载',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '拖拽页面缩略图即可自由调整 PDF 页面顺序，直观方便',
+        '每页显示高清缩略图，确保按正确的顺序排列',
+        '浏览器本地完成，原始文件不受影响，只导出新顺序的 PDF',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要重排页面顺序的 PDF 文件' },
+        { title: '拖拽调整顺序', desc: '拖拽页面缩略图，按您想要的顺序重新排列所有页面' },
+        { title: '导出新 PDF', desc: '点击「应用新顺序，导出 PDF」按钮，下载按新顺序排列的 PDF 文件' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '重排页面顺序会修改原始文件吗？', a: '不会，原始文件完全不变，重排后的新 PDF 会作为新文件下载到您的设备。' },
+        { q: '页面很多时如何快速重排？', a: '您可以拖拽页面缩略图到目标位置，系统会自动调整其他页面的顺序。对于较多页面的情况，建议分区域调整。' },
+        { q: '重排后页码会重新生成吗？', a: '重排只是改变页面的显示顺序，不会自动添加或更改页码文字。如果需要添加页码，可以使用添加水印功能在页面上添加数字编号。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '旋转 PDF', path: '/rotate-pdf' },
+        { label: '删除页面', path: '/delete-pages' },
+        { label: '提取页面', path: '/extract-pages' },
+      ],
+    },
   },
   watermark: {
     title: '🔏 PDF 添加水印',
@@ -218,6 +400,32 @@ export default {
     adding: '正在添加水印...',
     failed: '添加水印失败，请重试',
     completed: '添加完成',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '支持自定义水印文字、字体大小、透明度、旋转角度和颜色',
+        '水印覆盖 PDF 每一页，保护文档版权和保密性',
+        '浏览器本地处理，文件不会上传到服务器，信息安全可靠',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要添加水印的 PDF 文件' },
+        { title: '设置水印样式', desc: '输入水印文字，调整字体大小、透明度、旋转角度和颜色参数' },
+        { title: '下载带水印的 PDF', desc: '点击「添加水印」按钮，等待处理后下载带有水印的新 PDF 文件' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '水印可以放图片或 logo 吗？', a: '目前支持文字水印，您可以输入公司名称、网址等文字作为水印。图片水印功能正在开发中。' },
+        { q: '水印添加后可以去除吗？', a: 'PDF Elf 生成的水印是直接嵌入到 PDF 页面内容中的，无法通过本工具直接去除。如需去除请保留原始未加水印的文件。' },
+        { q: '水印的推荐设置是什么？', a: '推荐使用 45° 旋转、25% 透明度、灰色文字，这样水印既能有效标识版权，又不会过于干扰阅读体验。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '压缩 PDF', path: '/compress-pdf' },
+        { label: '旋转 PDF', path: '/rotate-pdf' },
+        { label: '合并 PDF', path: '/merge-pdf' },
+      ],
+    },
   },
   pdfToWord: {
     title: '📄 PDF 转 Word',
@@ -238,6 +446,32 @@ export default {
       creatingDocx: '正在生成 Word 文档…',
       finalizing: '正在完成转换…',
     },
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 转换为可编辑的 Word 文档（.docx），文字可自由编辑修改',
+        '保留原始段落结构和排版格式，转换精准度高',
+        '纯浏览器本地转换，利用 Pyodide 运行 LibreOffice 引擎，文件不会离开您的设备',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换的 PDF 文件到上传区域' },
+        { title: '点击转换', desc: '点击「转换为 Word」按钮，系统自动进行文档结构分析和转换' },
+        { title: '下载 Word 文档', desc: '转换完成后，下载 .docx 格式的 Word 文件，即可用 Microsoft Word 或 WPS 编辑' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '转换后的 Word 文档格式能完全还原吗？', a: '文字内容和段落结构可以较好保留，但复杂的表格、图片排版可能会有少许偏差。对于文字为主的 PDF，转换效果最佳。' },
+        { q: '扫描版 PDF 能转换成可编辑的 Word 吗？', a: '目前主要支持文字型 PDF 的转换。扫描版 PDF 本质上是图片，需要先使用 OCR 识别文字后才能转换，OCR 功能正在规划中。' },
+        { q: '转换需要多长时间？', a: '较小的 PDF（几十页内）通常在几十秒内完成。首次使用需要短暂加载转换引擎，后续使用会更快。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 Excel', path: '/pdf-to-excel' },
+        { label: 'Word 转 PDF', path: '/word-to-pdf' },
+        { label: 'PDF 转图片', path: '/pdf-to-image' },
+      ],
+    },
   },
   pdfToExcel: {
     title: '📊 PDF 转 Excel',
@@ -253,6 +487,32 @@ export default {
       parsingPages: '正在提取表格数据（{current}/{total}）…',
       creatingDocx: '正在生成 Excel 文件…',
       finalizing: '正在完成转换…',
+    },
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 中的表格数据转换为可编辑的 Excel 电子表格',
+        '每页 PDF 对应 Excel 中的一个工作表，结构清晰',
+        '浏览器本地转换，数据安全，无需担心敏感表格数据泄露',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择包含表格数据的 PDF 文件' },
+        { title: '点击转换', desc: '点击「转换为 Excel」按钮，系统自动提取表格数据并生成 Excel 文件' },
+        { title: '下载 Excel 文件', desc: '转换完成后下载 .xlsx 格式文件，即可用 Excel 或 WPS 打开编辑' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '所有表格都能完整提取吗？', a: '规则的表格数据提取效果最好。合并单元格、嵌套表格等复杂结构可能有部分偏差，建议转换后简单检查调整。' },
+        { q: 'PDF 中的图表和图片会保留吗？', a: '目前主要提取表格中的文字数据，嵌入的图表和图片可能不会被导出到 Excel 中。' },
+        { q: '转换包含多个表格的页面会怎样？', a: '系统会尽力识别并提取页面中的所有表格数据，每页内容放入单独的 Excel 工作表。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 Word', path: '/pdf-to-word' },
+        { label: 'Excel 转 PDF', path: '/excel-to-pdf' },
+        { label: 'PDF 转文本', path: '/pdf-to-text' },
+      ],
     },
   },
   pdfToPpt: {
@@ -270,6 +530,32 @@ export default {
       parsingPages: '正在处理幻灯片（{current}/{total}）…',
       finalizing: '正在完成转换…',
     },
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 每页转换为 PowerPoint 幻灯片，方便演示和编辑',
+        '文字以透明文本框形式覆盖，可自由编辑修改',
+        '浏览器本地转换，大型机密文档无需上传服务器',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换为 PPT 的 PDF 文件' },
+        { title: '点击转换', desc: '点击「转换为 PPT」按钮，系统逐页处理并生成演示文稿' },
+        { title: '下载 PPT 文件', desc: '转换完成后下载 .pptx 文件，即可用 PowerPoint 或 WPS 打开编辑' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '转换后的 PPT 可以编辑吗？', a: '可以，文字以透明文本框形式覆盖在幻灯片上，您可以自由编辑。背景保留原 PDF 页面的外观。' },
+        { q: 'PDF 中的图片会保留到 PPT 中吗？', a: '页面的整体外观（包括图片和背景）会作为幻灯片背景保留，但图片本身可能不可单独编辑或移动。' },
+        { q: '转换后字体不一样怎么办？', a: '文字颜色和位置会尽量保留，但具体字体取决于您设备上安装的字体。如果原始 PDF 使用了特殊字体，PPT 可能会替换为相近的系统字体。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PPT 转 PDF', path: '/ppt-to-pdf' },
+        { label: 'PDF 转 Word', path: '/pdf-to-word' },
+        { label: 'PDF 转图片', path: '/pdf-to-image' },
+      ],
+    },
   },
   pdfToImage: {
     title: '🖼️ PDF 转图片',
@@ -282,6 +568,32 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '支持将 PDF 页面导出为 PNG、JPEG、BMP、TIFF 四种图片格式',
+        '可自定义输出分辨率（DPI），满足不同清晰度需求',
+        '浏览器本地渲染，处理速度快，图片质量高清无损',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换为图片的 PDF 文件' },
+        { title: '选择格式和分辨率', desc: '选择目标图片格式（PNG/JPEG/BMP/TIFF）和分辨率（72-300 DPI）' },
+        { title: '下载图片文件', desc: '点击「转换为图片」按钮，每页 PDF 将生成一张对应格式的图片并打包下载' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '如何选择最合适的图片格式？', a: 'PNG 适合需要透明背景或高保真的场景，JPEG 适合文件大小敏感的场景（如网页展示），BMP/TIFF 适合印刷或存档用途。' },
+        { q: '分辨率越高越好吗？', a: '高 DPI 会生成更清晰的图片，但文件体积也会成倍增加。网页使用建议 150 DPI，印刷建议 300 DPI。' },
+        { q: '多页 PDF 转换后会怎样？', a: '每页 PDF 会生成一张独立的图片，所有图片打包为一个 ZIP 文件方便下载。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 JPG', path: '/pdf-to-jpg' },
+        { label: 'PDF 转 PNG', path: '/pdf-to-png' },
+        { label: '图片转 PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToJpg: {
     title: '🖼️ PDF 转 JPG',
@@ -293,6 +605,31 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 页面导出为高质量 JPG 图片，适合网页展示和社交媒体分享',
+        '可自定义输出分辨率（72-300 DPI），平衡画质与文件大小',
+        '浏览器本地转换，JPG 压缩效率高，转换速度快',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换为 JPG 的 PDF 文件' },
+        { title: '选择分辨率', desc: '根据需要选择适当的分辨率（默认 150 DPI），可平衡画质与文件大小' },
+        { title: '下载 JPG 图片', desc: '点击「转换为 JPG」按钮，每页生成一张 JPG 图片并打包下载' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'JPG 和 PNG 格式有什么区别？', a: 'JPG 是有损压缩格式，文件体积更小，适合照片和网页展示。PNG 是无损格式，画质更好但文件更大，适合需要透明背景的场景。' },
+        { q: 'JPG 图片会有水印吗？', a: '不会，转换生成的 JPG 图片完全干净，不含任何水印。PDF Elf 不添加任何标识或水印到您的文件中。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 PNG', path: '/pdf-to-png' },
+        { label: 'PDF 转图片', path: '/pdf-to-image' },
+        { label: '图片转 PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToPng: {
     title: '🖼️ PDF 转 PNG',
@@ -304,6 +641,31 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 页面导出为无损 PNG 图片，支持透明背景',
+        '可自定义输出分辨率，满足高清打印和设计需求',
+        '浏览器本地渲染，零上传，数据完全保密',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换为 PNG 的 PDF 文件' },
+        { title: '选择分辨率', desc: '根据需要设置分辨率，高清打印建议 300 DPI，网页使用建议 150 DPI' },
+        { title: '下载 PNG 图片', desc: '点击「转换为 PNG」按钮，每页 PDF 生成一张 PNG 图片并打包下载' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'PNG 格式的优势是什么？', a: 'PNG 是无损压缩格式，图片质量不受压缩影响，支持透明背景，非常适合设计稿、Logo 等需要高品质输出的场景。' },
+        { q: '转换后的 PNG 文件会很大吗？', a: 'PNG 文件通常比 JPG 大，但质量更好。如果您关心文件大小，可以尝试 JPG 格式。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 JPG', path: '/pdf-to-jpg' },
+        { label: 'PDF 转图片', path: '/pdf-to-image' },
+        { label: '图片转 PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToTiff: {
     title: '🖼️ PDF 转 TIFF',
@@ -315,6 +677,31 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 页面导出为 TIFF 格式，适合印刷、出版和档案保存',
+        '可自定义输出分辨率，支持高精度印刷需求',
+        '浏览器本地转换，适用于专业印刷前的格式准备',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换为 TIFF 的 PDF 文件' },
+        { title: '设置分辨率', desc: '根据印刷需求设置分辨率，印刷用途建议 300 DPI 以上' },
+        { title: '下载 TIFF 文件', desc: '点击「转换为 TIFF」按钮，每页生成一张 TIFF 图片并打包下载' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'TIFF 格式适合什么场景？', a: 'TIFF 是无损图像格式，主要用于印刷出版、档案数字化和专业影像处理，能保留最高质量的图像信息。' },
+        { q: 'TIFF 和 PNG 有什么区别？', a: '两者都是无损格式，但 TIFF 支持多页文件、CMYK 色彩模式和更高位深，更适合专业印刷。PNG 更通用，适合网页和日常使用。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转图片', path: '/pdf-to-image' },
+        { label: 'PDF 转 PNG', path: '/pdf-to-png' },
+        { label: 'PDF 转 JPG', path: '/pdf-to-jpg' },
+      ],
+    },
   },
   pdfToSvg: {
     title: '📐 PDF 转 SVG',
@@ -326,6 +713,31 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 全部页面合并导出为单个 SVG 矢量文件',
+        'SVG 格式支持无损缩放，任意放大不失真',
+        '浏览器本地转换，生成的 SVG 可用浏览器或设计软件打开',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换为 SVG 的 PDF 文件' },
+        { title: '设置分辨率', desc: '选择适当的分辨率参数（影响矢量精度）' },
+        { title: '下载 SVG 文件', desc: '点击「转换为 SVG」按钮，下载合并后的矢量 SVG 文件' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'SVG 格式有什么优势？', a: 'SVG 是矢量格式，可以无限缩放而不失真，非常适合需要高清展示或在网页中嵌入的场景。可以用浏览器、Illustrator 等软件打开编辑。' },
+        { q: '多页 PDF 转成 SVG 会怎样？', a: '所有页面会合并在一个 SVG 文件中，您可以用设计软件分页编辑或整体查看。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转图片', path: '/pdf-to-image' },
+        { label: 'PDF 转 HTML', path: '/pdf-to-html' },
+        { label: '图片转 PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToText: {
     title: '📝 PDF 转文本',
@@ -336,6 +748,32 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '提取失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '从 PDF 中提取纯文本内容，保留段落和换行结构',
+        '自动识别并保留原文的文字层级和排版关系',
+        '浏览器本地处理，适合快速提取 PDF 文字用于编辑或翻译',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要提取文字的 PDF 文件' },
+        { title: '点击提取', desc: '点击「提取文本」按钮，系统自动识别并提取 PDF 中的所有文字内容' },
+        { title: '下载文本文件', desc: '提取完成后下载 .txt 格式的文本文件，可用任意文本编辑器打开' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '扫描版 PDF 能提取文字吗？', a: '目前主要支持文字型 PDF 的文字提取。扫描版 PDF 本质上是图片，无法直接提取文字，需要 OCR 识别。' },
+        { q: '提取的文字会保持原文格式吗？', a: '文字内容和段落结构会尽量保留，但字体样式、大小、颜色等格式信息不会保留。' },
+        { q: '能提取特定区域的文字吗？', a: '目前提取整页的全部文字内容。如果需要区域提取，建议先用其他工具裁剪页面后再提取。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 Word', path: '/pdf-to-word' },
+        { label: 'PDF 转 HTML', path: '/pdf-to-html' },
+        { label: 'PDF 转 Excel', path: '/pdf-to-excel' },
+      ],
+    },
   },
   pdfToHtml: {
     title: '🌐 PDF 转 HTML',
@@ -346,6 +784,31 @@ export default {
     before: '转换前',
     after: '转换后',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PDF 转换为 HTML 网页格式，保留了文字的排列位置和页面布局',
+        '生成独立可运行的 HTML 文件，可用任意浏览器打开查看',
+        '浏览器本地转换，适合将 PDF 发布为网页或嵌入到网站中',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PDF 文件', desc: '拖拽或点击选择需要转换为 HTML 的 PDF 文件' },
+        { title: '点击转换', desc: '点击「转换为 HTML」按钮，系统将 PDF 内容转换为 HTML 网页格式' },
+        { title: '下载 HTML 文件', desc: '转换完成后下载 .html 文件，可用浏览器直接打开查看' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '转换后的 HTML 能嵌入到网站中吗？', a: '可以，生成的 HTML 是独立文件，您可以直接用浏览器打开，或将其内容嵌入到您的网页中。' },
+        { q: '图片和样式能保留吗？', a: '文字位置和基本布局会尽量还原，但复杂的 CSS 样式、嵌入图片可能需要手动调整。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转文本', path: '/pdf-to-text' },
+        { label: 'PDF 转 SVG', path: '/pdf-to-svg' },
+        { label: 'PDF 转 Word', path: '/pdf-to-word' },
+      ],
+    },
   },
   wordToPdf: {
     title: '📝 Word 转 PDF',
@@ -354,6 +817,32 @@ export default {
     convertBtn: '转换为 PDF',
     converting: '正在转换 Word → PDF...',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 Word 文档（.docx）转换为 PDF 格式，方便分享和打印',
+        '保留文字内容和基本排版，输出标准 PDF 文件',
+        '浏览器本地转换，文档内容不会外泄',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 Word 文件', desc: '拖拽或点击选择需要转换的 .docx 文件到上传区域' },
+        { title: '点击转换', desc: '点击「转换为 PDF」按钮，系统自动将文档转换为 PDF 格式' },
+        { title: '下载 PDF 文件', desc: '转换完成后下载生成的 PDF 文件，可用任意 PDF 阅读器打开' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'Word 中的图片和表格会保留吗？', a: '文字内容会完整保留，但复杂的表格、图片和排版格式可能无法完整转换，建议转换后检查并微调。' },
+        { q: '支持哪些 Word 格式？', a: '目前支持 .docx 格式（Microsoft Word 2007 及以上版本），不支持旧版 .doc 格式。' },
+        { q: 'Word 转 PDF 和 PDF 转 Word 有什么区别？', a: 'Word 转 PDF 是将可编辑的 Word 文档转为固定格式的 PDF，适合分享和打印。PDF 转 Word 则相反，将 PDF 转为可编辑的 Word 格式。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 Word', path: '/pdf-to-word' },
+        { label: 'Excel 转 PDF', path: '/excel-to-pdf' },
+        { label: 'PPT 转 PDF', path: '/ppt-to-pdf' },
+      ],
+    },
   },
   excelToPdf: {
     title: '📊 Excel 转 PDF',
@@ -362,6 +851,32 @@ export default {
     convertBtn: '转换为 PDF',
     converting: '正在转换 Excel → PDF...',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 Excel 电子表格（.xlsx）转换为 PDF 格式，适合打印和数据分发',
+        '保留表格数据和基本结构，输出标准 PDF 文件',
+        '浏览器本地转换，敏感数据不会上传到服务器',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 Excel 文件', desc: '拖拽或点击选择需要转换的 .xlsx 或 .xls 文件' },
+        { title: '点击转换', desc: '点击「转换为 PDF」按钮，系统自动将表格转换为 PDF' },
+        { title: '下载 PDF 文件', desc: '转换完成后下载 PDF 文件，可用任意 PDF 阅读器打开或打印' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'Excel 公式和图表会保留吗？', a: '表格数据会保留，但公式结果会转为静态数值。图表和复杂的条件格式可能无法完整呈现。' },
+        { q: '多工作表的 Excel 会怎么处理？', a: '当前转换每个工作表为 PDF 中的独立页面，多个工作表会产生多页 PDF。' },
+        { q: '支持 .xls 格式吗？', a: '支持 .xlsx（Excel 2007+）和 .xls（Excel 97-2003）格式。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 Excel', path: '/pdf-to-excel' },
+        { label: 'Word 转 PDF', path: '/word-to-pdf' },
+        { label: 'PPT 转 PDF', path: '/ppt-to-pdf' },
+      ],
+    },
   },
   pptToPdf: {
     title: '📽️ PPT 转 PDF',
@@ -370,6 +885,32 @@ export default {
     convertBtn: '转换为 PDF',
     converting: '正在转换 PPT → PDF...',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '将 PowerPoint 演示文稿（.pptx）转换为 PDF，方便跨设备分享和打印',
+        '保留幻灯片的文字内容和基本排版',
+        '浏览器本地转换，演示文档内容不会泄露',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传 PPT 文件', desc: '拖拽或点击选择需要转换的 .pptx 文件到上传区域' },
+        { title: '点击转换', desc: '点击「转换为 PDF」按钮，系统自动将每页幻灯片转为 PDF 页面' },
+        { title: '下载 PDF 文件', desc: '转换完成后下载 PDF 文件，可在任意设备上查看或打印' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: 'PPT 中的动画和切换效果会保留吗？', a: 'PDF 是静态文档格式，不支持动画。幻灯片的静态内容（文字、基本图形）会保留。' },
+        { q: '转换后的 PDF 排版会乱吗？', a: '文字内容会尽量保留原始位置，但特殊字体、复杂的 SmartArt 图形可能需要手动微调。' },
+        { q: '支持 .ppt 格式吗？', a: '目前仅支持 .pptx 格式（PowerPoint 2007 及以上版本），旧版 .ppt 格式不支持。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转 PPT', path: '/pdf-to-ppt' },
+        { label: 'Word 转 PDF', path: '/word-to-pdf' },
+        { label: 'Excel 转 PDF', path: '/excel-to-pdf' },
+      ],
+    },
   },
   imageToPdf: {
     title: '🖼️ 图片转 PDF',
@@ -385,6 +926,32 @@ export default {
     convertBtn: '转换为 PDF',
     converting: '正在转换为 PDF...',
     failed: '转换失败，请重试',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '支持将 PNG、JPEG、WebP、GIF 等多种图片格式合并转换为 PDF',
+        '可自定义页面尺寸（A4/A3/Letter）和页面方向（纵向/横向）',
+        '浏览器本地转换，多张图片一键合并为单个 PDF 文件',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '上传图片文件', desc: '拖拽或点击选择一张或多张图片，支持 PNG、JPEG、WebP、GIF 等常见格式' },
+        { title: '设置页面参数', desc: '选择页面尺寸（A4/A3/Letter/Auto）和方向（纵向/横向）' },
+        { title: '下载 PDF 文件', desc: '点击「转换为 PDF」按钮，等待处理后下载合并生成的 PDF 文件' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '图片转 PDF 后质量会变差吗？', a: '转换过程不会压缩图片，PDF 中的图片质量与原图保持基本一致。建议使用高分辨率原图以获得最佳输出效果。' },
+        { q: '多张图片可以排在一页上吗？', a: '目前每张图片占据一页。如果需要多图排在一页上，建议先将图片拼接成一张图再转换。' },
+        { q: '支持的图片格式有哪些？', a: '支持 PNG、JPEG、WebP 和 GIF 格式。推荐使用 PNG 或高质量 JPEG 以获得最佳效果。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: 'PDF 转图片', path: '/pdf-to-image' },
+        { label: 'PDF 转 JPG', path: '/pdf-to-jpg' },
+        { label: 'Word 转 PDF', path: '/word-to-pdf' },
+      ],
+    },
   },
   reader: {
     title: '📖 PDF 阅读器',
@@ -392,6 +959,32 @@ export default {
     back: '← 返回',
     loading: '加载中...',
     cannotOpen: '无法打开此 PDF 文件',
+    seo: {
+      featuresTitle: '功能特色',
+      features: [
+        '纯浏览器端 PDF 阅读器，无需安装任何软件或插件',
+        '支持键盘翻页（← →）、缩放和页码导航',
+        '支持大文件快速加载，文件不会上传到服务器',
+      ],
+      stepsTitle: '使用步骤',
+      steps: [
+        { title: '打开 PDF 文件', desc: '在阅读器页面点击或拖拽上传 PDF 文件，即可开始阅读' },
+        { title: '使用阅读功能', desc: '使用键盘方向键或屏幕按钮翻页，鼠标滚轮缩放，顶部工具栏可快速导航' },
+        { title: '随时随地阅读', desc: '无需下载任何软件，浏览器打开即可阅读 PDF，支持手机和电脑' },
+      ],
+      faqTitle: '常见问题',
+      faq: [
+        { q: '阅读器支持哪些 PDF 功能？', a: '支持翻页、缩放、页码跳转等基本阅读功能。此阅读器专注于流畅的阅读体验，不包含编辑功能。' },
+        { q: '可以在手机上使用吗？', a: '可以，PDF Elf 阅读器完全适配移动端浏览器，支持触屏滑动翻页和手势缩放。' },
+        { q: '阅读的文件会被上传吗？', a: '不会，和 PDF Elf 所有工具一样，阅读的文件仅在您的浏览器本地加载，不会上传到任何服务器。' },
+      ],
+      relatedTitle: '相关工具',
+      related: [
+        { label: '压缩 PDF', path: '/compress-pdf' },
+        { label: 'PDF 转 Word', path: '/pdf-to-word' },
+        { label: '合并 PDF', path: '/merge-pdf' },
+      ],
+    },
   },
   footer: {
     organize: '整理 PDF',

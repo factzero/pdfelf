@@ -40,6 +40,7 @@
     <ProgressBar :visible="isProcessing" :percent="progress" :text="progressText" />
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
     <ResultDownload v-if="resultBlob" :file-info="{ blob: resultBlob, filename: outputFilename }" />
+    <ToolSeoContent :ns="'imageToPdf'" />
   </div>
 </template>
 
@@ -47,6 +48,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ResultDownload from '@/components/ResultDownload.vue'
 import { useToolStore } from '@/stores/toolStore'
@@ -99,7 +101,7 @@ async function convert() {
 </script>
 
 <style scoped>
-.tool-page { max-width: 640px; margin: 0 auto; }
+.tool-page { max-width: 880px; margin: 0 auto; }
 .tool-title { font-size: 1.75rem; font-weight: 700; text-align: center; margin-bottom: var(--spacing-sm); }
 .tool-desc { text-align: center; color: var(--color-text-secondary); margin-bottom: var(--spacing-xl); }
 .options { margin-top: var(--spacing-lg); }

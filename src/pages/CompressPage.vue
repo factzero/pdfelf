@@ -99,6 +99,7 @@
     </div>
 
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+    <ToolSeoContent :ns="'compress'" />
   </div>
 </template>
 
@@ -106,6 +107,7 @@
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
@@ -256,8 +258,16 @@ async function compress() {
 
 <style scoped>
 .tool-page {
-  max-width: 640px;
+  max-width: 880px;
   margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@media (max-width: 640px) {
+  .tool-page {
+    max-width: 100%;
+    padding: 0 var(--spacing-sm);
+  }
 }
 
 .tool-title {

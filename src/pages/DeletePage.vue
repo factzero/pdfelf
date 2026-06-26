@@ -83,6 +83,7 @@
     </div>
 
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+    <ToolSeoContent :ns="'delete'" />
   </div>
 </template>
 
@@ -90,6 +91,7 @@
 import { ref, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
@@ -229,7 +231,7 @@ async function deletePages() {
 </script>
 
 <style scoped>
-.tool-page { max-width: 640px; margin: 0 auto; }
+.tool-page { max-width: 880px; margin: 0 auto; }
 .tool-title { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: var(--spacing-sm); }
 .tool-desc { text-align: center; color: var(--color-text-secondary); margin-bottom: var(--spacing-lg); font-size: 0.875rem; }
 

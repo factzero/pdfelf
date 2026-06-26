@@ -5,6 +5,7 @@
       <p class="tool-desc">{{ $t('reader.desc') }}</p>
       <FileDropZone :accept="['pdf']" @file-selected="onFileSelected" @error="onError" />
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+      <ToolSeoContent :ns="'reader'" />
     </div>
     <div v-else class="reader">
       <div class="reader__toolbar">
@@ -34,6 +35,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 
 const { t } = useI18n()

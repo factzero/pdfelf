@@ -82,6 +82,7 @@
     </div>
 
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+    <ToolSeoContent :ns="'pdfToTiff'" />
   </div>
 </template>
 
@@ -89,6 +90,7 @@
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
@@ -192,7 +194,7 @@ async function convert() {
 </script>
 
 <style scoped>
-.tool-page { max-width: 640px; margin: 0 auto; }
+.tool-page { max-width: 880px; margin: 0 auto; }
 .tool-title { font-size: 1.75rem; font-weight: 700; text-align: center; margin-bottom: var(--spacing-sm); }
 .tool-desc { text-align: center; color: var(--color-text-secondary); margin-bottom: var(--spacing-xl); }
 .file-preview { margin-top: var(--spacing-lg); }

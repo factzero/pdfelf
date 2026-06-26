@@ -100,6 +100,7 @@
     </div>
 
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+    <ToolSeoContent :ns="'split'" />
   </div>
 </template>
 
@@ -107,6 +108,7 @@
 import { ref, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { splitPDF } from '@/services/pdfService'
@@ -257,7 +259,7 @@ function parseRanges(input: string): [number, number][] {
 
 <style scoped>
 .tool-page {
-  max-width: 640px;
+  max-width: 880px;
   margin: 0 auto;
 }
 

@@ -98,6 +98,7 @@
     </div>
 
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+    <ToolSeoContent :ns="'pdfToPpt'" />
   </div>
 </template>
 
@@ -105,6 +106,7 @@
 import { ref, onUnmounted, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
@@ -238,7 +240,7 @@ async function convert() {
 
 <style scoped>
 .tool-page {
-  max-width: 640px;
+  max-width: 880px;
   margin: 0 auto;
 }
 

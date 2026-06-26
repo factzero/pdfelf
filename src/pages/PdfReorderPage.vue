@@ -96,6 +96,7 @@
       <!-- 错误 -->
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
     </template>
+    <ToolSeoContent :ns="'reorder'" />
   </div>
 </template>
 
@@ -103,6 +104,7 @@
 import { ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileDropZone from '@/components/FileDropZone.vue'
+import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import { reorderPdf } from '@/services/reorderService'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
@@ -550,7 +552,7 @@ onUnmounted(() => {
 }
 
 .tool-page {
-  max-width: 900px;
+  max-width: 880px;
   margin: 0 auto;
 }
 

@@ -115,6 +115,32 @@ export default {
     after: 'After',
     saved: '{pct}% saved',
     failed: 'Compression failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Fully local browser processing — your files never leave your device',
+        'Two compression modes: basic (high quality) and strong (maximum reduction)',
+        'Supports PDFs of any size with fast processing and minimal quality loss',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF you want to compress' },
+        { title: 'Choose compression mode', desc: 'Select "Basic" (recommended, keeps high quality) or "Strong" (higher compression ratio)' },
+        { title: 'Download compressed file', desc: 'Click "Compress" and download the optimized PDF after processing' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will compression reduce quality?', a: 'Basic mode preserves quality with virtually no visible difference. Strong mode may have slight quality loss but produces much smaller files.' },
+        { q: 'Where is my compressed file saved?', a: 'Your file exists only in your browser. It is never uploaded to any server. After compression, the file is downloaded directly to your device.' },
+        { q: 'How large a PDF can I compress?', a: 'There is no strict size limit, but files under 100 MB work best due to browser performance constraints.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Merge PDF', path: '/merge-pdf' },
+        { label: 'Split PDF', path: '/split-pdf' },
+        { label: 'Word to PDF', path: '/word-to-pdf' },
+      ],
+    },
   },
   merge: {
     title: '🔗 Merge PDF',
@@ -132,6 +158,32 @@ export default {
     noFiles: 'Please add at least one PDF file',
     merging: 'Merging PDF...',
     failed: 'Merge failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Drag-and-drop reordering for effortless PDF merging',
+        'Insert blank pages or additional PDFs at any position',
+        '100% local browser processing — secure and private',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload PDF files', desc: 'Drag & drop or select the PDF files you want to merge' },
+        { title: 'Arrange the order', desc: 'Drag thumbnails to set the merge order. Insert new files or blank pages at any position.' },
+        { title: 'Download merged PDF', desc: 'Click "Merge PDF" and download the combined file once processing is complete' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'How many PDFs can I merge at once?', a: 'There is no hard limit. You can merge as many PDFs as you like. Processing time may increase with more files.' },
+        { q: 'Can I reorder files after uploading?', a: 'Yes, simply drag the thumbnails to rearrange the merge order — it\'s intuitive and fast.' },
+        { q: 'Will the merged file be very large?', a: 'The merged file size is roughly the sum of all input files. Consider compressing large PDFs before merging.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Compress PDF', path: '/compress-pdf' },
+        { label: 'Split PDF', path: '/split-pdf' },
+        { label: 'Reorder Pages', path: '/reorder-pages' },
+      ],
+    },
   },
   split: {
     title: '✂️ Split PDF',
@@ -148,6 +200,32 @@ export default {
     splitting: 'Splitting PDF...',
     invalidRange: 'Please enter a valid page range',
     failed: 'Split failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Two modes: extract by page range or split every N pages',
+        'Each split produces independent PDFs with original formatting preserved',
+        'All processing happens locally in your browser — fast and secure',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF you want to split' },
+        { title: 'Choose split method', desc: 'Select "Extract by Range" and enter page ranges (e.g. 1-3, 5-8), or choose "Split Every N Pages"' },
+        { title: 'Download split files', desc: 'Click "Split PDF" and download all the resulting files once processing completes' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will split files lose formatting?', a: 'No. Splitting simply separates pages — no content, layout, or image quality is altered.' },
+        { q: 'How do I extract just a few pages?', a: 'Use "Extract by Range" mode and enter the page numbers you need, e.g. "1, 3-5" for page 1 and pages 3 through 5.' },
+        { q: 'Are the files automatically named?', a: 'Yes, split filenames include the original name and page range for easy identification.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Merge PDF', path: '/merge-pdf' },
+        { label: 'Extract Pages', path: '/extract-pages' },
+        { label: 'Delete Pages', path: '/delete-pages' },
+      ],
+    },
   },
   rotate: {
     title: '🔄 Rotate PDF',
@@ -162,6 +240,32 @@ export default {
     rotating: 'Rotating PDF...',
     completed: 'Rotation Complete',
     failed: 'Rotation failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Set rotation angle independently for each page (90°, 180°, 270°)',
+        'Visual thumbnail previews show page orientation before rotating',
+        'Local browser processing — zero uploads, fast even for large files',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF you want to rotate' },
+        { title: 'Set rotation angles', desc: 'Choose a rotation for each page: 90° clockwise, 180°, or 90° counterclockwise' },
+        { title: 'Download rotated PDF', desc: 'Click "Rotate and Save" and download the orientation-corrected PDF' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will rotating affect page content?', a: 'No, rotation only changes the display orientation — text, images, and all content remain intact.' },
+        { q: 'Can I batch-rotate scanned pages?', a: 'Yes, set the angle for each page individually, then export all at once with the correct orientations.' },
+        { q: 'Will the file size change after rotation?', a: 'Barely — rotation does not re-compress or alter content, so the file size remains essentially the same.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Delete Pages', path: '/delete-pages' },
+        { label: 'Reorder Pages', path: '/reorder-pages' },
+        { label: 'Compress PDF', path: '/compress-pdf' },
+      ],
+    },
   },
   delete: {
     title: '🗑️ Delete PDF Pages',
@@ -172,6 +276,32 @@ export default {
     deleting: 'Deleting pages...',
     failed: 'Deletion failed, please try again',
     completed: 'Deletion completed',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Visual page thumbnails — simply check the pages you want to delete',
+        'Select All / Deselect All for efficient batch operations',
+        '100% local browser processing — files never leave your device',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF from which to delete pages' },
+        { title: 'Check pages to delete', desc: 'Tick the checkboxes on unwanted page thumbnails. Use Select All / Deselect All for quick selection.' },
+        { title: 'Download new PDF', desc: 'Click "Delete N page(s)" and download the PDF with the selected pages removed' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Can I remove blank pages from a PDF?', a: 'Yes, visually identify blank pages from the thumbnails, check them, and delete. Note: you need to confirm blank pages manually.' },
+        { q: 'Does deleting pages modify the original file?', a: 'No. The delete operation creates a brand-new PDF — your original file is never touched.' },
+        { q: 'Can I undo if I delete the wrong page?', a: 'While selecting, simply uncheck the page. After processing, re-upload the original file if you need to start over.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Extract Pages', path: '/extract-pages' },
+        { label: 'Rotate PDF', path: '/rotate-pdf' },
+        { label: 'Split PDF', path: '/split-pdf' },
+      ],
+    },
   },
   extract: {
     title: '📋 Extract PDF Pages',
@@ -181,6 +311,32 @@ export default {
     extracting: 'Extracting pages...',
     failed: 'Extraction failed, please try again',
     completed: 'Extraction completed',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Check page thumbnails to extract selected pages into a new PDF',
+        'Select All / Deselect All for fast batch extraction',
+        'Pure local processing — fast and your data stays completely private',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF from which to extract pages' },
+        { title: 'Check pages to extract', desc: 'Tick the checkboxes on the pages you want to extract. Use Select All / Deselect All for quick selection.' },
+        { title: 'Download extracted PDF', desc: 'Click "Extract N page(s)" and download the new PDF containing only your chosen pages' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will extracted pages keep their original formatting?', a: 'Yes. Extraction simply copies the selected pages — formatting, layout, and image quality are fully preserved.' },
+        { q: 'How many pages can I extract at once?', a: 'No limit — you can extract any combination of pages, from a single page to the entire document.' },
+        { q: 'What\'s the difference between extract and split?', a: 'Extract picks specific pages to form one new file, while split divides a PDF into multiple files by rules. Use Extract when you only need certain pages.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Delete Pages', path: '/delete-pages' },
+        { label: 'Split PDF', path: '/split-pdf' },
+        { label: 'Rotate PDF', path: '/rotate-pdf' },
+      ],
+    },
   },
   reorder: {
     title: '🔀 Reorder PDF Pages',
@@ -191,6 +347,32 @@ export default {
     failed: 'Reordering failed, please try again',
     completed: 'Reorder Complete',
     note: 'Original file is unaffected. The reordered PDF will be downloaded as a new file.',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Drag page thumbnails to freely rearrange your PDF\'s page order',
+        'High-resolution thumbnails for accurate page identification',
+        'Browser-local processing — original file untouched, only the reordered PDF is exported',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF whose pages you want to reorder' },
+        { title: 'Drag to reorder', desc: 'Drag the page thumbnails into your desired sequence' },
+        { title: 'Export new PDF', desc: 'Click "Apply New Order & Export PDF" to download the reordered file' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will reordering modify my original file?', a: 'No. The original file is completely unaffected. A new PDF with the new order is downloaded separately.' },
+        { q: 'How do I reorder a PDF with many pages?', a: 'You can drag thumbnails to their target position — the system adjusts others automatically. For very long documents, reorder section by section.' },
+        { q: 'Will page numbers update after reordering?', a: 'Reordering changes the sequence of pages but does not automatically add or update printed page numbers. To add numbers, consider using the Watermark tool with numeric text.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Rotate PDF', path: '/rotate-pdf' },
+        { label: 'Delete Pages', path: '/delete-pages' },
+        { label: 'Extract Pages', path: '/extract-pages' },
+      ],
+    },
   },
   watermark: {
     title: '🔏 Add Watermark to PDF',
@@ -218,6 +400,32 @@ export default {
     adding: 'Adding watermark...',
     failed: 'Failed to add watermark, please try again',
     completed: 'Watermark added',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Customize watermark text, font size, opacity, rotation angle, and color',
+        'Watermark applied to every page of your PDF for copyright protection',
+        'Browser-local processing — your files are never uploaded to any server',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF you want to watermark' },
+        { title: 'Configure watermark', desc: 'Enter your watermark text and adjust font size, opacity, rotation, and color settings' },
+        { title: 'Download watermarked PDF', desc: 'Click "Add Watermark" and download the new PDF with your watermark applied' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Can I use an image or logo as a watermark?', a: 'Currently, text watermarks are supported. You can enter company names, URLs, or any text. Image watermark support is planned.' },
+        { q: 'Can the watermark be removed later?', a: 'Watermarks added by PDF Elf are embedded directly into the PDF content and cannot be removed with this tool. Always keep the original unwatermarked file.' },
+        { q: 'What are the recommended watermark settings?', a: 'We recommend 45° rotation, 25% opacity, and gray color — this effectively marks your document without overwhelming the content.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Compress PDF', path: '/compress-pdf' },
+        { label: 'Rotate PDF', path: '/rotate-pdf' },
+        { label: 'Merge PDF', path: '/merge-pdf' },
+      ],
+    },
   },
   pdfToWord: {
     title: '📄 PDF to Word',
@@ -238,6 +446,32 @@ export default {
       creatingDocx: 'Generating Word document…',
       finalizing: 'Finalizing conversion…',
     },
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Convert PDF to fully editable Word documents (.docx) with selectable, editable text',
+        'Preserves paragraph structure and text formatting with high accuracy',
+        'Local browser conversion using Pyodide/LibreOffice engine — your files never leave your device',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF you want to convert' },
+        { title: 'Start conversion', desc: 'Click "Convert to Word" — the system analyzes the document structure and converts it automatically' },
+        { title: 'Download Word document', desc: 'Once complete, download the .docx file and open it with Microsoft Word or WPS' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will the formatting be fully preserved?', a: 'Text content and paragraph structure are well-preserved. Complex tables and image layouts may have minor differences. Text-heavy PDFs convert best.' },
+        { q: 'Can scanned PDFs be converted to editable Word?', a: 'Currently, text-based PDFs work best. Scanned PDFs are essentially images and require OCR — this feature is on our roadmap.' },
+        { q: 'How long does conversion take?', a: 'Small PDFs (tens of pages) typically complete within seconds to a minute. The first conversion loads the engine; subsequent ones are faster.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Excel', path: '/pdf-to-excel' },
+        { label: 'Word to PDF', path: '/word-to-pdf' },
+        { label: 'PDF to Image', path: '/pdf-to-image' },
+      ],
+    },
   },
   pdfToExcel: {
     title: '📊 PDF to Excel',
@@ -253,6 +487,32 @@ export default {
       parsingPages: 'Extracting table data ({current}/{total})…',
       creatingDocx: 'Generating Excel file…',
       finalizing: 'Finalizing conversion…',
+    },
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Convert PDF table data into fully editable Excel spreadsheets',
+        'Each PDF page becomes a separate worksheet for clear organization',
+        'Local browser conversion — your sensitive spreadsheet data stays private',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or select the PDF containing table data' },
+        { title: 'Start conversion', desc: 'Click "Convert to Excel" — the system extracts table data and generates the spreadsheet' },
+        { title: 'Download Excel file', desc: 'Download the .xlsx file and open it with Excel or WPS for editing' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Are all tables extracted perfectly?', a: 'Regular tables convert best. Merged cells and nested tables may have minor discrepancies — a quick review after conversion is recommended.' },
+        { q: 'Will charts and images in the PDF be preserved?', a: 'Currently, the tool focuses on extracting table text data. Embedded charts and images may not be exported to Excel.' },
+        { q: 'What happens with pages containing multiple tables?', a: 'The system attempts to identify and extract all tables on the page. Each page\'s data goes into a separate Excel worksheet.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Word', path: '/pdf-to-word' },
+        { label: 'Excel to PDF', path: '/excel-to-pdf' },
+        { label: 'PDF to Text', path: '/pdf-to-text' },
+      ],
     },
   },
   pdfToPpt: {
@@ -270,6 +530,32 @@ export default {
       parsingPages: 'Processing slides ({current}/{total})…',
       finalizing: 'Finalizing conversion…',
     },
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Convert each PDF page into an editable PowerPoint slide',
+        'Text is overlaid as transparent text boxes — freely editable',
+        'Local browser conversion — large, confidential documents stay on your device',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or select the PDF to convert to PPT' },
+        { title: 'Start conversion', desc: 'Click "Convert to PPT" — the system processes each page into a presentation slide' },
+        { title: 'Download PPT file', desc: 'Download the .pptx file and open it with PowerPoint or WPS for editing' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Can I edit the converted PPT?', a: 'Yes! Text is overlaid as transparent text boxes on each slide, so you can freely edit titles, bullet points, and paragraphs.' },
+        { q: 'Will images in the PDF appear in the PPT?', a: 'The overall page appearance (including images and backgrounds) is preserved as the slide background. Individual images may not be separately editable.' },
+        { q: 'Why do fonts look different after conversion?', a: 'Text color and position are preserved, but the exact font depends on what\'s installed on your device. Special fonts may be substituted with similar system fonts.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PPT to PDF', path: '/ppt-to-pdf' },
+        { label: 'PDF to Word', path: '/pdf-to-word' },
+        { label: 'PDF to Image', path: '/pdf-to-image' },
+      ],
+    },
   },
   pdfToImage: {
     title: '🖼️ PDF to Image',
@@ -282,6 +568,32 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Export PDF pages as PNG, JPEG, BMP, or TIFF images',
+        'Adjustable output resolution (DPI) for different quality needs',
+        'Local browser rendering — fast processing with high image quality',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF to convert to images' },
+        { title: 'Choose format and resolution', desc: 'Select your target image format (PNG/JPEG/BMP/TIFF) and resolution (72–300 DPI)' },
+        { title: 'Download image files', desc: 'Click "Convert to Image" — each PDF page becomes a separate image, packaged in a ZIP for download' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Which image format should I choose?', a: 'PNG for lossless quality or transparency, JPEG for smaller file sizes (web/social media), BMP/TIFF for printing and archival.' },
+        { q: 'Is higher DPI always better?', a: 'Higher DPI produces sharper images but much larger files. 150 DPI is great for web use; 300 DPI is recommended for print.' },
+        { q: 'What happens with multi-page PDFs?', a: 'Each page becomes a separate image file, all zipped together for convenient single-click download.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to JPG', path: '/pdf-to-jpg' },
+        { label: 'PDF to PNG', path: '/pdf-to-png' },
+        { label: 'Image to PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToJpg: {
     title: '🖼️ PDF to JPG',
@@ -293,6 +605,31 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Export PDF pages as high-quality JPG images — great for web and social sharing',
+        'Adjustable output resolution (72–300 DPI) to balance quality and file size',
+        'Local browser conversion — fast processing with efficient JPG compression',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF to convert to JPG' },
+        { title: 'Choose resolution', desc: 'Select a resolution — 150 DPI is the default sweet spot for quality vs. file size' },
+        { title: 'Download JPG images', desc: 'Click "Convert to JPG" — each page becomes a JPG image, zipped for download' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'What\'s the difference between JPG and PNG?', a: 'JPG is a lossy format with smaller files, ideal for photos and web display. PNG is lossless with better quality but larger files, ideal when transparency is needed.' },
+        { q: 'Will my JPG images have watermarks?', a: 'No. Converted images are completely clean with no watermarks. PDF Elf never adds branding or watermarks to your output.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to PNG', path: '/pdf-to-png' },
+        { label: 'PDF to Image', path: '/pdf-to-image' },
+        { label: 'Image to PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToPng: {
     title: '🖼️ PDF to PNG',
@@ -304,6 +641,31 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Export PDF pages as lossless PNG images with transparency support',
+        'Adjustable resolution — from web-optimized to print-ready 300 DPI',
+        'Local browser rendering — zero uploads, complete data privacy',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF to convert to PNG' },
+        { title: 'Choose resolution', desc: 'Set resolution — 300 DPI for print, 150 DPI for web use' },
+        { title: 'Download PNG images', desc: 'Click "Convert to PNG" — each page becomes a PNG image, zipped for download' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'What are the advantages of PNG format?', a: 'PNG is a lossless format with excellent quality and transparency support. Ideal for designs, logos, and scenarios requiring high fidelity.' },
+        { q: 'Will PNG files be very large?', a: 'PNG files are typically larger than JPG but offer better quality. If file size is a concern, consider JPG format instead.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to JPG', path: '/pdf-to-jpg' },
+        { label: 'PDF to Image', path: '/pdf-to-image' },
+        { label: 'Image to PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToTiff: {
     title: '🖼️ PDF to TIFF',
@@ -315,6 +677,31 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Export PDF pages as TIFF format — ideal for printing, publishing, and archiving',
+        'Adjustable resolution to meet high-precision print requirements',
+        'Local browser conversion for professional print preparation',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF to convert to TIFF' },
+        { title: 'Set resolution', desc: 'Choose resolution — 300+ DPI recommended for print-quality output' },
+        { title: 'Download TIFF files', desc: 'Click "Convert to TIFF" — each page becomes a TIFF image, zipped for download' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'When should I use TIFF format?', a: 'TIFF is a lossless format used primarily for print publishing, document archiving, and professional image processing — it preserves the highest image quality.' },
+        { q: 'What\'s the difference between TIFF and PNG?', a: 'Both are lossless, but TIFF supports multi-page files, CMYK color, and higher bit depths — making it better for professional printing. PNG is more universal for web and everyday use.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Image', path: '/pdf-to-image' },
+        { label: 'PDF to PNG', path: '/pdf-to-png' },
+        { label: 'PDF to JPG', path: '/pdf-to-jpg' },
+      ],
+    },
   },
   pdfToSvg: {
     title: '📐 PDF to SVG',
@@ -326,6 +713,31 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Merge all PDF pages into a single vector SVG file',
+        'SVG format supports lossless scaling — zoom in infinitely without pixelation',
+        'Local browser conversion — output viewable in any browser or design software',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF to convert to SVG' },
+        { title: 'Set resolution', desc: 'Select a resolution parameter (affects vector precision)' },
+        { title: 'Download SVG file', desc: 'Click "Convert to SVG" and download the merged vector SVG file' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'What are the advantages of SVG?', a: 'SVG is a vector format — it scales infinitely without quality loss, perfect for high-resolution displays and web embedding. Openable in browsers and Illustrator.' },
+        { q: 'What happens to multi-page PDFs?', a: 'All pages are combined into a single SVG file. You can view or edit them in design software.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Image', path: '/pdf-to-image' },
+        { label: 'PDF to HTML', path: '/pdf-to-html' },
+        { label: 'Image to PDF', path: '/image-to-pdf' },
+      ],
+    },
   },
   pdfToText: {
     title: '📝 PDF to Text',
@@ -336,6 +748,32 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Extraction failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Extract plain text from PDFs while preserving paragraph and line-break structure',
+        'Automatically identifies and retains text hierarchy and layout relationships',
+        'Local browser processing — ideal for quick text extraction for editing or translation',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF to extract text from' },
+        { title: 'Click extract', desc: 'Click "Extract Text" — the system identifies and extracts all text content from the PDF' },
+        { title: 'Download text file', desc: 'Download the .txt file and open it with any text editor' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Can text be extracted from scanned PDFs?', a: 'Currently, text-based PDFs work best. Scanned PDFs are images and require OCR for text extraction — this feature is on our roadmap.' },
+        { q: 'Will the extracted text preserve formatting?', a: 'Text content and paragraph structure are preserved, but font styles, sizes, and colors are not retained.' },
+        { q: 'Can I extract text from specific areas?', a: 'The tool extracts all text from the entire page. For region-specific extraction, consider cropping the page first.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Word', path: '/pdf-to-word' },
+        { label: 'PDF to HTML', path: '/pdf-to-html' },
+        { label: 'PDF to Excel', path: '/pdf-to-excel' },
+      ],
+    },
   },
   pdfToHtml: {
     title: '🌐 PDF to HTML',
@@ -346,6 +784,31 @@ export default {
     before: 'Before',
     after: 'After',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Convert PDF to standalone HTML web pages, preserving text position and page layout',
+        'Generates self-contained HTML files viewable in any browser',
+        'Local browser conversion — perfect for publishing PDFs as web pages',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PDF', desc: 'Drag & drop or click to select the PDF to convert to HTML' },
+        { title: 'Click convert', desc: 'Click "Convert to HTML" — the system transforms PDF content into web format' },
+        { title: 'Download HTML file', desc: 'Download the .html file and open it in any browser' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Can I embed the converted HTML on my website?', a: 'Yes, the generated HTML is a standalone file you can open in any browser or embed into your web pages.' },
+        { q: 'Are images and styles preserved?', a: 'Text position and basic layout are retained, but complex CSS and embedded images may require manual adjustment.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Text', path: '/pdf-to-text' },
+        { label: 'PDF to SVG', path: '/pdf-to-svg' },
+        { label: 'PDF to Word', path: '/pdf-to-word' },
+      ],
+    },
   },
   wordToPdf: {
     title: '📝 Word to PDF',
@@ -354,6 +817,32 @@ export default {
     convertBtn: 'Convert to PDF',
     converting: 'Converting Word → PDF...',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Convert Word documents (.docx) to PDF format for easy sharing and printing',
+        'Preserves text content and basic formatting, outputting standard PDF files',
+        'Local browser conversion — your document content never leaks',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your Word file', desc: 'Drag & drop or click to select a .docx file' },
+        { title: 'Start conversion', desc: 'Click "Convert to PDF" — the system transforms your document into PDF format' },
+        { title: 'Download PDF', desc: 'Download the generated PDF and open it with any PDF reader' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will images and tables in Word be preserved?', a: 'Text content is fully preserved, but complex tables, images, and formatting may not convert perfectly. Review after conversion is recommended.' },
+        { q: 'Which Word formats are supported?', a: 'Currently .docx (Word 2007+) is supported. Legacy .doc format is not supported.' },
+        { q: 'What\'s the difference between Word to PDF and PDF to Word?', a: 'Word to PDF creates a fixed-format PDF from an editable document — great for sharing. PDF to Word does the reverse, making a PDF editable again.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Word', path: '/pdf-to-word' },
+        { label: 'Excel to PDF', path: '/excel-to-pdf' },
+        { label: 'PPT to PDF', path: '/ppt-to-pdf' },
+      ],
+    },
   },
   excelToPdf: {
     title: '📊 Excel to PDF',
@@ -362,6 +851,32 @@ export default {
     convertBtn: 'Convert to PDF',
     converting: 'Converting Excel → PDF...',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Convert Excel spreadsheets (.xlsx) to PDF — perfect for printing and data distribution',
+        'Preserves table data and basic structure in standard PDF format',
+        'Local browser conversion — sensitive spreadsheet data stays on your device',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your Excel file', desc: 'Drag & drop or click to select a .xlsx or .xls file' },
+        { title: 'Start conversion', desc: 'Click "Convert to PDF" — the system converts your spreadsheet into PDF' },
+        { title: 'Download PDF', desc: 'Download the PDF and open it with any PDF reader or print it directly' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Are Excel formulas and charts preserved?', a: 'Table data is retained, but formulas output as static values. Charts and complex conditional formatting may not render fully.' },
+        { q: 'How are multi-sheet Excel files handled?', a: 'Each worksheet becomes a separate page in the resulting PDF.' },
+        { q: 'Is .xls format supported?', a: 'Yes, both .xlsx (Excel 2007+) and .xls (Excel 97–2003) formats are supported.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Excel', path: '/pdf-to-excel' },
+        { label: 'Word to PDF', path: '/word-to-pdf' },
+        { label: 'PPT to PDF', path: '/ppt-to-pdf' },
+      ],
+    },
   },
   pptToPdf: {
     title: '📽️ PPT to PDF',
@@ -370,6 +885,32 @@ export default {
     convertBtn: 'Convert to PDF',
     converting: 'Converting PPT → PDF...',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Convert PowerPoint presentations (.pptx) to PDF for cross-device sharing and printing',
+        'Preserves slide text content and basic layout',
+        'Local browser conversion — your presentation content stays confidential',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your PPT file', desc: 'Drag & drop or click to select a .pptx file' },
+        { title: 'Start conversion', desc: 'Click "Convert to PDF" — each slide becomes a PDF page' },
+        { title: 'Download PDF', desc: 'Download the PDF and view or print it on any device' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Are animations and transitions preserved?', a: 'PDF is a static format — animations are not supported. Static content (text, basic graphics) is preserved.' },
+        { q: 'Will the layout be messy after conversion?', a: 'Text content generally retains its position, but special fonts and complex SmartArt may need manual tweaking.' },
+        { q: 'Is .ppt format supported?', a: 'Currently only .pptx (PowerPoint 2007+) is supported. Legacy .ppt format is not supported.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to PPT', path: '/pdf-to-ppt' },
+        { label: 'Word to PDF', path: '/word-to-pdf' },
+        { label: 'Excel to PDF', path: '/excel-to-pdf' },
+      ],
+    },
   },
   imageToPdf: {
     title: '🖼️ Image to PDF',
@@ -385,6 +926,32 @@ export default {
     convertBtn: 'Convert to PDF',
     converting: 'Converting to PDF...',
     failed: 'Conversion failed, please try again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Combine PNG, JPEG, WebP, GIF, and other images into a single PDF',
+        'Customizable page size (A4/A3/Letter) and orientation (portrait/landscape)',
+        'Local browser conversion — merge multiple images into one PDF in a single click',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload your images', desc: 'Drag & drop or select one or more images in PNG, JPEG, WebP, or GIF format' },
+        { title: 'Configure page settings', desc: 'Choose page size (A4/A3/Letter/Auto) and orientation (portrait/landscape)' },
+        { title: 'Download PDF', desc: 'Click "Convert to PDF" and download the combined PDF file' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'Will image quality degrade in the PDF?', a: 'The conversion does not compress images, so quality remains consistent with the originals. Use high-resolution source images for best results.' },
+        { q: 'Can I arrange multiple images on one page?', a: 'Currently, each image occupies one page. For multi-image layouts, consider merging images into one file before conversion.' },
+        { q: 'Which image formats are supported?', a: 'PNG, JPEG, WebP, and GIF are supported. PNG or high-quality JPEG are recommended for best results.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'PDF to Image', path: '/pdf-to-image' },
+        { label: 'PDF to JPG', path: '/pdf-to-jpg' },
+        { label: 'Word to PDF', path: '/word-to-pdf' },
+      ],
+    },
   },
   reader: {
     title: '📖 PDF Reader',
@@ -392,6 +959,32 @@ export default {
     back: '← Back',
     loading: 'Loading...',
     cannotOpen: 'Cannot open this PDF file',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Pure browser-based PDF reader — no software or plugins required',
+        'Keyboard navigation (← →), zoom, and page number jumping',
+        'Fast loading for large files — your PDFs stay local, never uploaded',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Open a PDF', desc: 'Click or drag-and-drop a PDF file on the reader page to start viewing' },
+        { title: 'Use reading features', desc: 'Navigate with arrow keys or on-screen buttons, zoom with scroll wheel, and jump to pages via the toolbar' },
+        { title: 'Read anywhere', desc: 'No downloads needed — open PDFs directly in your browser, works on mobile and desktop' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'What features does the reader support?', a: 'Page turning, zooming, and page navigation are supported. The reader focuses on smooth reading; editing features are available in our other tools.' },
+        { q: 'Can I use it on mobile devices?', a: 'Yes! The PDF Elf Reader is fully responsive and supports touch swiping to turn pages and pinch-to-zoom gestures on mobile browsers.' },
+        { q: 'Are my PDF files uploaded when I use the reader?', a: 'No. Like all PDF Elf tools, files are loaded locally in your browser only. Nothing is ever uploaded to any server.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'Compress PDF', path: '/compress-pdf' },
+        { label: 'PDF to Word', path: '/pdf-to-word' },
+        { label: 'Merge PDF', path: '/merge-pdf' },
+      ],
+    },
   },
   footer: {
     organize: 'Organize PDF',
