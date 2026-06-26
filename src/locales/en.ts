@@ -395,8 +395,10 @@ export default {
   },
   footer: {
     organize: 'Organize PDF',
-    convert: 'Convert',
-    otherTools: 'Other Tools',
+    edit: 'Edit PDF',
+    fromPdf: 'Convert from PDF',
+    toPdf: 'Convert to PDF',
+    reader: 'Reader',
   },
   stats: {
     totalVisits: '{n} total visits',

@@ -65,7 +65,13 @@ const footerCols = [
     ],
   },
   {
-    categoryKey: 'footer.convert',
+    categoryKey: 'footer.edit',
+    links: [
+      { titleKey: 'tools.addWatermark.title', route: '/add-watermark' },
+    ],
+  },
+  {
+    categoryKey: 'footer.fromPdf',
     links: [
       { titleKey: 'tools.pdfToWord.title', route: '/pdf-to-word' },
       { titleKey: 'tools.pdfToExcel.title', route: '/pdf-to-excel' },
@@ -73,20 +79,24 @@ const footerCols = [
       { titleKey: 'tools.pdfToImage.title', route: '/pdf-to-image' },
       { titleKey: 'tools.pdfToJpg.title', route: '/pdf-to-jpg' },
       { titleKey: 'tools.pdfToPng.title', route: '/pdf-to-png' },
+      { titleKey: 'tools.pdfToTiff.title', route: '/pdf-to-tiff' },
+      { titleKey: 'tools.pdfToSvg.title', route: '/pdf-to-svg' },
       { titleKey: 'tools.pdfToText.title', route: '/pdf-to-text' },
       { titleKey: 'tools.pdfToHtml.title', route: '/pdf-to-html' },
     ],
   },
   {
-    categoryKey: 'footer.otherTools',
+    categoryKey: 'footer.toPdf',
     links: [
       { titleKey: 'tools.wordToPdf.title', route: '/word-to-pdf' },
       { titleKey: 'tools.excelToPdf.title', route: '/excel-to-pdf' },
       { titleKey: 'tools.pptToPdf.title', route: '/ppt-to-pdf' },
       { titleKey: 'tools.imageToPdf.title', route: '/image-to-pdf' },
-      { titleKey: 'tools.addWatermark.title', route: '/add-watermark' },
-      { titleKey: 'tools.pdfToTiff.title', route: '/pdf-to-tiff' },
-      { titleKey: 'tools.pdfToSvg.title', route: '/pdf-to-svg' },
+    ],
+  },
+  {
+    categoryKey: 'footer.reader',
+    links: [
       { titleKey: 'tools.pdfReader.title', route: '/pdf-reader' },
     ],
   },

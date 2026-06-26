@@ -395,8 +395,10 @@ export default {
   },
   footer: {
     organize: '整理 PDF',
-    convert: '格式转换',
-    otherTools: '其他工具',
+    edit: '编辑 PDF',
+    fromPdf: '从 PDF 转换',
+    toPdf: '转换成 PDF',
+    reader: '阅读器',
   },
   stats: {
     totalVisits: '总访问 {n} 次',
