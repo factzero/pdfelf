@@ -394,11 +394,11 @@ export default {
     cannotOpen: '无法打开此 PDF 文件',
   },
   footer: {
-    organize: '整理 PDF',
-    edit: '编辑 PDF',
-    fromPdf: '从 PDF 转换',
-    toPdf: '转换成 PDF',
-    reader: '阅读器',
+    organize: '📂 整理 PDF',
+    edit: '✏️ 编辑 PDF',
+    fromPdf: '🔄 从 PDF 转换',
+    toPdf: '📥 转换成 PDF',
+    reader: '📖 阅读器',
   },
   stats: {
     totalVisits: '总访问 {n} 次',
