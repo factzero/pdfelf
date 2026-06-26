@@ -5,7 +5,7 @@
         <h4 class="footer__col-title">{{ $t(col.categoryKey) }}</h4>
         <ul class="footer__links">
           <li v-for="link in col.links" :key="link.route">
-            <router-link :to="link.route">{{ $t(link.titleKey) }}</router-link>
+            <router-link :to="link.route">{{ link.icon }} {{ $t(link.titleKey) }}</router-link>
           </li>
         </ul>
       </div>
@@ -55,49 +55,49 @@ const footerCols = [
   {
     categoryKey: 'footer.organize',
     links: [
-      { titleKey: 'tools.compressPdf.title', route: '/compress-pdf' },
-      { titleKey: 'tools.mergePdf.title', route: '/merge-pdf' },
-      { titleKey: 'tools.splitPdf.title', route: '/split-pdf' },
-      { titleKey: 'tools.rotatePdf.title', route: '/rotate-pdf' },
-      { titleKey: 'tools.deletePages.title', route: '/delete-pages' },
-      { titleKey: 'tools.extractPages.title', route: '/extract-pages' },
-      { titleKey: 'tools.reorderPages.title', route: '/reorder-pages' },
+      { icon: '🗜️', titleKey: 'tools.compressPdf.title', route: '/compress-pdf' },
+      { icon: '🔗', titleKey: 'tools.mergePdf.title', route: '/merge-pdf' },
+      { icon: '✂️', titleKey: 'tools.splitPdf.title', route: '/split-pdf' },
+      { icon: '🔄', titleKey: 'tools.rotatePdf.title', route: '/rotate-pdf' },
+      { icon: '🗑️', titleKey: 'tools.deletePages.title', route: '/delete-pages' },
+      { icon: '📋', titleKey: 'tools.extractPages.title', route: '/extract-pages' },
+      { icon: '🔀', titleKey: 'tools.reorderPages.title', route: '/reorder-pages' },
     ],
   },
   {
     categoryKey: 'footer.edit',
     links: [
-      { titleKey: 'tools.addWatermark.title', route: '/add-watermark' },
+      { icon: '🔏', titleKey: 'tools.addWatermark.title', route: '/add-watermark' },
     ],
   },
   {
     categoryKey: 'footer.fromPdf',
     links: [
-      { titleKey: 'tools.pdfToWord.title', route: '/pdf-to-word' },
-      { titleKey: 'tools.pdfToExcel.title', route: '/pdf-to-excel' },
-      { titleKey: 'tools.pdfToPpt.title', route: '/pdf-to-ppt' },
-      { titleKey: 'tools.pdfToImage.title', route: '/pdf-to-image' },
-      { titleKey: 'tools.pdfToJpg.title', route: '/pdf-to-jpg' },
-      { titleKey: 'tools.pdfToPng.title', route: '/pdf-to-png' },
-      { titleKey: 'tools.pdfToTiff.title', route: '/pdf-to-tiff' },
-      { titleKey: 'tools.pdfToSvg.title', route: '/pdf-to-svg' },
-      { titleKey: 'tools.pdfToText.title', route: '/pdf-to-text' },
-      { titleKey: 'tools.pdfToHtml.title', route: '/pdf-to-html' },
+      { icon: '📄', titleKey: 'tools.pdfToWord.title', route: '/pdf-to-word' },
+      { icon: '📊', titleKey: 'tools.pdfToExcel.title', route: '/pdf-to-excel' },
+      { icon: '📽️', titleKey: 'tools.pdfToPpt.title', route: '/pdf-to-ppt' },
+      { icon: '🖼️', titleKey: 'tools.pdfToImage.title', route: '/pdf-to-image' },
+      { icon: '🖼️', titleKey: 'tools.pdfToJpg.title', route: '/pdf-to-jpg' },
+      { icon: '🖼️', titleKey: 'tools.pdfToPng.title', route: '/pdf-to-png' },
+      { icon: '🖼️', titleKey: 'tools.pdfToTiff.title', route: '/pdf-to-tiff' },
+      { icon: '📐', titleKey: 'tools.pdfToSvg.title', route: '/pdf-to-svg' },
+      { icon: '📝', titleKey: 'tools.pdfToText.title', route: '/pdf-to-text' },
+      { icon: '🌐', titleKey: 'tools.pdfToHtml.title', route: '/pdf-to-html' },
     ],
   },
   {
     categoryKey: 'footer.toPdf',
     links: [
-      { titleKey: 'tools.wordToPdf.title', route: '/word-to-pdf' },
-      { titleKey: 'tools.excelToPdf.title', route: '/excel-to-pdf' },
-      { titleKey: 'tools.pptToPdf.title', route: '/ppt-to-pdf' },
-      { titleKey: 'tools.imageToPdf.title', route: '/image-to-pdf' },
+      { icon: '📝', titleKey: 'tools.wordToPdf.title', route: '/word-to-pdf' },
+      { icon: '📊', titleKey: 'tools.excelToPdf.title', route: '/excel-to-pdf' },
+      { icon: '📽️', titleKey: 'tools.pptToPdf.title', route: '/ppt-to-pdf' },
+      { icon: '🖼️', titleKey: 'tools.imageToPdf.title', route: '/image-to-pdf' },
     ],
   },
   {
     categoryKey: 'footer.reader',
     links: [
-      { titleKey: 'tools.pdfReader.title', route: '/pdf-reader' },
+      { icon: '📖', titleKey: 'tools.pdfReader.title', route: '/pdf-reader' },
     ],
   },
 ]
@@ -119,14 +119,14 @@ const footerCols = [
 }
 
 .footer__col {
-  min-width: 160px;
+  min-width: 180px;
 }
 
 .footer__col-title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
 }
 
 .footer__links {
@@ -136,12 +136,14 @@ const footerCols = [
 }
 
 .footer__links li {
-  margin-bottom: 6px;
+  margin-bottom: var(--spacing-sm);
 }
 
 .footer__links a {
-  font-size: 0.82rem;
-  color: var(--color-text-secondary);
+  display: inline-block;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text);
   text-decoration: none;
   transition: color 0.2s;
 }

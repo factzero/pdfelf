@@ -394,11 +394,11 @@ export default {
     cannotOpen: 'Cannot open this PDF file',
   },
   footer: {
-    organize: '📂 Organize PDF',
-    edit: '✏️ Edit PDF',
-    fromPdf: '🔄 Convert from PDF',
-    toPdf: '📥 Convert to PDF',
-    reader: '📖 Reader',
+    organize: 'Organize PDF',
+    edit: 'Edit PDF',
+    fromPdf: 'Convert from PDF',
+    toPdf: 'Convert to PDF',
+    reader: 'Reader',
   },
   stats: {
     totalVisits: '{n} total visits',
