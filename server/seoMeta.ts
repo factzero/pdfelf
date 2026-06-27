@@ -385,6 +385,9 @@ export function buildJsonLd(seo: SeoEntry): string {
       url: 'https://pdfelf.online/',
       description: '免费在线 PDF 处理工具，提供压缩、合并、拆分、转换等 20+ PDF 功能',
       logo: 'https://pdfelf.online/favicon.svg',
+      sameAs: [
+        'https://github.com/factzero/pdfelf',
+      ],
     })
 
     // WebSite + SearchAction — 告诉 Google 这是一个可搜索的功能性网站
