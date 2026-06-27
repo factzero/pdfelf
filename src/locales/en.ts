@@ -99,7 +99,7 @@ export default {
     headerFooter: { title: 'Header & Footer', desc: 'Add header and footer text to every PDF page with customizable fonts' },
     signPdf: { title: 'Sign PDF', desc: 'Three ways: image upload, text signature, or freehand drawing — with adjustable position and size' },
     htmlToPdf: { title: 'HTML to PDF', desc: 'Convert HTML code or files into PDF documents' },
-    redactPdf: { title: 'Redact PDF', desc: 'Permanently redact sensitive info with rectangles, circles, or freehand brush' },
+    redactPdf: { title: 'Redact PDF', desc: 'Permanently redact sensitive info with shapes or freehand brush' },
     fillForm: { title: 'Fill Form', desc: 'Auto-detect and fill interactive PDF form fields' },
   },
   trust: {
@@ -1604,10 +1604,16 @@ export default {
   },
   redactPdf: {
     title: '🔏 Redact PDF',
-    desc: 'Permanently redact sensitive PDF content with rectangles, circles, or freehand brush',
+    desc: 'Permanently redact sensitive PDF content with rectangles, rounded rects, circles, ellipses, triangles, stars, hexagons, crosses, or freehand brush',
     drawHint: 'Choose a tool and draw on the PDF page',
     toolRect: 'Rectangle',
+    toolRoundedRect: 'Rounded',
     toolCircle: 'Circle',
+    toolEllipse: 'Ellipse',
+    toolTriangle: 'Triangle',
+    toolStar: 'Star',
+    toolHexagon: 'Hexagon',
+    toolCross: 'Cross',
     toolFreehand: 'Freehand',
     brushWidth: 'Brush Size',
     clearAll: 'Clear All',
@@ -1617,10 +1623,11 @@ export default {
     startBtn: 'Apply Redactions',
     processing: 'Applying redactions...',
     completed: 'Redactions Applied',
+    continueEdit: 'Continue Editing',
     seo: {
       featuresTitle: 'Features',
       features: [
-        'Draw rectangles, circles, or freehand brush strokes to redact sensitive PDF content',
+        'Draw rectangles, rounded rects, circles, ellipses, triangles, stars, hexagons, crosses, or freehand brush strokes to redact sensitive content',
         'Per-page redaction with precise control over placement',
         'Irreversible — ensures sensitive data cannot be recovered',
         'Local browser processing — your files stay private',
@@ -1628,7 +1635,7 @@ export default {
       stepsTitle: 'How to Use',
       steps: [
         { title: 'Upload PDF', desc: 'Drag & drop or select the PDF with sensitive content' },
-        { title: 'Choose a tool', desc: 'Select rectangle, circle, or freehand brush and adjust brush size' },
+        { title: 'Choose a tool', desc: 'Select from rectangle, rounded rect, circle, ellipse, triangle, star, hexagon, cross, or freehand brush' },
         { title: 'Draw redactions', desc: 'Draw over sensitive text or images on the PDF page' },
         { title: 'Download redacted PDF', desc: 'Click Apply Redactions to permanently redact and download' },
       ],
@@ -1636,7 +1643,7 @@ export default {
       faq: [
         { q: 'Is redaction reversible?', a: 'No, redaction draws solid black shapes that permanently cover the original content. Keep a backup of the original file.' },
         { q: 'Can I redact multiple pages?', a: 'Yes, switch pages and draw redaction areas on each page. All redactions are applied at once.' },
-        { q: 'What is the difference between freehand and shapes?', a: 'Freehand brush is great for irregular areas (e.g., handwritten signatures). Rectangles and circles are better for neatly redacting text blocks or stamps.' },
+        { q: 'What is the difference between freehand and shapes?', a: 'Freehand brush is great for irregular areas (e.g., handwritten signatures). Shape tools are better for neatly redacting text blocks or stamps.' },
       ],
       relatedTitle: 'Related Tools',
       related: [

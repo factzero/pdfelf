@@ -1507,6 +1507,25 @@ export interface RedactCircle {
   ry: number
 }
 
+export interface RedactRoundedRect {
+  page: number
+  x: number
+  y: number
+  width: number
+  height: number
+  rx: number
+  ry: number
+}
+
+export interface RedactPolygon {
+  page: number
+  shape: 'triangle' | 'star' | 'hexagon' | 'cross'
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 export interface RedactPath {
   page: number
   points: { x: number; y: number }[]
@@ -1516,116 +1535,238 @@ export interface RedactPath {
 export interface RedactPayload {
   rects?: RedactRect[]
   circles?: RedactCircle[]
+  roundedRects?: RedactRoundedRect[]
+  polygons?: RedactPolygon[]
   paths?: RedactPath[]
   color?: [number, number, number] // RGB
 }
 
+/** Compute polygon vertices in top-left coordinates from a bounding rect */
+function shapeVertices(shape: string, x: number, y: number, w: number, h: number): { x: number; y: number }[] {
+  const cx = x + w / 2
+  const cy = y + h / 2
+  switch (shape) {
+    case 'triangle': {
+      // Upward-pointing triangle
+      return [
+        { x: cx, y },
+        { x: x + w, y: y + h },
+        { x, y: y + h },
+      ]
+    }
+    case 'star': {
+      const outerR = Math.min(w, h) / 2
+      const innerR = outerR * 0.382
+      const verts: { x: number; y: number }[] = []
+      for (let i = 0; i < 10; i++) {
+        const r = i % 2 === 0 ? outerR : innerR
+        const angle = -Math.PI / 2 + (i * Math.PI) / 5
+        verts.push({ x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) })
+      }
+      return verts
+    }
+    case 'hexagon': {
+      const verts: { x: number; y: number }[] = []
+      for (let i = 0; i < 6; i++) {
+        const angle = (i * Math.PI) / 3
+        verts.push({ x: cx + (w / 2) * Math.cos(angle), y: cy + (h / 2) * Math.sin(angle) })
+      }
+      return verts
+    }
+    case 'cross': {
+      // Two overlapping rectangles forming a plus sign
+      const thickness = Math.min(w, h) / 3
+      const tx = thickness / 2
+      return [
+        { x: cx - tx, y },                        // top-left of vertical arm
+        { x: cx + tx, y },                        // top-right of vertical arm
+        { x: cx + tx, y: cy - tx },               // inner top-right
+        { x: x + w, y: cy - tx },                 // right-top of horizontal arm
+        { x: x + w, y: cy + tx },                 // right-bottom of horizontal arm
+        { x: cx + tx, y: cy + tx },               // inner bottom-right
+        { x: cx + tx, y: y + h },                 // bottom-right of vertical arm
+        { x: cx - tx, y: y + h },                 // bottom-left of vertical arm
+        { x: cx - tx, y: cy + tx },               // inner bottom-left
+        { x, y: cy + tx },                        // left-bottom of horizontal arm
+        { x, y: cy - tx },                        // left-top of horizontal arm
+        { x: cx - tx, y: cy - tx },               // inner top-left
+      ]
+    }
+    default:
+      return []
+  }
+}
+
+/**
+ * Collect all redaction page indices (0-based) from the payload.
+ */
+function collectRedactedPages(payload: RedactPayload): Set<number> {
+  const pages = new Set<number>()
+  for (const r of payload.rects ?? []) pages.add(r.page - 1)
+  for (const c of payload.circles ?? []) pages.add(c.page - 1)
+  for (const rr of payload.roundedRects ?? []) pages.add(rr.page - 1)
+  for (const p of payload.polygons ?? []) pages.add(p.page - 1)
+  for (const fp of payload.paths ?? []) pages.add(fp.page - 1)
+  return pages
+}
+
+/**
+ * Get all redaction items for a specific page (0-based page index).
+ */
+function getPageRedactions(pageIdx: number, payload: RedactPayload) {
+  return {
+    rects: (payload.rects ?? []).filter(r => r.page - 1 === pageIdx),
+    circles: (payload.circles ?? []).filter(c => c.page - 1 === pageIdx),
+    roundedRects: (payload.roundedRects ?? []).filter(rr => rr.page - 1 === pageIdx),
+    polygons: (payload.polygons ?? []).filter(p => p.page - 1 === pageIdx),
+    freePaths: (payload.paths ?? []).filter(fp => fp.page - 1 === pageIdx),
+  }
+}
+
+/**
+ * Draw redaction shapes onto a Canvas 2D context.
+ * Coordinates are in PDF points (origin top-left); the canvas is scaled by `scale`.
+ */
+function drawRedactionsOnCanvas(
+  ctx: CanvasRenderingContext2D,
+  items: ReturnType<typeof getPageRedactions>,
+  scale: number,
+) {
+  const c = [0, 0, 0] // RGB black — must match the color used in the original payload
+  ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`
+
+  // Shapes are in PDF points with top-left origin — same as the canvas, so no Y flip needed.
+  for (const r of items.rects) {
+    ctx.fillRect(r.x * scale, r.y * scale, r.width * scale, r.height * scale)
+  }
+  for (const circle of items.circles) {
+    ctx.beginPath()
+    ctx.ellipse(circle.cx * scale, circle.cy * scale, circle.rx * scale, circle.ry * scale, 0, 0, Math.PI * 2)
+    ctx.fill()
+  }
+  for (const rr of items.roundedRects) {
+    const sx = rr.x * scale
+    const sy = rr.y * scale
+    const w = rr.width * scale
+    const h = rr.height * scale
+    const rx = Math.min(rr.rx * scale, w / 2, h / 2)
+    const ry = Math.min(rr.ry * scale, w / 2, h / 2)
+    ctx.beginPath()
+    ctx.moveTo(sx + rx, sy)
+    ctx.lineTo(sx + w - rx, sy)
+    ctx.quadraticCurveTo(sx + w, sy, sx + w, sy + ry)
+    ctx.lineTo(sx + w, sy + h - ry)
+    ctx.quadraticCurveTo(sx + w, sy + h, sx + w - rx, sy + h)
+    ctx.lineTo(sx + rx, sy + h)
+    ctx.quadraticCurveTo(sx, sy + h, sx, sy + h - ry)
+    ctx.lineTo(sx, sy + ry)
+    ctx.quadraticCurveTo(sx, sy, sx + rx, sy)
+    ctx.fill()
+  }
+  for (const poly of items.polygons) {
+    const verts = shapeVertices(poly.shape, poly.x, poly.y, poly.width, poly.height)
+    if (verts.length === 0) continue
+    ctx.beginPath()
+    ctx.moveTo(verts[0].x * scale, verts[0].y * scale)
+    for (let i = 1; i < verts.length; i++) {
+      ctx.lineTo(verts[i].x * scale, verts[i].y * scale)
+    }
+    ctx.closePath()
+    ctx.fill()
+  }
+  for (const fp of items.freePaths) {
+    const pts = fp.points
+    if (pts.length === 0) continue
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.lineWidth = fp.brushWidth * scale
+    ctx.beginPath()
+    ctx.moveTo(pts[0].x * scale, pts[0].y * scale)
+    for (let i = 1; i < pts.length; i++) {
+      ctx.lineTo(pts[i].x * scale, pts[i].y * scale)
+    }
+    ctx.stroke()
+  }
+}
+
 /**
  * Redact (永久遮盖) sensitive areas in a PDF.
- * Supports rectangles, circles/ellipses, and freehand paths.
- * Coordinates are in PDF points (1/72 inch), with origin at top-left (same as canvas).
+ *
+ * Pages that contain redactions are rendered to a high-resolution canvas,
+ * the black cover shapes are drawn on top, and the result is embedded as
+ * a PNG image — this ensures the original content cannot be recovered.
+ * Pages without redactions are copied as-is from the original document.
+ *
+ * Coordinates are in PDF points (1/72 inch), with origin at top-left.
  */
 export async function redactPdf(
   file: File,
   payload: RedactPayload,
   onProgress?: (percent: number) => void,
 ): Promise<Blob> {
-  const rects = payload.rects ?? []
-  const circles = payload.circles ?? []
-  const freePaths = payload.paths ?? []
-  const color = payload.color ?? [0, 0, 0] as [number, number, number]
-
+  const redactedPages = collectRedactedPages(payload)
   onProgress?.(5)
+
   const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(10)
+
+  // Load source doc with pdf-lib (for page info + copying clean pages)
+  const srcDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const totalPages = srcDoc.getPageCount()
   onProgress?.(15)
 
-  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
-  const pages = pdfDoc.getPages()
-  onProgress?.(25)
+  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+  const loadingTask = pdfjsLib.getDocument({ data: buffer.slice(0), ...DEFAULT_PDF_OPTIONS })
+  const pdfJsDoc = await loadingTask.promise
+  onProgress?.(20)
 
-  const totalItems = rects.length + circles.length + freePaths.length
-  let processed = 0
+  const newDoc = await PDFDocument.create()
+  const scale = 2.0 // high-resolution render
 
-  function advance(): number {
-    processed++
-    return 25 + Math.round((processed / Math.max(totalItems, 1)) * 65)
-  }
+  for (let i = 0; i < totalPages; i++) {
+    const pageIdx = i // 0-based
+    const baseProg = 20 + Math.round((i / totalPages) * 70)
 
-  // Draw rectangles
-  for (const rect of rects) {
-    const pi = rect.page - 1
-    if (pi < 0 || pi >= pages.length) continue
-    const page = pages[pi]
-    const pageHeight = page.getHeight()
-    const pdfY = pageHeight - rect.y - rect.height
-    page.drawRectangle({
-      x: rect.x, y: pdfY, width: rect.width, height: rect.height,
-      color: rgb(color[0], color[1], color[2]),
-    })
-    onProgress?.(advance())
-  }
+    if (redactedPages.has(pageIdx)) {
+      // ── True redaction: render page + draw black shapes → embed as image ──
+      const pdfPage = await pdfJsDoc.getPage(pageIdx + 1)
+      const viewport = pdfPage.getViewport({ scale })
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.floor(viewport.width)
+      canvas.height = Math.floor(viewport.height)
+      const ctx = canvas.getContext('2d')!
+      await pdfPage.render({ canvasContext: ctx, viewport, canvas }).promise
 
-  // Draw circles/ellipses
-  for (const c of circles) {
-    const pi = c.page - 1
-    if (pi < 0 || pi >= pages.length) continue
-    const page = pages[pi]
-    const pageHeight = page.getHeight()
-    const pdfY = pageHeight - c.cy
-    page.drawEllipse({
-      x: c.cx, y: pdfY, xScale: c.rx, yScale: c.ry,
-      color: rgb(color[0], color[1], color[2]),
-    })
-    onProgress?.(advance())
-  }
+      const items = getPageRedactions(pageIdx, payload)
+      drawRedactionsOnCanvas(ctx, items, scale)
 
-  // Draw freehand paths — approximate as overlapping filled circles + connecting quads
-  for (const path of freePaths) {
-    const pi = path.page - 1
-    if (pi < 0 || pi >= pages.length) continue
-    const page = pages[pi]
-    const pageHeight = page.getHeight()
-    const pts = path.points
-    if (pts.length === 0) continue
-    const r = path.brushWidth / 2
-
-    // Draw a circle at each sampled point
-    const step = Math.max(1, Math.floor(pts.length / 200) === 0 ? 1 : Math.floor(pts.length / 200))
-    for (let i = 0; i < pts.length; i += step) {
-      const pdfY = pageHeight - pts[i].y
-      page.drawEllipse({
-        x: pts[i].x, y: pdfY, xScale: r, yScale: r,
-        color: rgb(color[0], color[1], color[2]),
+      const pngBlob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png')
       })
+      const pngBytes = new Uint8Array(await pngBlob.arrayBuffer())
+      const image = await newDoc.embedPng(pngBytes)
+      const srcPage = srcDoc.getPage(pageIdx)
+      const pageW = srcPage.getWidth()
+      const pageH = srcPage.getHeight()
+      const newPage = newDoc.addPage([pageW, pageH])
+      newPage.drawImage(image, { x: 0, y: 0, width: pageW, height: pageH })
+
+      onProgress?.(baseProg + 2)
+    } else {
+      // ── No redactions: copy page as-is ──
+      const copiedPages = await newDoc.copyPages(srcDoc, [pageIdx])
+      copiedPages.forEach(p => newDoc.addPage(p))
+
+      onProgress?.(baseProg)
     }
 
-    // Draw connecting rectangles between consecutive sampled points to fill gaps
-    if (pts.length >= 2) {
-      for (let i = step; i < pts.length; i += step) {
-        const p0 = pts[i - step]
-        const p1 = pts[i]
-        const dx = p1.x - p0.x
-        const dy = p1.y - p0.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < 0.5) continue
-        // Bounding rect for the segment
-        const bx = Math.min(p0.x, p1.x) - r
-        const by = Math.min(p0.y, p1.y) - r
-        const bw = Math.abs(dx) + r * 2
-        const bh = Math.abs(dy) + r * 2
-        const pdfY = pageHeight - by - bh
-        page.drawRectangle({
-          x: bx, y: pdfY, width: bw, height: bh,
-          color: rgb(color[0], color[1], color[2]),
-        })
-      }
-    }
-
-    onProgress?.(advance())
+    // Yield to keep UI responsive
+    await new Promise((r) => setTimeout(r, 0))
   }
 
+  pdfJsDoc.cleanup()
   onProgress?.(95)
-  const resultBytes = await pdfDoc.save({ useObjectStreams: true })
+  const resultBytes = await newDoc.save({ useObjectStreams: true })
   onProgress?.(100)
   return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
 }
