@@ -1,4 +1,4 @@
-import { PDFDocument, rgb, degrees } from 'pdf-lib'
+import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import JSZip from 'jszip'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
@@ -370,4 +370,102 @@ async function loadWatermarkFont(
   const fontBytes = await fontResp.arrayBuffer()
 
   return pdfDoc.embedFont(fontBytes)
+}
+
+/**
+ * Add page numbers to a PDF file.
+ * @param file - Input PDF file
+ * @param options - Page number formatting options
+ * @param onProgress - Progress callback (0-100)
+ * @returns PDF with page numbers as Blob
+ */
+export async function addPageNumbers(
+  file: File,
+  options: {
+    position?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
+    fontSize?: number
+    format?: 'page-only' | 'page-of-total' | 'page-slash-total'
+    font?: 'Helvetica' | 'Times Roman' | 'Courier'
+  } = {},
+  onProgress?: (percent: number) => void
+): Promise<Blob> {
+  const {
+    position = 'bottom-center',
+    fontSize = 12,
+    format = 'page-of-total',
+    font = 'Helvetica',
+  } = options
+
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(30)
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const pages = pdfDoc.getPages()
+  const totalPages = pages.length
+
+  // Map font name to pdf-lib StandardFonts
+  const fontMap: Record<string, StandardFonts> = {
+    'Helvetica': StandardFonts.Helvetica,
+    'Times Roman': StandardFonts.TimesRoman,
+    'Courier': StandardFonts.Courier,
+  }
+  const selectedFont = fontMap[font] ?? StandardFonts.Helvetica
+  const pdfFont = pdfDoc.embedStandardFont(selectedFont)
+
+  for (let i = 0; i < pages.length; i++) {
+    onProgress?.(30 + Math.round((i / pages.length) * 65))
+    const page = pages[i]
+    const pageNum = i + 1
+    const { width, height } = page.getSize()
+
+    let label: string
+    switch (format) {
+      case 'page-only':
+        label = `${pageNum}`
+        break
+      case 'page-slash-total':
+        label = `${pageNum} / ${totalPages}`
+        break
+      case 'page-of-total':
+      default:
+        label = `Page ${pageNum} of ${totalPages}`
+    }
+
+    const textWidth = pdfFont.widthOfTextAtSize(label, fontSize)
+    const textHeight = fontSize
+    const margin = 28
+
+    let x: number
+    let y: number
+
+    // Horizontal position
+    if (position.includes('left')) {
+      x = margin
+    } else if (position.includes('right')) {
+      x = width - textWidth - margin
+    } else {
+      x = (width - textWidth) / 2
+    }
+
+    // Vertical position (y flips: top is near height, bottom is near 0)
+    if (position.startsWith('top')) {
+      y = height - margin - textHeight
+    } else {
+      y = margin
+    }
+
+    page.drawText(label, {
+      x,
+      y,
+      size: fontSize,
+      font: pdfFont,
+      color: rgb(0.35, 0.35, 0.35),
+    })
+  }
+
+  onProgress?.(95)
+  const resultBytes = await pdfDoc.save()
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+  onProgress?.(100)
+  return blob
 }

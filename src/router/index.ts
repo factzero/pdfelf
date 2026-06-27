@@ -59,6 +59,12 @@ const router = createRouter({
       component: () => import('@/pages/WatermarkPage.vue'),
       meta: { titleKey: 'seo.addWatermark', descKey: 'tools.addWatermark.desc' },
     },
+    {
+      path: '/add-page-numbers',
+      name: 'add-page-numbers',
+      component: () => import('@/pages/AddPageNumberPage.vue'),
+      meta: { titleKey: 'seo.addPageNumbers', descKey: 'tools.addPageNumbers.desc' },
+    },
     // 从 PDF 转换
     {
       path: '/pdf-to-word',

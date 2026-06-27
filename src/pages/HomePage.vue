@@ -45,6 +45,7 @@ const categories = [
     nameKey: 'categories.edit',
     tools: [
       { icon: '🔏', titleKey: 'tools.addWatermark.title', descKey: 'tools.addWatermark.desc', route: '/add-watermark' },
+      { icon: '🔢', titleKey: 'tools.addPageNumbers.title', descKey: 'tools.addPageNumbers.desc', route: '/add-page-numbers' },
     ],
   },
   {
