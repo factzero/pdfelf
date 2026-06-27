@@ -1061,3 +1061,228 @@ async function tryRenderRebuild(
     return null
   }
 }
+
+/**
+ * Read PDF metadata (title, author, subject, keywords, creator, producer).
+ */
+export async function readPdfMetadata(file: File): Promise<Record<string, string>> {
+  const buffer = await readFileAsArrayBuffer(file)
+  const pdfDoc = await PDFDocument.load(buffer, {
+    ignoreEncryption: true,
+    throwOnInvalidObject: false,
+  })
+  return {
+    title: pdfDoc.getTitle() || '',
+    author: pdfDoc.getAuthor() || '',
+    subject: pdfDoc.getSubject() || '',
+    keywords: (pdfDoc.getKeywords() || '').toString(),
+    creator: pdfDoc.getCreator() || '',
+    producer: pdfDoc.getProducer() || '',
+    pages: String(pdfDoc.getPageCount()),
+  }
+}
+
+/**
+ * Edit PDF metadata and save.
+ */
+export async function editPdfMetadata(
+  file: File,
+  metadata: { title?: string; author?: string; subject?: string; keywords?: string; creator?: string; producer?: string },
+  onProgress?: (percent: number) => void,
+): Promise<Blob> {
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(30)
+  const pdfDoc = await PDFDocument.load(buffer, {
+    ignoreEncryption: true,
+    throwOnInvalidObject: false,
+  })
+  onProgress?.(60)
+  if (metadata.title !== undefined) pdfDoc.setTitle(metadata.title)
+  if (metadata.author !== undefined) pdfDoc.setAuthor(metadata.author)
+  if (metadata.subject !== undefined) pdfDoc.setSubject(metadata.subject)
+  if (metadata.keywords !== undefined) pdfDoc.setKeywords(metadata.keywords.split(/[,;，；\s]+/).filter(Boolean))
+  if (metadata.creator !== undefined) pdfDoc.setCreator(metadata.creator)
+  if (metadata.producer !== undefined) pdfDoc.setProducer(metadata.producer)
+  const resultBytes = await pdfDoc.save({ useObjectStreams: true })
+  onProgress?.(100)
+  return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+}
+
+/**
+ * Flip PDF pages horizontally or vertically.
+ */
+export async function flipPdf(
+  file: File,
+  mode: 'horizontal' | 'vertical',
+  onProgress?: (percent: number) => void,
+): Promise<Blob> {
+  onProgress?.(5)
+  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(10)
+
+  const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
+  const pdf = await loadingTask.promise
+  const pageCount = pdf.numPages
+  onProgress?.(20)
+
+  const scale = 2.0
+  const newDoc = await PDFDocument.create()
+
+  for (let i = 1; i <= pageCount; i++) {
+    onProgress?.(20 + Math.round((i / pageCount) * 65))
+    const page = await pdf.getPage(i)
+    const viewport = page.getViewport({ scale })
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.floor(viewport.width)
+    canvas.height = Math.floor(viewport.height)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) continue
+
+    ctx.save()
+    if (mode === 'horizontal') {
+      ctx.translate(canvas.width, 0)
+      ctx.scale(-1, 1)
+    } else {
+      ctx.translate(0, canvas.height)
+      ctx.scale(1, -1)
+    }
+    await page.render({ canvasContext: ctx, viewport, canvas }).promise
+    ctx.restore()
+
+    const pngBlob: Blob = await new Promise((resolve, reject) =>
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png'),
+    )
+    const pngBytes = new Uint8Array(await pngBlob.arrayBuffer())
+    const image = await newDoc.embedPng(pngBytes)
+    const newPage = newDoc.addPage([viewport.width, viewport.height])
+    newPage.drawImage(image, { x: 0, y: 0, width: viewport.width, height: viewport.height })
+    await new Promise((r) => setTimeout(r, 0))
+  }
+
+  pdf.cleanup()
+  onProgress?.(90)
+  const resultBytes = await newDoc.save({ useObjectStreams: true })
+  onProgress?.(100)
+  return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+}
+
+/**
+ * Convert PDF to grayscale (black & white).
+ */
+export async function grayscalePdf(
+  file: File,
+  onProgress?: (percent: number) => void,
+): Promise<Blob> {
+  onProgress?.(5)
+  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(10)
+
+  const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
+  const pdf = await loadingTask.promise
+  const pageCount = pdf.numPages
+  onProgress?.(20)
+
+  const scale = 1.5
+  const newDoc = await PDFDocument.create()
+
+  for (let i = 1; i <= pageCount; i++) {
+    onProgress?.(20 + Math.round((i / pageCount) * 65))
+    const page = await pdf.getPage(i)
+    const viewport = page.getViewport({ scale })
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.floor(viewport.width)
+    canvas.height = Math.floor(viewport.height)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) continue
+
+    await page.render({ canvasContext: ctx, viewport, canvas }).promise
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const data = imageData.data
+    for (let j = 0; j < data.length; j += 4) {
+      const gray = Math.round(data[j] * 0.299 + data[j + 1] * 0.587 + data[j + 2] * 0.114)
+      data[j] = gray
+      data[j + 1] = gray
+      data[j + 2] = gray
+    }
+    ctx.putImageData(imageData, 0, 0)
+
+    const imgBlob: Blob = await new Promise((resolve, reject) =>
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/jpeg', 0.85),
+    )
+    const imgBytes = new Uint8Array(await imgBlob.arrayBuffer())
+    const image = await newDoc.embedJpg(imgBytes)
+    const newPage = newDoc.addPage([viewport.width, viewport.height])
+    newPage.drawImage(image, { x: 0, y: 0, width: viewport.width, height: viewport.height })
+    await new Promise((r) => setTimeout(r, 0))
+  }
+
+  pdf.cleanup()
+  onProgress?.(90)
+  const resultBytes = await newDoc.save({ useObjectStreams: true })
+  onProgress?.(100)
+  return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+}
+
+/**
+ * Resize PDF pages to a target page size.
+ */
+export async function resizePdfPages(
+  file: File,
+  options: { width: number; height: number; scaleContent?: boolean },
+  onProgress?: (percent: number) => void,
+): Promise<Blob> {
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(20)
+
+  const srcDoc = await PDFDocument.load(buffer, {
+    ignoreEncryption: true,
+    throwOnInvalidObject: false,
+  })
+  const pages = srcDoc.getPages()
+  const pageCount = pages.length
+  onProgress?.(30)
+
+  const newDoc = await PDFDocument.create()
+
+  for (let i = 0; i < pageCount; i++) {
+    onProgress?.(30 + Math.round((i / pageCount) * 60))
+    const srcPage = pages[i]
+    const originalSize = srcPage.getSize()
+    const newPage = newDoc.addPage([options.width, options.height])
+    const embeddedPage = await newDoc.embedPage(srcPage)
+
+    if (options.scaleContent !== false) {
+      const scaleX = options.width / originalSize.width
+      const scaleY = options.height / originalSize.height
+      const scale = Math.min(scaleX, scaleY)
+      const drawW = originalSize.width * scale
+      const drawH = originalSize.height * scale
+      const offsetX = (options.width - drawW) / 2
+      const offsetY = (options.height - drawH) / 2
+      newPage.drawPage(embeddedPage, {
+        x: offsetX,
+        y: offsetY,
+        width: drawW,
+        height: drawH,
+      })
+    } else {
+      newPage.drawPage(embeddedPage, {
+        x: 0,
+        y: 0,
+        width: originalSize.width,
+        height: originalSize.height,
+      })
+    }
+    await new Promise((r) => setTimeout(r, 0))
+  }
+
+  onProgress?.(95)
+  const resultBytes = await newDoc.save({ useObjectStreams: true })
+  onProgress?.(100)
+  return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+}

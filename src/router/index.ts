@@ -192,6 +192,31 @@ const router = createRouter({
       component: () => import('@/pages/PdfReaderPage.vue'),
       meta: { titleKey: 'seo.pdfReader', descKey: 'tools.pdfReader.desc' },
     },
+    // 更多工具
+    {
+      path: '/edit-metadata',
+      name: 'edit-metadata',
+      component: () => import('@/pages/EditMetadataPage.vue'),
+      meta: { titleKey: 'seo.editMetadata', descKey: 'tools.editMetadata.desc' },
+    },
+    {
+      path: '/flip-pdf',
+      name: 'flip-pdf',
+      component: () => import('@/pages/FlipPdfPage.vue'),
+      meta: { titleKey: 'seo.flipPdf', descKey: 'tools.flipPdf.desc' },
+    },
+    {
+      path: '/grayscale-pdf',
+      name: 'grayscale-pdf',
+      component: () => import('@/pages/GrayscalePdfPage.vue'),
+      meta: { titleKey: 'seo.grayscalePdf', descKey: 'tools.grayscalePdf.desc' },
+    },
+    {
+      path: '/resize-pdf',
+      name: 'resize-pdf',
+      component: () => import('@/pages/ResizePdfPage.vue'),
+      meta: { titleKey: 'seo.resizePdf', descKey: 'tools.resizePdf.desc' },
+    },
   ],
 })
 

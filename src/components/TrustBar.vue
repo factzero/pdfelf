@@ -69,7 +69,6 @@ const footerCols = [
     links: [
       { icon: '🔏', titleKey: 'tools.addWatermark.title', route: '/add-watermark' },
       { icon: '🔢', titleKey: 'tools.addPageNumbers.title', route: '/add-page-numbers' },
-      { icon: '✂️', titleKey: 'tools.cropPdf.title', route: '/crop-pdf' },
     ],
   },
   {
@@ -77,6 +76,7 @@ const footerCols = [
     links: [
       { icon: '🔒', titleKey: 'tools.protectPdf.title', route: '/protect-pdf' },
       { icon: '🔓', titleKey: 'tools.unlockPdf.title', route: '/unlock-pdf' },
+      { icon: '✂️', titleKey: 'tools.cropPdf.title', route: '/crop-pdf' },
       { icon: '🖼️', titleKey: 'tools.extractImages.title', route: '/extract-images' },
       { icon: '🔧', titleKey: 'tools.repairPdf.title', route: '/repair-pdf' },
     ],
@@ -111,6 +111,15 @@ const footerCols = [
       { icon: '📖', titleKey: 'tools.pdfReader.title', route: '/pdf-reader' },
     ],
   },
+  {
+    categoryKey: 'footer.moreTools',
+    links: [
+      { icon: '📋', titleKey: 'tools.editMetadata.title', route: '/edit-metadata' },
+      { icon: '🔄', titleKey: 'tools.flipPdf.title', route: '/flip-pdf' },
+      { icon: '⬛', titleKey: 'tools.grayscalePdf.title', route: '/grayscale-pdf' },
+      { icon: '📐', titleKey: 'tools.resizePdf.title', route: '/resize-pdf' },
+    ],
+  },
 ]
 </script>
 
@@ -122,22 +131,23 @@ const footerCols = [
 }
 
 .footer__nav {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-3xl);
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-md);
   padding: var(--spacing-2xl) var(--spacing-md);
-  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .footer__col {
-  min-width: 180px;
+  min-width: 0;
 }
 
 .footer__col-title {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
 }
 
 .footer__links {
@@ -147,16 +157,17 @@ const footerCols = [
 }
 
 .footer__links li {
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 4px;
 }
 
 .footer__links a {
   display: inline-block;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.6;
   color: var(--color-text);
   text-decoration: none;
   transition: color 0.2s;
+  white-space: nowrap;
 }
 
 .footer__links a:hover {
@@ -195,11 +206,23 @@ const footerCols = [
   opacity: 0.4;
 }
 
+@media (max-width:1200px) {
+  .footer__nav {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer__nav {
+    grid-template-columns: repeat(2, 1fr);
+    text-align: center;
+  }
+}
+
 @media (max-width: 640px) {
   .footer__nav {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: center;
-    text-align: center;
     gap: var(--spacing-xl);
   }
 

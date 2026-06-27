@@ -88,6 +88,15 @@ const categories = [
       { icon: '📖', titleKey: 'tools.pdfReader.title', descKey: 'tools.pdfReader.desc', route: '/pdf-reader' },
     ],
   },
+  {
+    nameKey: 'categories.moreTools',
+    tools: [
+      { icon: '📋', titleKey: 'tools.editMetadata.title', descKey: 'tools.editMetadata.desc', route: '/edit-metadata' },
+      { icon: '🔄', titleKey: 'tools.flipPdf.title', descKey: 'tools.flipPdf.desc', route: '/flip-pdf' },
+      { icon: '⬛', titleKey: 'tools.grayscalePdf.title', descKey: 'tools.grayscalePdf.desc', route: '/grayscale-pdf' },
+      { icon: '📐', titleKey: 'tools.resizePdf.title', descKey: 'tools.resizePdf.desc', route: '/resize-pdf' },
+    ],
+  },
 ]
 </script>
 
