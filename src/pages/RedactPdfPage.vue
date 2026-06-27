@@ -34,7 +34,7 @@
 
       <p class="hint">{{ $t('redactPdf.drawHint') }}</p>
 
-      <div class="canvas-container">
+      <div ref="canvasContainerRef" class="canvas-container">
         <canvas
           ref="pdfCanvasRef"
           class="pdf-canvas"
@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onUnmounted, nextTick } from 'vue'
+import { ref, watch, onUnmounted, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
@@ -124,6 +124,7 @@ const outputFilename = ref('')
 const errorMsg = ref('')
 const currentPage = ref(1)
 const pdfCanvasRef = ref<HTMLCanvasElement | null>(null)
+const canvasContainerRef = ref<HTMLDivElement | null>(null)
 
 const redactions = ref<RedactRect[]>([])
 
@@ -136,6 +137,7 @@ let drawStartY = 0
 let lastX = 0
 let lastY = 0
 let pageRenderedScale = 1.5
+let containerWidth = 800
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return bytes + ' B'
@@ -162,14 +164,27 @@ async function onFileSelected(file: File | File[]) {
   }
 }
 
+function getViewScale(pageViewport: any): number {
+  if (canvasContainerRef.value) {
+    containerWidth = canvasContainerRef.value.clientWidth - 16 // subtract scrollbar width
+  }
+  // Fit to container width, but cap at 2.0 for performance
+  const fitScale = containerWidth / pageViewport.width
+  return Math.min(2.0, Math.max(0.5, fitScale))
+}
+
 async function renderPage(pageNum: number) {
   if (!pdfDoc) return
   if (!pdfCanvasRef.value) { await nextTick(); if (!pdfCanvasRef.value) return }
   const c = pdfCanvasRef.value!
   const page = await pdfDoc.getPage(pageNum)
+  const unscaledViewport = page.getViewport({ scale: 1 })
+  pageRenderedScale = getViewScale(unscaledViewport)
   const viewport = page.getViewport({ scale: pageRenderedScale })
   c.width = Math.floor(viewport.width)
   c.height = Math.floor(viewport.height)
+  c.style.width = Math.floor(viewport.width) + 'px'
+  c.style.height = Math.floor(viewport.height) + 'px'
   const ctx = c.getContext('2d')!
   ctx.clearRect(0, 0, c.width, c.height)
   await page.render({ canvas: c, canvasContext: ctx, viewport }).promise
@@ -367,8 +382,22 @@ async function process() {
   }
 }
 
+let resizeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  resizeObserver = new ResizeObserver(() => {
+    if (pdfDoc && currentPage.value > 0) {
+      renderPage(currentPage.value)
+    }
+  })
+  if (canvasContainerRef.value) {
+    resizeObserver.observe(canvasContainerRef.value)
+  }
+})
+
 onUnmounted(() => {
   if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null }
+  if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null }
 })
 </script>
 
@@ -417,10 +446,15 @@ onUnmounted(() => {
 
 .canvas-container {
   border: 1px solid var(--color-border); border-radius: var(--radius-md);
-  overflow: auto; max-height: 600px; background: #e5e5e5;
-  display: flex; justify-content: center;
+  overflow: auto; max-height: 70vh; min-height: 200px; background: #e5e5e5;
+  text-align: center;
 }
-.pdf-canvas { display: block; cursor: crosshair; touch-action: none; }
+.pdf-canvas {
+  display: block;
+  margin: 0 auto;
+  cursor: crosshair;
+  touch-action: none;
+}
 
 .rect-list { font-size: 0.8125rem; color: var(--color-text-secondary); }
 
