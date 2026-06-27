@@ -69,6 +69,7 @@ const footerCols = [
     links: [
       { icon: '🔏', titleKey: 'tools.addWatermark.title', route: '/add-watermark' },
       { icon: '🔢', titleKey: 'tools.addPageNumbers.title', route: '/add-page-numbers' },
+      { icon: '📖', titleKey: 'tools.headerFooter.title', route: '/add-header-footer' },
     ],
   },
   {
@@ -118,6 +119,7 @@ const footerCols = [
       { icon: '🔄', titleKey: 'tools.flipPdf.title', route: '/flip-pdf' },
       { icon: '⬛', titleKey: 'tools.grayscalePdf.title', route: '/grayscale-pdf' },
       { icon: '📐', titleKey: 'tools.resizePdf.title', route: '/resize-pdf' },
+      { icon: '✍️', titleKey: 'tools.signPdf.title', route: '/sign-pdf' },
     ],
   },
 ]

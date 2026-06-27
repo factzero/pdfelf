@@ -472,6 +472,210 @@ export async function addPageNumbers(
   return blob
 }
 
+// ---- CJK font cache (loaded once per session) ----
+let _cjkFontBytes: ArrayBuffer | null = null
+const CJK_FONT_URL = '/fonts/NotoSansSC-Regular.ttf'
+
+/** Detect whether a text string contains characters outside WinAnsiEncoding (e.g. CJK). */
+function hasNonWinAnsi(text: string): boolean {
+  // eslint-disable-next-line no-control-regex
+  return /[^\x00-\xFF]/.test(text)
+}
+
+async function loadCjkFontBytes(onProgress?: (pct: number) => void): Promise<ArrayBuffer> {
+  if (_cjkFontBytes) return _cjkFontBytes
+  onProgress?.(0)
+  const resp = await fetch(CJK_FONT_URL)
+  if (!resp.ok) throw new Error(`Failed to load CJK font: ${resp.status}`)
+  onProgress?.(50)
+  _cjkFontBytes = await resp.arrayBuffer()
+  onProgress?.(100)
+  return _cjkFontBytes!
+}
+
+/**
+ * Add header and footer text to every page of a PDF.
+ * @param file - Input PDF file
+ * @param options - Header/footer text, font, alignment, margin settings
+ * @param onProgress - Progress callback (0-100)
+ * @returns PDF with headers and footers as Blob
+ */
+export async function addHeaderFooter(
+  file: File,
+  options: {
+    headerText?: string
+    footerText?: string
+    fontSize?: number
+    font?: 'Helvetica' | 'Times Roman' | 'Courier'
+    headerAlign?: 'left' | 'center' | 'right'
+    footerAlign?: 'left' | 'center' | 'right'
+    margin?: number
+  } = {},
+  onProgress?: (percent: number) => void
+): Promise<Blob> {
+  const {
+    headerText = '',
+    footerText = '',
+    fontSize = 12,
+    font = 'Helvetica',
+    headerAlign = 'center',
+    footerAlign = 'center',
+    margin = 28,
+  } = options
+
+  const needsCjk = hasNonWinAnsi(headerText) || hasNonWinAnsi(footerText)
+
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(20)
+
+  if (needsCjk) {
+    // Load CJK font (cached), then embed with fontkit
+    await loadCjkFontBytes((p) => onProgress?.(20 + Math.round(p * 0.05)))
+  }
+
+  onProgress?.(25)
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const pages = pdfDoc.getPages()
+
+  let pdfFont: Awaited<ReturnType<typeof pdfDoc.embedFont>>
+
+  if (needsCjk) {
+    pdfDoc.registerFontkit(fontkit)
+    pdfFont = await pdfDoc.embedFont(_cjkFontBytes!)
+  } else {
+    const fontMap: Record<string, StandardFonts> = {
+      'Helvetica': StandardFonts.Helvetica,
+      'Times Roman': StandardFonts.TimesRoman,
+      'Courier': StandardFonts.Courier,
+    }
+    const selectedFont = fontMap[font] ?? StandardFonts.Helvetica
+    pdfFont = pdfDoc.embedStandardFont(selectedFont)
+  }
+
+  for (let i = 0; i < pages.length; i++) {
+    onProgress?.(30 + Math.round((i / pages.length) * 65))
+    const page = pages[i]
+    const { width, height } = page.getSize()
+
+    function drawTextOnPage(text: string, align: string, isTop: boolean) {
+      if (!text.trim()) return
+      const textWidth = pdfFont.widthOfTextAtSize(text, fontSize)
+      let x: number
+      if (align === 'left') {
+        x = margin
+      } else if (align === 'right') {
+        x = width - textWidth - margin
+      } else {
+        x = (width - textWidth) / 2
+      }
+      const y = isTop
+        ? height - margin - fontSize
+        : margin
+      page.drawText(text.trim(), {
+        x,
+        y,
+        size: fontSize,
+        font: pdfFont,
+        color: rgb(0.35, 0.35, 0.35),
+      })
+    }
+
+    drawTextOnPage(headerText, headerAlign, true)
+    drawTextOnPage(footerText, footerAlign, false)
+  }
+
+  onProgress?.(95)
+  const resultBytes = await pdfDoc.save()
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+  onProgress?.(100)
+  return blob
+}
+
+/**
+ * Add an e-signature image to every page of a PDF.
+ * @param file - Input PDF file
+ * @param signatureImage - Signature PNG/JPEG blob
+ * @param options - Position, scale, and page range
+ * @param onProgress - Progress callback (0-100)
+ * @returns Signed PDF as Blob
+ */
+export async function signPdf(
+  file: File,
+  signatureImage: Blob,
+  options: {
+    position?: 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top-left' | 'top-right' | 'top-center'
+    scale?: number
+    marginX?: number
+    marginY?: number
+  } = {},
+  onProgress?: (percent: number) => void
+): Promise<Blob> {
+  const {
+    position = 'bottom-right',
+    scale = 1,
+    marginX = 40,
+    marginY = 40,
+  } = options
+
+  onProgress?.(10)
+  const [pdfBuffer, imgBuffer] = await Promise.all([
+    readFileAsArrayBuffer(file),
+    signatureImage.arrayBuffer(),
+  ])
+  onProgress?.(30)
+  const pdfDoc = await PDFDocument.load(pdfBuffer, { ignoreEncryption: true })
+
+  // Determine image format
+  const isPng = signatureImage.type === 'image/png'
+  const signature = isPng
+    ? await pdfDoc.embedPng(imgBuffer)
+    : await pdfDoc.embedJpg(imgBuffer)
+
+  const pages = pdfDoc.getPages()
+
+  for (let i = 0; i < pages.length; i++) {
+    onProgress?.(30 + Math.round((i / pages.length) * 65))
+    const page = pages[i]
+    const { width, height } = page.getSize()
+
+    const imgDims = signature.scale(scale)
+    const sigW = imgDims.width
+    const sigH = imgDims.height
+
+    let x: number
+    let y: number
+
+    if (position.includes('left')) {
+      x = marginX
+    } else if (position.includes('right')) {
+      x = width - sigW - marginX
+    } else {
+      x = (width - sigW) / 2
+    }
+
+    if (position.startsWith('top')) {
+      y = height - sigH - marginY
+    } else {
+      y = marginY
+    }
+
+    page.drawImage(signature, {
+      x,
+      y,
+      width: sigW,
+      height: sigH,
+      opacity: 1,
+    })
+  }
+
+  onProgress?.(95)
+  const resultBytes = await pdfDoc.save()
+  const blob = new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+  onProgress?.(100)
+  return blob
+}
+
 /**
  * Protect a PDF with password encryption.
  * Uses @pdfsmaller/pdf-encrypt-lite for real RC4 128-bit encryption per PDF spec.

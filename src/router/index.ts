@@ -68,6 +68,12 @@ const router = createRouter({
       component: () => import('@/pages/AddPageNumberPage.vue'),
       meta: { titleKey: 'seo.addPageNumbers', descKey: 'tools.addPageNumbers.desc' },
     },
+    {
+      path: '/add-header-footer',
+      name: 'add-header-footer',
+      component: () => import('@/pages/AddHeaderFooterPage.vue'),
+      meta: { titleKey: 'seo.headerFooter', descKey: 'tools.headerFooter.desc' },
+    },
     // 安全
     {
       path: '/protect-pdf',
@@ -216,6 +222,12 @@ const router = createRouter({
       name: 'resize-pdf',
       component: () => import('@/pages/ResizePdfPage.vue'),
       meta: { titleKey: 'seo.resizePdf', descKey: 'tools.resizePdf.desc' },
+    },
+    {
+      path: '/sign-pdf',
+      name: 'sign-pdf',
+      component: () => import('@/pages/SignPage.vue'),
+      meta: { titleKey: 'seo.signPdf', descKey: 'tools.signPdf.desc' },
     },
   ],
 })

@@ -46,6 +46,7 @@ const categories = [
     tools: [
       { icon: '🔏', titleKey: 'tools.addWatermark.title', descKey: 'tools.addWatermark.desc', route: '/add-watermark' },
       { icon: '🔢', titleKey: 'tools.addPageNumbers.title', descKey: 'tools.addPageNumbers.desc', route: '/add-page-numbers' },
+      { icon: '📖', titleKey: 'tools.headerFooter.title', descKey: 'tools.headerFooter.desc', route: '/add-header-footer' },
     ],
   },
   {
@@ -95,6 +96,7 @@ const categories = [
       { icon: '🔄', titleKey: 'tools.flipPdf.title', descKey: 'tools.flipPdf.desc', route: '/flip-pdf' },
       { icon: '⬛', titleKey: 'tools.grayscalePdf.title', descKey: 'tools.grayscalePdf.desc', route: '/grayscale-pdf' },
       { icon: '📐', titleKey: 'tools.resizePdf.title', descKey: 'tools.resizePdf.desc', route: '/resize-pdf' },
+      { icon: '✍️', titleKey: 'tools.signPdf.title', descKey: 'tools.signPdf.desc', route: '/sign-pdf' },
     ],
   },
 ]
