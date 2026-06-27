@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(),
+  scrollBehavior() {
+    return { top: 0 }
+  },
   routes: [
     {
       path: '/',
@@ -64,6 +67,37 @@ const router = createRouter({
       name: 'add-page-numbers',
       component: () => import('@/pages/AddPageNumberPage.vue'),
       meta: { titleKey: 'seo.addPageNumbers', descKey: 'tools.addPageNumbers.desc' },
+    },
+    // 安全
+    {
+      path: '/protect-pdf',
+      name: 'protect-pdf',
+      component: () => import('@/pages/ProtectPdfPage.vue'),
+      meta: { titleKey: 'seo.protectPdf', descKey: 'tools.protectPdf.desc' },
+    },
+    {
+      path: '/unlock-pdf',
+      name: 'unlock-pdf',
+      component: () => import('@/pages/UnlockPdfPage.vue'),
+      meta: { titleKey: 'seo.unlockPdf', descKey: 'tools.unlockPdf.desc' },
+    },
+    {
+      path: '/crop-pdf',
+      name: 'crop-pdf',
+      component: () => import('@/pages/CropPdfPage.vue'),
+      meta: { titleKey: 'seo.cropPdf', descKey: 'tools.cropPdf.desc' },
+    },
+    {
+      path: '/extract-images',
+      name: 'extract-images',
+      component: () => import('@/pages/ExtractImagesPage.vue'),
+      meta: { titleKey: 'seo.extractImages', descKey: 'tools.extractImages.desc' },
+    },
+    {
+      path: '/repair-pdf',
+      name: 'repair-pdf',
+      component: () => import('@/pages/RepairPdfPage.vue'),
+      meta: { titleKey: 'seo.repairPdf', descKey: 'tools.repairPdf.desc' },
     },
     // 从 PDF 转换
     {

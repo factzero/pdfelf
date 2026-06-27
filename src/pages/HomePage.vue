@@ -49,6 +49,16 @@ const categories = [
     ],
   },
   {
+    nameKey: 'categories.security',
+    tools: [
+      { icon: '🔒', titleKey: 'tools.protectPdf.title', descKey: 'tools.protectPdf.desc', route: '/protect-pdf' },
+      { icon: '🔓', titleKey: 'tools.unlockPdf.title', descKey: 'tools.unlockPdf.desc', route: '/unlock-pdf' },
+      { icon: '✂️', titleKey: 'tools.cropPdf.title', descKey: 'tools.cropPdf.desc', route: '/crop-pdf' },
+      { icon: '🖼️', titleKey: 'tools.extractImages.title', descKey: 'tools.extractImages.desc', route: '/extract-images' },
+      { icon: '🔧', titleKey: 'tools.repairPdf.title', descKey: 'tools.repairPdf.desc', route: '/repair-pdf' },
+    ],
+  },
+  {
     nameKey: 'categories.fromPdf',
     tools: [
       { icon: '📄', titleKey: 'tools.pdfToWord.title', descKey: 'tools.pdfToWord.desc', route: '/pdf-to-word' },
