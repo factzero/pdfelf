@@ -104,6 +104,7 @@ const footerCols = [
       { icon: '📊', titleKey: 'tools.excelToPdf.title', route: '/excel-to-pdf' },
       { icon: '📽️', titleKey: 'tools.pptToPdf.title', route: '/ppt-to-pdf' },
       { icon: '🖼️', titleKey: 'tools.imageToPdf.title', route: '/image-to-pdf' },
+      { icon: '🌐', titleKey: 'tools.htmlToPdf.title', route: '/html-to-pdf' },
     ],
   },
   {
@@ -120,6 +121,8 @@ const footerCols = [
       { icon: '⬛', titleKey: 'tools.grayscalePdf.title', route: '/grayscale-pdf' },
       { icon: '📐', titleKey: 'tools.resizePdf.title', route: '/resize-pdf' },
       { icon: '✍️', titleKey: 'tools.signPdf.title', route: '/sign-pdf' },
+      { icon: '🔏', titleKey: 'tools.redactPdf.title', route: '/redact-pdf' },
+      { icon: '📝', titleKey: 'tools.fillForm.title', route: '/fill-form' },
     ],
   },
 ]
