@@ -81,6 +81,7 @@ const categories = [
       { icon: '📊', titleKey: 'tools.excelToPdf.title', descKey: 'tools.excelToPdf.desc', route: '/excel-to-pdf' },
       { icon: '📽️', titleKey: 'tools.pptToPdf.title', descKey: 'tools.pptToPdf.desc', route: '/ppt-to-pdf' },
       { icon: '🖼️', titleKey: 'tools.imageToPdf.title', descKey: 'tools.imageToPdf.desc', route: '/image-to-pdf' },
+      { icon: '🌐', titleKey: 'tools.htmlToPdf.title', descKey: 'tools.htmlToPdf.desc', route: '/html-to-pdf' },
     ],
   },
   {
@@ -97,6 +98,8 @@ const categories = [
       { icon: '⬛', titleKey: 'tools.grayscalePdf.title', descKey: 'tools.grayscalePdf.desc', route: '/grayscale-pdf' },
       { icon: '📐', titleKey: 'tools.resizePdf.title', descKey: 'tools.resizePdf.desc', route: '/resize-pdf' },
       { icon: '✍️', titleKey: 'tools.signPdf.title', descKey: 'tools.signPdf.desc', route: '/sign-pdf' },
+      { icon: '🔏', titleKey: 'tools.redactPdf.title', descKey: 'tools.redactPdf.desc', route: '/redact-pdf' },
+      { icon: '📝', titleKey: 'tools.fillForm.title', descKey: 'tools.fillForm.desc', route: '/fill-form' },
     ],
   },
 ]

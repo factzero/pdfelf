@@ -1490,3 +1490,140 @@ export async function resizePdfPages(
   onProgress?.(100)
   return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
 }
+
+export interface RedactRect {
+  page: number
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+/**
+ * Redact (永久遮盖) sensitive areas in a PDF by placing solid black rectangles.
+ * Coordinates are in PDF points (1/72 inch), with origin at bottom-left.
+ */
+export async function redactPdf(
+  file: File,
+  rects: RedactRect[],
+  onProgress?: (percent: number) => void,
+): Promise<Blob> {
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(20)
+
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const pages = pdfDoc.getPages()
+  onProgress?.(40)
+
+  const totalRects = rects.length
+  for (let i = 0; i < totalRects; i++) {
+    const rect = rects[i]
+    const pageIndex = rect.page - 1
+    if (pageIndex < 0 || pageIndex >= pages.length) continue
+
+    const page = pages[pageIndex]
+    const pageHeight = page.getHeight()
+
+    // Convert top-left origin (used in UI) to pdf-lib bottom-left origin
+    const pdfY = pageHeight - rect.y - rect.height
+
+    page.drawRectangle({
+      x: rect.x,
+      y: pdfY,
+      width: rect.width,
+      height: rect.height,
+      color: rgb(0, 0, 0),
+    })
+
+    onProgress?.(40 + Math.round((i / totalRects) * 50))
+  }
+
+  onProgress?.(95)
+  const resultBytes = await pdfDoc.save({ useObjectStreams: true })
+  onProgress?.(100)
+  return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+}
+
+export interface FormFieldInfo {
+  name: string
+  type: string
+  value?: string
+}
+
+/**
+ * Extract form field information from a PDF
+ */
+export async function getFormFields(file: File): Promise<FormFieldInfo[]> {
+  const buffer = await readFileAsArrayBuffer(file)
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const form = pdfDoc.getForm()
+  const fields = form.getFields()
+  return fields.map((f) => {
+    const field = f as any
+    return {
+      name: field.getName?.() || '',
+      type: field.constructor?.name || 'Unknown',
+      value: '',
+    }
+  })
+}
+
+/**
+ * Fill PDF form fields and return the modified PDF
+ */
+export async function fillPdfForm(
+  file: File,
+  fieldValues: Record<string, string>,
+  onProgress?: (percent: number) => void,
+): Promise<Blob> {
+  onProgress?.(10)
+  const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(30)
+
+  const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
+  const form = pdfDoc.getForm()
+  const fields = form.getFields()
+  onProgress?.(50)
+
+  const totalFields = Object.keys(fieldValues).length
+  let filled = 0
+
+  for (const field of fields) {
+    const fieldName = (field as any).getName?.() || ''
+    if (fieldValues[fieldName] !== undefined) {
+      try {
+        const f = field as any
+        const type = f.constructor?.name || ''
+        if (type === 'PDFTextField') {
+          f.setText(fieldValues[fieldName])
+        } else if (type === 'PDFCheckBox') {
+          const val = fieldValues[fieldName].toLowerCase()
+          if (val === 'true' || val === 'yes' || val === 'on' || val === '1') {
+            f.check()
+          } else {
+            f.uncheck()
+          }
+        } else if (type === 'PDFDropdown') {
+          f.select(fieldValues[fieldName])
+        } else if (type === 'PDFRadioGroup') {
+          f.select(fieldValues[fieldName])
+        } else if (type === 'PDFOptionList') {
+          f.select(fieldValues[fieldName])
+        } else {
+          // Fallback for text-like fields
+          try { f.setText?.(fieldValues[fieldName]) } catch {}
+        }
+        filled++
+      } catch {
+        // Skip fields that can't be filled
+      }
+    }
+    onProgress?.(50 + Math.round((filled / totalFields) * 40))
+  }
+
+  onProgress?.(95)
+  const resultBytes = await pdfDoc.save({ useObjectStreams: true })
+  onProgress?.(100)
+  return new Blob([new Uint8Array(resultBytes)], { type: 'application/pdf' })
+}

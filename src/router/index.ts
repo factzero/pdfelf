@@ -191,6 +191,12 @@ const router = createRouter({
       component: () => import('@/pages/ImageToPdfPage.vue'),
       meta: { titleKey: 'seo.imageToPdf', descKey: 'tools.imageToPdf.desc' },
     },
+    {
+      path: '/html-to-pdf',
+      name: 'html-to-pdf',
+      component: () => import('@/pages/HtmlToPdfPage.vue'),
+      meta: { titleKey: 'seo.htmlToPdf', descKey: 'tools.htmlToPdf.desc' },
+    },
     // 阅读器
     {
       path: '/pdf-reader',
@@ -228,6 +234,18 @@ const router = createRouter({
       name: 'sign-pdf',
       component: () => import('@/pages/SignPage.vue'),
       meta: { titleKey: 'seo.signPdf', descKey: 'tools.signPdf.desc' },
+    },
+    {
+      path: '/redact-pdf',
+      name: 'redact-pdf',
+      component: () => import('@/pages/RedactPdfPage.vue'),
+      meta: { titleKey: 'seo.redactPdf', descKey: 'tools.redactPdf.desc' },
+    },
+    {
+      path: '/fill-form',
+      name: 'fill-form',
+      component: () => import('@/pages/FillFormPage.vue'),
+      meta: { titleKey: 'seo.fillForm', descKey: 'tools.fillForm.desc' },
     },
   ],
 })
