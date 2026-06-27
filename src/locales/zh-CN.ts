@@ -99,7 +99,7 @@ export default {
     headerFooter: { title: '页眉页脚', desc: '为 PDF 每一页添加页眉和页脚文字，支持自定义字体和对齐' },
     signPdf: { title: '电子签名', desc: '三种签名方式：图片、文字和手写，支持调整位置和大小' },
     htmlToPdf: { title: 'HTML 转 PDF', desc: '将 HTML 代码或文件转换为 PDF 文档' },
-    redactPdf: { title: '密文遮盖', desc: '在 PDF 上绘制黑色矩形永久遮盖敏感信息' },
+    redactPdf: { title: '密文遮盖', desc: '在 PDF 上使用矩形、圆形或自由画笔永久遮盖敏感信息' },
     fillForm: { title: '表单填写', desc: '自动检测并填写 PDF 交互式表单字段' },
   },
   trust: {
@@ -1604,8 +1604,13 @@ export default {
   },
   redactPdf: {
     title: '🔏 密文遮盖',
-    desc: '在 PDF 上绘制黑色矩形永久遮盖敏感信息，遮盖后不可逆',
-    drawHint: '在下方 PDF 页面上拖动鼠标绘制矩形遮盖区域',
+    desc: '在 PDF 上使用矩形、圆形或自由画笔永久遮盖敏感信息，遮盖后不可逆',
+    drawHint: '选择绘制工具后在 PDF 页面上操作',
+    toolRect: '矩形',
+    toolCircle: '圆形',
+    toolFreehand: '自由画笔',
+    brushWidth: '画笔粗细',
+    clearAll: '清除全部',
     pageSelect: '跳转到页',
     undo: '撤销上一个',
     rectsCount: '已标记 {n} 个遮盖区域',
@@ -1615,21 +1620,23 @@ export default {
     seo: {
       featuresTitle: '功能特色',
       features: [
-        '在 PDF 绘制黑色矩形永久遮盖敏感信息',
-        '支持逐页操作，精确控制遮盖位置',
+        '在 PDF 上绘制矩形、圆形或自由画笔遮盖敏感信息',
+        '支持逐页操作，精确控制遮盖位置和大小',
         '遮盖不可逆，确保敏感信息无法恢复',
         '浏览器本地处理，文件不会上传到服务器',
       ],
       stepsTitle: '使用步骤',
       steps: [
         { title: '上传 PDF', desc: '拖拽或点击选择需要遮盖敏感信息的 PDF 文件' },
-        { title: '绘制遮盖区域', desc: '用鼠标在页面上拖拽绘制黑色矩形，覆盖需要遮盖的文字或图片' },
+        { title: '选择工具', desc: '选择矩形、圆形或自由画笔工具，调整画笔粗细' },
+        { title: '绘制遮盖', desc: '在 PDF 页面上绘制遮盖区域，遮盖敏感文字或图片' },
         { title: '下载 PDF', desc: '点击「应用遮盖」按钮，下载已永久遮盖的 PDF 文件' },
       ],
       faqTitle: '常见问题',
       faq: [
-        { q: '遮盖是可逆的吗？', a: '不可逆，遮盖是在 PDF 上绘制实心黑色矩形，原始内容被永久覆盖。建议保留原始文件备份。' },
+        { q: '遮盖是可逆的吗？', a: '不可逆，遮盖是在 PDF 上绘制实心黑色区域，原始内容被永久覆盖。建议保留原始文件备份。' },
         { q: '可以遮盖多页吗？', a: '可以，切换页面后在每页上分别绘制遮盖区域，所有遮盖会一次性应用到 PDF。' },
+        { q: '自由画笔和矩形/圆形有什么区别？', a: '自由画笔适合涂鸦式遮盖不规则区域（如手写签名），矩形/圆形适合规整遮盖文字段落或图章。' },
       ],
       relatedTitle: '相关工具',
       related: [

@@ -1499,44 +1499,129 @@ export interface RedactRect {
   height: number
 }
 
+export interface RedactCircle {
+  page: number
+  cx: number
+  cy: number
+  rx: number
+  ry: number
+}
+
+export interface RedactPath {
+  page: number
+  points: { x: number; y: number }[]
+  brushWidth: number
+}
+
+export interface RedactPayload {
+  rects?: RedactRect[]
+  circles?: RedactCircle[]
+  paths?: RedactPath[]
+  color?: [number, number, number] // RGB
+}
+
 /**
- * Redact (永久遮盖) sensitive areas in a PDF by placing solid black rectangles.
- * Coordinates are in PDF points (1/72 inch), with origin at bottom-left.
+ * Redact (永久遮盖) sensitive areas in a PDF.
+ * Supports rectangles, circles/ellipses, and freehand paths.
+ * Coordinates are in PDF points (1/72 inch), with origin at top-left (same as canvas).
  */
 export async function redactPdf(
   file: File,
-  rects: RedactRect[],
+  payload: RedactPayload,
   onProgress?: (percent: number) => void,
 ): Promise<Blob> {
-  onProgress?.(10)
+  const rects = payload.rects ?? []
+  const circles = payload.circles ?? []
+  const freePaths = payload.paths ?? []
+  const color = payload.color ?? [0, 0, 0] as [number, number, number]
+
+  onProgress?.(5)
   const buffer = await readFileAsArrayBuffer(file)
-  onProgress?.(20)
+  onProgress?.(15)
 
   const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true })
   const pages = pdfDoc.getPages()
-  onProgress?.(40)
+  onProgress?.(25)
 
-  const totalRects = rects.length
-  for (let i = 0; i < totalRects; i++) {
-    const rect = rects[i]
-    const pageIndex = rect.page - 1
-    if (pageIndex < 0 || pageIndex >= pages.length) continue
+  const totalItems = rects.length + circles.length + freePaths.length
+  let processed = 0
 
-    const page = pages[pageIndex]
+  function advance(): number {
+    processed++
+    return 25 + Math.round((processed / Math.max(totalItems, 1)) * 65)
+  }
+
+  // Draw rectangles
+  for (const rect of rects) {
+    const pi = rect.page - 1
+    if (pi < 0 || pi >= pages.length) continue
+    const page = pages[pi]
     const pageHeight = page.getHeight()
-
-    // Convert top-left origin (used in UI) to pdf-lib bottom-left origin
     const pdfY = pageHeight - rect.y - rect.height
-
     page.drawRectangle({
-      x: rect.x,
-      y: pdfY,
-      width: rect.width,
-      height: rect.height,
-      color: rgb(0, 0, 0),
+      x: rect.x, y: pdfY, width: rect.width, height: rect.height,
+      color: rgb(color[0], color[1], color[2]),
     })
+    onProgress?.(advance())
+  }
 
-    onProgress?.(40 + Math.round((i / totalRects) * 50))
+  // Draw circles/ellipses
+  for (const c of circles) {
+    const pi = c.page - 1
+    if (pi < 0 || pi >= pages.length) continue
+    const page = pages[pi]
+    const pageHeight = page.getHeight()
+    const pdfY = pageHeight - c.cy
+    page.drawEllipse({
+      x: c.cx, y: pdfY, xScale: c.rx, yScale: c.ry,
+      color: rgb(color[0], color[1], color[2]),
+    })
+    onProgress?.(advance())
+  }
+
+  // Draw freehand paths — approximate as overlapping filled circles + connecting quads
+  for (const path of freePaths) {
+    const pi = path.page - 1
+    if (pi < 0 || pi >= pages.length) continue
+    const page = pages[pi]
+    const pageHeight = page.getHeight()
+    const pts = path.points
+    if (pts.length === 0) continue
+    const r = path.brushWidth / 2
+
+    // Draw a circle at each sampled point
+    const step = Math.max(1, Math.floor(pts.length / 200) === 0 ? 1 : Math.floor(pts.length / 200))
+    for (let i = 0; i < pts.length; i += step) {
+      const pdfY = pageHeight - pts[i].y
+      page.drawEllipse({
+        x: pts[i].x, y: pdfY, xScale: r, yScale: r,
+        color: rgb(color[0], color[1], color[2]),
+      })
+    }
+
+    // Draw connecting rectangles between consecutive sampled points to fill gaps
+    if (pts.length >= 2) {
+      for (let i = step; i < pts.length; i += step) {
+        const p0 = pts[i - step]
+        const p1 = pts[i]
+        const dx = p1.x - p0.x
+        const dy = p1.y - p0.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < 0.5) continue
+        // Bounding rect for the segment
+        const bx = Math.min(p0.x, p1.x) - r
+        const by = Math.min(p0.y, p1.y) - r
+        const bw = Math.abs(dx) + r * 2
+        const bh = Math.abs(dy) + r * 2
+        const pdfY = pageHeight - by - bh
+        page.drawRectangle({
+          x: bx, y: pdfY, width: bw, height: bh,
+          color: rgb(color[0], color[1], color[2]),
+        })
+      }
+    }
+
+    onProgress?.(advance())
   }
 
   onProgress?.(95)
