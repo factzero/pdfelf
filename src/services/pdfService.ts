@@ -498,7 +498,7 @@ export async function protectPDF(
   )
 
   onProgress?.(95)
-  const blob = new Blob([encryptedBytes], { type: 'application/pdf' })
+  const blob = new Blob([encryptedBytes.slice()], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -520,7 +520,7 @@ export async function unlockPDF(
   const decryptedBytes = await decryptPDF(pdfBytes, password)
 
   onProgress?.(95)
-  const blob = new Blob([decryptedBytes], { type: 'application/pdf' })
+  const blob = new Blob([decryptedBytes.slice()], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
 }
@@ -1030,7 +1030,7 @@ async function tryRenderRebuild(
       const ctx = canvas.getContext('2d')
       if (!ctx) continue
 
-      await page.render({ canvasContext: ctx, viewport }).promise
+      await page.render({ canvasContext: ctx, viewport, canvas }).promise
 
       // Canvas → PNG blob → embed into new PDF
       const pngBlob = await new Promise<Blob>((resolve, reject) => {

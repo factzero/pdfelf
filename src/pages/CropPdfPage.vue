@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
@@ -263,8 +263,6 @@ function onMouseMove(e: MouseEvent) {
     })
   } else if (dragMode.value === 'move') {
     const rs = rectStart.value
-    const cw = canvasRef.value?.width || 0
-    const ch = canvasRef.value?.height || 0
     cropRect.value = clampRect({
       x: rs.x + dx,
       y: rs.y + dy,

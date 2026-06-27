@@ -68,6 +68,17 @@ const footerCols = [
     categoryKey: 'footer.edit',
     links: [
       { icon: '🔏', titleKey: 'tools.addWatermark.title', route: '/add-watermark' },
+      { icon: '🔢', titleKey: 'tools.addPageNumbers.title', route: '/add-page-numbers' },
+      { icon: '✂️', titleKey: 'tools.cropPdf.title', route: '/crop-pdf' },
+    ],
+  },
+  {
+    categoryKey: 'footer.security',
+    links: [
+      { icon: '🔒', titleKey: 'tools.protectPdf.title', route: '/protect-pdf' },
+      { icon: '🔓', titleKey: 'tools.unlockPdf.title', route: '/unlock-pdf' },
+      { icon: '🖼️', titleKey: 'tools.extractImages.title', route: '/extract-images' },
+      { icon: '🔧', titleKey: 'tools.repairPdf.title', route: '/repair-pdf' },
     ],
   },
   {
