@@ -3,6 +3,7 @@
     <LayoutHeader />
     <main class="main">
       <router-view />
+      <ToolLike />
     </main>
     <TrustBar />
   </div>
@@ -10,6 +11,7 @@
 
 <script setup lang="ts">
 import LayoutHeader from '@/components/LayoutHeader.vue'
+import ToolLike from '@/components/ToolLike.vue'
 import TrustBar from '@/components/TrustBar.vue'
 </script>
 
@@ -23,5 +25,6 @@ import TrustBar from '@/components/TrustBar.vue'
 .main {
   flex: 1;
   padding: var(--spacing-2xl) 0;
+  position: relative;
 }
 </style>

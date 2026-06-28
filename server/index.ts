@@ -3,6 +3,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { readFileSync } from 'fs'
 import { getStats, recordVisit, initStore } from './statsStore'
+import { initRatingStore, submitRating, getPageRatings, getUserRating, getAllSummaries } from './likeStore.js'
 import { seoMap, enSeoMap, buildJsonLd, buildJsonLdEn, homeSeo, homeEnSeo } from './seoMeta.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -17,7 +18,7 @@ if (process.env.NODE_ENV !== 'production') {
     res.json({
       service: 'PDF Elf Stats Server',
       status: 'running',
-      endpoints: ['GET /api/stats', 'POST /api/stats/visit'],
+      endpoints: ['GET /api/stats', 'POST /api/stats/visit', 'GET /api/ratings', 'POST /api/ratings', 'GET /api/ratings/user', 'GET /api/ratings/summary'],
     })
   })
 }
@@ -33,6 +34,46 @@ app.post('/api/stats/visit', (req, res) => {
   const ip = req.ip || req.socket.remoteAddress || 'unknown'
   const stats = recordVisit(ip, visitorId, path)
   res.json(stats)
+})
+
+// API: 获取某页面的评分与评论
+app.get('/api/ratings', (req, res) => {
+  const { path } = req.query
+  if (!path) {
+    res.status(400).json({ error: 'path required' })
+    return
+  }
+  res.json(getPageRatings(path as string))
+})
+
+// API: 获取用户对某页面的已有评分
+app.get('/api/ratings/user', (req, res) => {
+  const { path, visitorId } = req.query
+  if (!path || !visitorId) {
+    res.status(400).json({ error: 'path and visitorId required' })
+    return
+  }
+  res.json(getUserRating(path as string, visitorId as string))
+})
+
+// API: 所有页面的评分摘要（用于排名）
+app.get('/api/ratings/summary', (_req, res) => {
+  res.json(getAllSummaries())
+})
+
+// API: 提交评分+评论
+app.post('/api/ratings', (req, res) => {
+  const { path, visitorId, stars, review } = req.body
+  if (!path || !visitorId) {
+    res.status(400).json({ error: 'path and visitorId required' })
+    return
+  }
+  if (typeof stars !== 'number' || stars < 1 || stars > 5) {
+    res.status(400).json({ error: 'stars must be 1-5' })
+    return
+  }
+  const result = submitRating(path, visitorId, stars, review || '')
+  res.json(result)
 })
 
 // 静态信息页面（SEO 信任信号：隐私、联系、关于）
@@ -331,6 +372,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // 初始化统计存储文件（不存在则自动创建）
 initStore()
+initRatingStore()
 
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`\n📊 [Stats Server] http://localhost:${PORT}`)
