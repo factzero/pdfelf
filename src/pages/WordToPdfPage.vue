@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('wordToPdf.title') }}</h1>
+    <h1 class="tool-title"><FileText :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('wordToPdf.title') }}</h1>
     <p class="tool-desc">{{ $t('wordToPdf.desc') }}</p>
     <FileDropZone :accept="['docx']" @file-selected="onFileSelected" @error="onError" />
     <div v-if="selectedFile" class="notice">
@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FileText } from 'lucide-vue-next'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import ProgressBar from '@/components/ProgressBar.vue'

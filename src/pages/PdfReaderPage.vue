@@ -1,7 +1,7 @@
 <template>
   <div class="reader-page" :class="{ 'reader-page--reading': selectedFile }">
     <div v-if="!selectedFile" class="upload-area container">
-      <h1 class="tool-title">{{ $t('reader.title') }}</h1>
+      <h1 class="tool-title"><BookOpenText :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('reader.title') }}</h1>
       <p class="tool-desc">{{ $t('reader.desc') }}</p>
       <FileDropZone :accept="['pdf']" @file-selected="onFileSelected" @error="onError" />
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
@@ -33,6 +33,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { BookOpenText } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'

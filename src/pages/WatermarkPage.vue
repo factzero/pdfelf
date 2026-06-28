@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('watermark.title') }}</h1>
+    <h1 class="tool-title"><Stamp :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('watermark.title') }}</h1>
     <p class="tool-desc">{{ $t('watermark.desc') }}</p>
 
     <!-- 上传区：未选文件时显示 -->
@@ -16,7 +16,7 @@
       <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
         <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF Preview" />
         <div v-else class="file-preview__placeholder">
-          <span class="file-preview__placeholder-icon">📄</span>
+          <FileText :size="48" :stroke-width="1" class="file-preview__placeholder-icon" />
         </div>
         <Transition name="fade">
           <button
@@ -119,6 +119,7 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FileText, Stamp } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'

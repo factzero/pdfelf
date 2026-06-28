@@ -19,7 +19,10 @@
       @change="onFileChange"
     />
     <div class="dropzone__content">
-      <div class="dropzone__icon">{{ hasFile ? '📄' : '📁' }}</div>
+      <div class="dropzone__icon">
+        <FileText v-if="hasFile" :size="48" :stroke-width="1.5" />
+        <FolderOpen v-else :size="48" :stroke-width="1.5" />
+      </div>
       <div class="dropzone__text">
         <template v-if="hasFile">
           <p class="dropzone__filename">{{ fileName }}</p>
@@ -38,6 +41,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FileText, FolderOpen } from 'lucide-vue-next'
 import { formatFileSize } from '@/utils/fileUtils'
 
 const { t } = useI18n()
@@ -173,7 +177,7 @@ defineExpose({
 }
 
 .dropzone__icon {
-  font-size: 3rem;
+  color: var(--color-text-secondary);
   margin-bottom: var(--spacing-md);
 }
 

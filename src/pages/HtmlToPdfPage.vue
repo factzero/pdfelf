@@ -1,15 +1,15 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('htmlToPdf.title') }}</h1>
+    <h1 class="tool-title"><Globe :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('htmlToPdf.title') }}</h1>
     <p class="tool-desc">{{ $t('htmlToPdf.desc') }}</p>
 
     <!-- Mode tabs -->
     <div class="mode-tabs">
       <button class="mode-tab" :class="{ 'mode-tab--active': inputMode === 'paste' }" @click="inputMode = 'paste'">
-        📝 {{ $t('htmlToPdf.modePaste') }}
+        <Pencil :size="16" :stroke-width="1.5" /> {{ $t('htmlToPdf.modePaste') }}
       </button>
       <button class="mode-tab" :class="{ 'mode-tab--active': inputMode === 'file' }" @click="inputMode = 'file'">
-        📄 {{ $t('htmlToPdf.modeFile') }}
+        <FileText :size="16" :stroke-width="1.5" /> {{ $t('htmlToPdf.modeFile') }}
       </button>
     </div>
 
@@ -52,7 +52,7 @@
         />
         <div v-else class="file-preview">
           <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
-            <span class="file-preview__icon">📄</span>
+            <FileText :size="24" :stroke-width="1.5" class="file-preview__icon" />
             <Transition name="fade">
               <button v-if="showDelete" class="file-preview__delete" @click="clearHtmlFile">✕</button>
             </Transition>
@@ -127,6 +127,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FileText, Globe, Pencil } from 'lucide-vue-next'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'

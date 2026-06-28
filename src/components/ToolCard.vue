@@ -1,14 +1,16 @@
 <template>
   <router-link :to="route" class="tool-card">
-    <span class="tool-card__icon">{{ icon }}</span>
+    <component :is="icon" class="tool-card__icon" :size="40" :stroke-width="1.5" />
     <h3 class="tool-card__title">{{ title }}</h3>
     <p class="tool-card__desc">{{ description }}</p>
   </router-link>
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 defineProps<{
-  icon: string
+  icon: Component
   title: string
   description: string
   route: string
@@ -21,7 +23,7 @@ defineProps<{
   flex-direction: column;
   align-items: center;
   padding: var(--spacing-xl) var(--spacing-lg);
-  background: var(--color-bg-secondary);
+  background: #ffffff;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   text-decoration: none;
@@ -38,7 +40,7 @@ defineProps<{
 }
 
 .tool-card__icon {
-  font-size: 2.5rem;
+  color: var(--color-primary);
   margin-bottom: var(--spacing-md);
 }
 

@@ -24,7 +24,7 @@ import TrustBar from '@/components/TrustBar.vue'
 
 .main {
   flex: 1;
-  padding: var(--spacing-2xl) 0;
+  padding: var(--spacing-md) 0 var(--spacing-2xl);
   position: relative;
 }
 </style>

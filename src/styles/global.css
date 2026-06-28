@@ -89,6 +89,13 @@ button {
   text-align: center;
 }
 
+.tool-title__icon {
+  vertical-align: middle;
+  margin-right: 0.4rem;
+  margin-top: -0.15em;
+  color: var(--color-primary);
+}
+
 .mt-1 { margin-top: var(--spacing-md); }
 .mt-2 { margin-top: var(--spacing-lg); }
 .mt-3 { margin-top: var(--spacing-xl); }

@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page">
-    <h1 class="tool-title">{{ $t('crop.title') }}</h1>
+    <h1 class="tool-title"><Crop :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('crop.title') }}</h1>
     <p class="tool-desc">{{ $t('crop.desc') }}</p>
 
     <FileDropZone v-if="!selectedFile" :accept="['pdf']" @file-selected="onFileSelected" @error="errorMsg = $event" />
@@ -90,6 +90,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Crop } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 import FileDropZone from '@/components/FileDropZone.vue'

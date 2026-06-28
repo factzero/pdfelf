@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('reorder.title') }}</h1>
+    <h1 class="tool-title"><ArrowLeftRight :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('reorder.title') }}</h1>
     <p class="tool-desc">{{ $t('reorder.desc') }}</p>
 
     <FileDropZone
@@ -19,7 +19,7 @@
           @mouseenter="showDelete = true"
           @mouseleave="showDelete = false"
         >
-          <span class="file-preview__icon">📄</span>
+          <FileText :size="48" :stroke-width="1" class="file-preview__icon" />
           <Transition name="fade">
             <button v-if="showDelete" class="file-preview__delete" @click="removeFile">✕</button>
           </Transition>
@@ -103,6 +103,7 @@
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ArrowLeftRight, FileText } from 'lucide-vue-next'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import ProgressBar from '@/components/ProgressBar.vue'

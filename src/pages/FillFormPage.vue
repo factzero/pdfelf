@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('fillForm.title') }}</h1>
+    <h1 class="tool-title"><FileType :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('fillForm.title') }}</h1>
     <p class="tool-desc">{{ $t('fillForm.desc') }}</p>
 
     <FileDropZone
@@ -87,6 +87,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FileType } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'

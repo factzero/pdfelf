@@ -32,17 +32,17 @@ export default {
   },
   home: {
     heroTitle: 'PDF Elf — Free Online PDF Tools',
-    heroSubtitle: 'Free Online PDF Tools — All processing done locally in your browser',
-    introText: 'PDF Elf offers 30+ free PDF processing tools, including compress, merge, split, rotate, delete pages, extract pages, reorder pages, add watermark, protect, unlock, crop, extract images, repair, edit metadata, flip, grayscale, resize pages, and bidirectional conversion between PDF and Word, Excel, PPT, images, SVG, text, HTML. All processing runs locally in your browser — files are never uploaded to any server, keeping your data private and secure.',
+    heroSubtitle: 'Free, Secure & Fast — All processing done locally in your browser',
+    introText: '<strong>30+</strong> PDF tools: compress, merge, split, rotate, watermark, convert, and more. <strong>All processing runs locally in your browser — no file uploads</strong>, keeping your data private.',
   },
   categories: {
-    organize: '📂 Organize PDF',
-    edit: '✏️ Edit PDF',
-    security: '🔒 Security & Tools',
-    fromPdf: '🔄 Convert from PDF',
-    toPdf: '📥 Convert to PDF',
-    reader: '📖 Reader',
-    moreTools: '🔧 More Tools',
+    organize: 'Organize PDF',
+    edit: 'Edit PDF',
+    security: 'Security & Tools',
+    fromPdf: 'Convert from PDF',
+    toPdf: 'Convert to PDF',
+    reader: 'Reader',
+    moreTools: 'More Tools',
   },
   seo: {
     homeTitle: 'PDF Elf — Free Online PDF Tools | Compress Merge Split Convert',
@@ -157,7 +157,7 @@ export default {
     fileReadFailed: 'File read failed',
   },
   compress: {
-    title: '🗜️ Compress PDF',
+    title: 'Compress PDF',
     desc: 'Reduce PDF file size — choose the compression mode that suits you',
     basic: 'Basic Compression',
     basicDesc: 'Recommended — Moderate compression, good quality',
@@ -199,9 +199,9 @@ export default {
     },
   },
   merge: {
-    title: '🔗 Merge PDF',
+    title: 'Merge PDF',
     desc: 'Combine multiple PDFs into one file, drag to reorder',
-    addDoc: '📄 Add Document',
+    addDoc: 'Add Document',
     addBlank: '📃 Add Blank Page',
     blankPage: 'Blank Page',
     blankPages: '{n} blank page(s)',
@@ -242,7 +242,7 @@ export default {
     },
   },
   split: {
-    title: '✂️ Split PDF',
+    title: 'Split PDF',
     desc: 'Split PDF by page ranges or every N pages',
     range: 'Extract by Range',
     rangeDesc: 'Enter page ranges, e.g. 1-3, 5-8',
@@ -284,7 +284,7 @@ export default {
     },
   },
   rotate: {
-    title: '🔄 Rotate PDF',
+    title: 'Rotate PDF',
     desc: 'Rotate PDF pages with individual angle settings',
     selectPages: '{n} pages total, select pages to rotate:',
     noRotation: 'No Rotation',
@@ -324,7 +324,7 @@ export default {
     },
   },
   delete: {
-    title: '🗑️ Delete PDF Pages',
+    title: 'Delete PDF Pages',
     desc: 'Remove unwanted pages from your PDF',
     selectPages: '{n} pages total, check pages to delete:',
     deleteBtn: 'Delete {n} page(s)',
@@ -360,7 +360,7 @@ export default {
     },
   },
   extract: {
-    title: '📋 Extract PDF Pages',
+    title: 'Extract PDF Pages',
     desc: 'Extract selected pages from PDF and save as a new file',
     selectPages: '{n} pages total, check pages to extract:',
     extractBtn: 'Extract {n} page(s)',
@@ -395,7 +395,7 @@ export default {
     },
   },
   reorder: {
-    title: '🔀 Reorder PDF Pages',
+    title: 'Reorder PDF Pages',
     desc: 'Drag & drop to rearrange PDF page order, then export as a new file',
     dragHint: '👇 Drag page thumbnails to reorder',
     reorderBtn: 'Apply New Order & Export PDF',
@@ -431,7 +431,7 @@ export default {
     },
   },
   watermark: {
-    title: '🔏 Add Watermark to PDF',
+    title: 'Add Watermark to PDF',
     desc: 'Add text watermark to every page of your PDF',
     text: 'Watermark Text',
     textPlaceholder: 'e.g. Confidential',
@@ -535,7 +535,7 @@ export default {
     },
   },
   pdfToWord: {
-    title: '📄 PDF to Word',
+    title: 'PDF to Word',
     desc: 'Convert PDF files to editable Word documents',
     convertBtn: 'Convert to Word',
     converting: 'Converting PDF → Word...',
@@ -581,7 +581,7 @@ export default {
     },
   },
   pdfToExcel: {
-    title: '📊 PDF to Excel',
+    title: 'PDF to Excel',
     desc: 'Convert PDF files to Excel spreadsheets, each page becomes a sheet',
     convertBtn: 'Convert to Excel',
     converting: 'Converting PDF → Excel...',
@@ -623,7 +623,7 @@ export default {
     },
   },
   pdfToPpt: {
-    title: '📽️ PDF to PPT',
+    title: 'PDF to PPT',
     desc: 'Convert PDF files to PowerPoint presentations, each page becomes a slide',
     renderNote: 'Text is editable — background appearance preserved with transparent text boxes overlaid on each slide',
     convertBtn: 'Convert to PPT',
@@ -665,7 +665,7 @@ export default {
     },
   },
   pdfToImage: {
-    title: '🖼️ PDF to Image',
+    title: 'PDF to Image',
     desc: 'Export PDF pages as PNG, JPEG, BMP or TIFF images',
     format: 'Image Format',
     resolution: 'Resolution',
@@ -703,7 +703,7 @@ export default {
     },
   },
   pdfToJpg: {
-    title: '🖼️ PDF to JPG',
+    title: 'PDF to JPG',
     desc: 'Export PDF pages as high-quality JPG images',
     resolution: 'Resolution',
     convertBtn: 'Convert to JPG',
@@ -739,7 +739,7 @@ export default {
     },
   },
   pdfToPng: {
-    title: '🖼️ PDF to PNG',
+    title: 'PDF to PNG',
     desc: 'Export PDF pages as lossless PNG images with transparency support',
     resolution: 'Resolution',
     convertBtn: 'Convert to PNG',
@@ -775,7 +775,7 @@ export default {
     },
   },
   pdfToTiff: {
-    title: '🖼️ PDF to TIFF',
+    title: 'PDF to TIFF',
     desc: 'Export PDF pages as TIFF format, ideal for printing and archiving',
     resolution: 'Resolution',
     convertBtn: 'Convert to TIFF',
@@ -811,7 +811,7 @@ export default {
     },
   },
   pdfToSvg: {
-    title: '📐 PDF to SVG',
+    title: 'PDF to SVG',
     desc: 'Merge all PDF pages into a single SVG file, supports lossless scaling',
     resolution: 'Resolution',
     convertBtn: 'Convert to SVG',
@@ -847,7 +847,7 @@ export default {
     },
   },
   pdfToText: {
-    title: '📝 PDF to Text',
+    title: 'PDF to Text',
     desc: 'Extract text from PDF, preserving paragraph and line break structure',
     convertBtn: 'Extract Text',
     converting: 'Extracting PDF text...',
@@ -883,7 +883,7 @@ export default {
     },
   },
   pdfToHtml: {
-    title: '🌐 PDF to HTML',
+    title: 'PDF to HTML',
     desc: 'Convert PDF to HTML webpage, preserving text position and layout',
     convertBtn: 'Convert to HTML',
     converting: 'Converting PDF → HTML...',
@@ -918,7 +918,7 @@ export default {
     },
   },
   wordToPdf: {
-    title: '📝 Word to PDF',
+    title: 'Word to PDF',
     desc: 'Convert Word documents (.docx) to PDF format',
     note: '⚠️ Note: Text content will be preserved, but complex formatting (tables, images, layout) may not be fully retained.',
     convertBtn: 'Convert to PDF',
@@ -952,7 +952,7 @@ export default {
     },
   },
   excelToPdf: {
-    title: '📊 Excel to PDF',
+    title: 'Excel to PDF',
     desc: 'Convert Excel spreadsheets (.xlsx) to PDF format',
     note: '⚠️ Note: Table data and basic structure will be preserved, but complex styles and formulas may not render fully.',
     convertBtn: 'Convert to PDF',
@@ -986,7 +986,7 @@ export default {
     },
   },
   pptToPdf: {
-    title: '📽️ PPT to PDF',
+    title: 'PPT to PDF',
     desc: 'Convert PowerPoint presentations (.pptx) to PDF format',
     note: '⚠️ Note: Text content of each slide will be preserved, but images, animations, and complex layouts may not render fully.',
     convertBtn: 'Convert to PDF',
@@ -1020,7 +1020,7 @@ export default {
     },
   },
   imageToPdf: {
-    title: '🖼️ Image to PDF',
+    title: 'Image to PDF',
     desc: 'Combine one or more images into a PDF file',
     pageSize: 'Page Size',
     orientation: 'Orientation',
@@ -1061,7 +1061,7 @@ export default {
     },
   },
   reader: {
-    title: '📖 PDF Reader',
+    title: 'PDF Reader',
     desc: 'Read PDF files online in your browser',
     back: '← Back',
     loading: 'Loading...',
@@ -1103,7 +1103,7 @@ export default {
     moreTools: 'More Tools',
   },
   protect: {
-    title: '🔒 Protect PDF',
+    title: 'Protect PDF',
     desc: 'Add password protection to your PDF and restrict permissions',
     passwordLabel: 'Set Password',
     passwordPlaceholder: 'Enter password (min 2 characters)',
@@ -1148,7 +1148,7 @@ export default {
     },
   },
   unlock: {
-    title: '🔓 Unlock PDF',
+    title: 'Unlock PDF',
     desc: 'Remove password protection from a PDF and restore open access',
     passwordLabel: 'Enter Password',
     passwordPlaceholder: 'Enter the PDF open password',
@@ -1185,7 +1185,7 @@ export default {
     },
   },
   crop: {
-    title: '✂️ Crop PDF',
+    title: 'Crop PDF',
     desc: 'Crop PDF page margins to remove excess whitespace',
     dragHint: 'Click and drag to select the area you want to keep, adjust size as needed',
     changeFile: 'Change file',
@@ -1231,7 +1231,7 @@ export default {
     },
   },
   extractImg: {
-    title: '🖼️ Extract Images',
+    title: 'Extract Images',
     desc: 'Export all embedded images from a PDF file',
     extractBtn: 'Extract Images',
     extracting: 'Extracting images...',
@@ -1267,7 +1267,7 @@ export default {
     },
   },
   repair: {
-    title: '🔧 Repair PDF',
+    title: 'Repair PDF',
     desc: 'Try to fix damaged or corrupted PDF files that won\'t open',
     repairBtn: 'Start Repair',
     repairing: 'Repairing PDF...',
@@ -1301,7 +1301,7 @@ export default {
     },
   },
   editMetadata: {
-    title: '📋 Edit PDF Metadata',
+    title: 'Edit PDF Metadata',
     desc: 'View and modify PDF file title, author, subject, keywords, and more',
     titleLabel: 'Title',
     titlePlaceholder: 'Enter PDF title...',
@@ -1349,11 +1349,11 @@ export default {
     },
   },
   flipPdf: {
-    title: '🔄 Flip PDF Pages',
+    title: 'Flip PDF Pages',
     desc: 'Mirror flip all PDF pages horizontally or vertically — perfect for correcting mis-scanned documents',
     horizontal: '↔️ Horizontal Flip',
     vertical: '↕️ Vertical Flip',
-    flipBtn: '🔄 Flip Pages',
+    flipBtn: 'Flip Pages',
     flipping: 'Flipping...',
     failed: 'Flip failed, please try again',
     completed: 'Flip Complete',
@@ -1384,9 +1384,9 @@ export default {
     },
   },
   grayscalePdf: {
-    title: '⬛ Grayscale PDF',
+    title: 'Grayscale PDF',
     desc: 'Convert color PDF to black & white / grayscale to reduce file size — ideal for printing and archiving',
-    convertBtn: '⬛ Convert to Grayscale',
+    convertBtn: 'Convert to Grayscale',
     converting: 'Converting...',
     failed: 'Conversion failed, please try again',
     completed: 'Grayscale Conversion Complete',
@@ -1417,13 +1417,13 @@ export default {
     },
   },
   resizePdf: {
-    title: '📐 Resize PDF Pages',
+    title: 'Resize PDF Pages',
     desc: 'Change PDF page dimensions to standard sizes like A4, A3, Letter — content scales to fit automatically',
     width: 'Width',
     height: 'Height',
     unit: 'mm',
     scaleContent: 'Scale content to fit new size',
-    resizeBtn: '📐 Resize',
+    resizeBtn: 'Resize',
     resizing: 'Resizing...',
     failed: 'Resize failed, please try again',
     completed: 'Page Size Adjusted',
@@ -1454,7 +1454,7 @@ export default {
     },
   },
   headerFooter: {
-    title: '📖 Add Header & Footer',
+    title: 'Add Header & Footer',
     desc: 'Add header and footer text to every PDF page with customizable alignment and fonts',
     headerText: 'Header Text',
     headerPlaceholder: 'Enter header content (leave empty to skip)',
@@ -1504,7 +1504,7 @@ export default {
     },
   },
   sign: {
-    title: '✍️ Sign PDF',
+    title: 'Sign PDF',
     desc: 'Three ways to sign: image upload, text signature, or freehand drawing. Adjustable position and size.',
     modeImage: 'Image',
     modeText: 'Text',
@@ -1583,7 +1583,7 @@ export default {
     todayVisits: '{n} today',
   },
   htmlToPdf: {
-    title: '🌐 HTML to PDF',
+    title: 'HTML to PDF',
     desc: 'Convert HTML code or HTML files into PDF documents',
     modePaste: 'Paste Code',
     modeFile: 'Upload File',
@@ -1627,7 +1627,7 @@ export default {
     },
   },
   redactPdf: {
-    title: '🔏 Redact PDF',
+    title: 'Redact PDF',
     desc: 'Permanently redact sensitive PDF content with rectangles, rounded rects, circles, ellipses, triangles, stars, hexagons, crosses, or freehand brush',
     drawHint: 'Choose a tool and draw on the PDF page',
     toolRect: 'Rectangle',
@@ -1678,7 +1678,7 @@ export default {
     },
   },
   fillForm: {
-    title: '📝 Fill PDF Form',
+    title: 'Fill PDF Form',
     desc: 'Auto-detect interactive form fields in your PDF, fill them, and export',
     fieldsFound: '{n} form field(s) detected',
     fieldPlaceholder: 'Enter value...',

@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('extractImg.title') }}</h1>
+    <h1 class="tool-title"><Image :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('extractImg.title') }}</h1>
     <p class="tool-desc">{{ $t('extractImg.desc') }}</p>
 
     <!-- 上传区：未选文件时显示 -->
@@ -83,6 +83,7 @@
 <script setup lang="ts">
 import { ref, computed, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Image } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 import FileDropZone from '@/components/FileDropZone.vue'

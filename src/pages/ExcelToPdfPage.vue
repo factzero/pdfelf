@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('excelToPdf.title') }}</h1>
+    <h1 class="tool-title"><Table2 :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('excelToPdf.title') }}</h1>
     <p class="tool-desc">{{ $t('excelToPdf.desc') }}</p>
     <FileDropZone :accept="['xlsx', 'xls']" @file-selected="onFileSelected" @error="onError" />
     <div v-if="selectedFile" class="notice">
@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Table2 } from 'lucide-vue-next'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import ProgressBar from '@/components/ProgressBar.vue'

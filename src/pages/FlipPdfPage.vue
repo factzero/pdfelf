@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('flipPdf.title') }}</h1>
+    <h1 class="tool-title"><FlipVertical :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('flipPdf.title') }}</h1>
     <p class="tool-desc">{{ $t('flipPdf.desc') }}</p>
 
     <FileDropZone v-if="!selectedFile" :accept="['pdf']" @file-selected="onFileSelected" @error="errorMsg = $event" />
@@ -9,7 +9,7 @@
       <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
         <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF Preview" />
         <div v-else class="file-preview__placeholder">
-          <span class="file-preview__placeholder-icon">📄</span>
+          <FileText :size="48" :stroke-width="1" class="file-preview__placeholder-icon" />
         </div>
         <Transition name="fade">
           <button v-if="showDelete" class="file-preview__delete" @click="removeFile">✕</button>
@@ -72,6 +72,7 @@
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FileText, FlipVertical } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import { readFileAsArrayBuffer, generateOutputFilename, formatFileSize, downloadBlob } from '@/utils/fileUtils'
 import FileDropZone from '@/components/FileDropZone.vue'

@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('redactPdf.title') }}</h1>
+    <h1 class="tool-title"><EyeOff :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('redactPdf.title') }}</h1>
     <p class="tool-desc">{{ $t('redactPdf.desc') }}</p>
 
     <FileDropZone
@@ -11,12 +11,14 @@
     />
 
     <div v-if="selectedFile" class="file-bar">
-      <span class="file-bar__icon">📄</span>
+      <FileText :size="20" :stroke-width="1.5" class="file-bar__icon" />
       <span class="file-bar__name">{{ selectedFile.name }}</span>
       <span class="file-bar__meta">{{ formatFileSize(selectedFile.size) }}</span>
       <span v-if="pageCount > 0" class="file-bar__pages">{{ $t('common.pages', { n: pageCount }) }}</span>
       <input ref="reSelectInputRef" type="file" accept=".pdf" hidden @change="onReSelect" />
-      <button class="file-bar__act" title="重新选择文件" @click="reSelectInputRef?.click()">📂</button>
+      <button class="file-bar__act" title="重新选择文件" @click="reSelectInputRef?.click()">
+        <FolderOpen :size="18" :stroke-width="1.5" />
+      </button>
       <button class="file-bar__del" title="移除文件" @click="removeFile">✕</button>
     </div>
 
@@ -141,6 +143,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onUnmounted, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { EyeOff, FileText, FolderOpen } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'

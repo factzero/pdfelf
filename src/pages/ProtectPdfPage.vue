@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('protect.title') }}</h1>
+    <h1 class="tool-title"><Lock :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('protect.title') }}</h1>
     <p class="tool-desc">{{ $t('protect.desc') }}</p>
 
     <FileDropZone v-if="!selectedFile" :accept="['pdf']" @file-selected="onFileSelected" @error="errorMsg = $event" />
@@ -9,7 +9,7 @@
       <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
         <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF Preview" />
         <div v-else class="file-preview__placeholder">
-          <span class="file-preview__placeholder-icon">📄</span>
+          <FileText :size="48" :stroke-width="1" class="file-preview__placeholder-icon" />
         </div>
         <Transition name="fade">
           <button v-if="showDelete" class="file-preview__delete" @click="removeFile">✕</button>
@@ -25,7 +25,7 @@
       <div class="option-group">
         <label class="option-label">{{ $t('protect.passwordLabel') }}</label>
         <div class="pwd-input-wrap">
-          <span class="pwd-icon pwd-icon--lock">🔒</span>
+          <Lock :size="18" :stroke-width="2" class="pwd-icon pwd-icon--lock" />
           <input
             v-model="ownerPassword"
             :type="showPwd ? 'text' : 'password'"
@@ -33,15 +33,15 @@
             :placeholder="$t('protect.passwordPlaceholder')"
           />
           <button class="pwd-toggle" type="button" @click="showPwd = !showPwd" :title="showPwd ? $t('protect.hidePwd') : $t('protect.showPwd')">
-            <span v-if="showPwd">👁</span>
-            <span v-else>🙈</span>
+            <Eye v-if="showPwd" :size="18" :stroke-width="2" />
+            <EyeOff v-else :size="18" :stroke-width="2" />
           </button>
         </div>
       </div>
       <div class="option-group">
         <label class="option-label">{{ $t('protect.confirmLabel') }}</label>
         <div class="pwd-input-wrap" :class="{ 'pwd-input-wrap--error': pwdMismatch }">
-          <span class="pwd-icon pwd-icon--lock">🔒</span>
+          <Lock :size="18" :stroke-width="2" class="pwd-icon pwd-icon--lock" />
           <input
             v-model="confirmPassword"
             :type="showConfirmPwd ? 'text' : 'password'"
@@ -49,8 +49,8 @@
             :placeholder="$t('protect.confirmPlaceholder')"
           />
           <button class="pwd-toggle" type="button" @click="showConfirmPwd = !showConfirmPwd" :title="showConfirmPwd ? $t('protect.hidePwd') : $t('protect.showPwd')">
-            <span v-if="showConfirmPwd">👁</span>
-            <span v-else>🙈</span>
+            <Eye v-if="showConfirmPwd" :size="18" :stroke-width="2" />
+            <EyeOff v-else :size="18" :stroke-width="2" />
           </button>
         </div>
         <p v-if="pwdMismatch" class="pwd-mismatch">{{ $t('protect.pwdMismatch') }}</p>
@@ -101,6 +101,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Eye, EyeOff, FileText, Lock } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 import FileDropZone from '@/components/FileDropZone.vue'

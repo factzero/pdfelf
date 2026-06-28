@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('imageToPdf.title') }}</h1>
+    <h1 class="tool-title"><Image :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('imageToPdf.title') }}</h1>
     <p class="tool-desc">{{ $t('imageToPdf.desc') }}</p>
     <FileDropZone :accept="['png', 'jpg', 'jpeg', 'webp', 'gif']" :multiple="true" @file-selected="onFileSelected" @error="onError" />
     <div v-if="files.length > 0" class="options">
@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Image } from 'lucide-vue-next'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import ProgressBar from '@/components/ProgressBar.vue'

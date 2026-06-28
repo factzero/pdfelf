@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('sign.title') }}</h1>
+    <h1 class="tool-title"><PenTool :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('sign.title') }}</h1>
     <p class="tool-desc">{{ $t('sign.desc') }}</p>
 
     <FileDropZone
@@ -14,7 +14,7 @@
       <div class="file-preview__thumbnail" @mouseenter="showDelete = true" @mouseleave="showDelete = false">
         <img v-if="previewUrl" :src="previewUrl" class="file-preview__canvas" alt="PDF Preview" />
         <div v-else class="file-preview__placeholder">
-          <span class="file-preview__placeholder-icon">📄</span>
+          <FileText :size="48" :stroke-width="1" class="file-preview__placeholder-icon" />
         </div>
         <Transition name="fade">
           <button v-if="showDelete" class="file-preview__delete" @click="removeFile">✕</button>
@@ -33,17 +33,17 @@
         class="mode-tab"
         :class="{ 'mode-tab--active': signMode === 'image' }"
         @click="switchMode('image')"
-      >🖼️ {{ $t('sign.modeImage') }}</button>
+      ><Image :size="18" :stroke-width="1.5" /> {{ $t('sign.modeImage') }}</button>
       <button
         class="mode-tab"
         :class="{ 'mode-tab--active': signMode === 'text' }"
         @click="switchMode('text')"
-      >🔤 {{ $t('sign.modeText') }}</button>
+      ><Type :size="18" :stroke-width="1.5" /> {{ $t('sign.modeText') }}</button>
       <button
         class="mode-tab"
         :class="{ 'mode-tab--active': signMode === 'hand' }"
         @click="switchMode('hand')"
-      >✍️ {{ $t('sign.modeHand') }}</button>
+      ><PenTool :size="18" :stroke-width="1.5" /> {{ $t('sign.modeHand') }}</button>
     </div>
 
     <!-- ======= Image Mode ======= -->
@@ -212,6 +212,7 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FileText, Image, PenTool, Type } from 'lucide-vue-next'
 import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'

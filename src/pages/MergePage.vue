@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container" @click="closeInsertMenu">
-    <h1 class="tool-title">{{ $t('merge.title') }}</h1>
+    <h1 class="tool-title"><Combine :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('merge.title') }}</h1>
     <p class="tool-desc">{{ $t('merge.desc') }}</p>
 
     <!-- 文件缩略图列表 -->
@@ -25,7 +25,7 @@
               :alt="item.name"
             />
             <div v-else class="merge-item__thumb-placeholder">
-              <span v-if="item.type === 'blank'" class="merge-item__thumb-blank">📄</span>
+              <FileText v-if="item.type === 'blank'" :size="40" :stroke-width="1.5" class="merge-item__thumb-blank" />
               <span v-else class="merge-item__thumb-loading">{{ $t('merge.loading') }}</span>
             </div>
 
@@ -152,6 +152,7 @@
 <script setup lang="ts">
 import { ref, reactive, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Combine, FileText } from 'lucide-vue-next'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'

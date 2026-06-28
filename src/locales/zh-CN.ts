@@ -32,17 +32,17 @@ export default {
   },
   home: {
     heroTitle: 'PDF Elf — 免费在线 PDF 工具',
-    heroSubtitle: '免费在线 PDF 工具 — 所有处理在浏览器本地完成',
-    introText: 'PDF Elf 提供 30+ 种免费 PDF 处理功能，包括压缩、合并、分割、旋转、删除页面、提取页面、重排页面顺序、添加水印、加密解密、裁剪、提取图片、修复、编辑元数据、翻转、灰度转换、调整页面大小，以及 PDF 与 Word、Excel、PPT、图片、SVG、文本、HTML 的双向转换。所有操作均在您的浏览器本地完成，文件不会上传到任何服务器，保护您的隐私安全。',
+    heroSubtitle: '免费、安全、便捷 — 所有处理均在浏览器本地完成',
+    introText: '<strong>30+</strong> 种 PDF 处理工具：压缩合并、分割旋转、增删页面、水印加密、格式互转等。<strong>所有操作均在浏览器本地完成，文件不上传</strong>，保护隐私。',
   },
   categories: {
-    organize: '📂 整理 PDF',
-    edit: '✏️ 编辑 PDF',
-    security: '🔒 安全与工具',
-    fromPdf: '🔄 从 PDF 转换',
-    toPdf: '📥 转换成 PDF',
-    reader: '📖 阅读器',
-    moreTools: '🔧 更多工具',
+    organize: '整理 PDF',
+    edit: '编辑 PDF',
+    security: '安全与工具',
+    fromPdf: '从 PDF 转换',
+    toPdf: '转换成 PDF',
+    reader: '阅读器',
+    moreTools: '更多工具',
   },
   seo: {
     homeTitle: 'PDF Elf — 免费在线 PDF 工具 | 在线压缩合并拆分转换',
@@ -157,7 +157,7 @@ export default {
     fileReadFailed: '文件读取失败',
   },
   compress: {
-    title: '🗜️ 压缩 PDF',
+    title: '压缩 PDF',
     desc: '减小 PDF 文件大小，选择适合你的压缩模式',
     basic: '基本压缩',
     basicDesc: '推荐 — 适度压缩，保持良好质量',
@@ -199,9 +199,9 @@ export default {
     },
   },
   merge: {
-    title: '🔗 合并 PDF',
+    title: '合并 PDF',
     desc: '将多个 PDF 合并为一个文件，拖拽调整顺序',
-    addDoc: '📄 添加文档',
+    addDoc: '添加文档',
     addBlank: '📃 添加空白页',
     blankPage: '空白页',
     blankPages: '{n} 空白页',
@@ -242,7 +242,7 @@ export default {
     },
   },
   split: {
-    title: '✂️ 分割 PDF',
+    title: '分割 PDF',
     desc: '按页面范围或每 N 页分割 PDF',
     range: '按范围提取',
     rangeDesc: '输入页码范围，如 1-3, 5-8',
@@ -284,7 +284,7 @@ export default {
     },
   },
   rotate: {
-    title: '🔄 旋转 PDF',
+    title: '旋转 PDF',
     desc: '旋转 PDF 页面，支持每页独立设置旋转角度',
     selectPages: '共 {n} 页，选择要旋转的页面：',
     noRotation: '不旋转',
@@ -324,7 +324,7 @@ export default {
     },
   },
   delete: {
-    title: '🗑️ 删除 PDF 页面',
+    title: '删除 PDF 页面',
     desc: '从 PDF 中删除不需要的页面',
     selectPages: '共 {n} 页，勾选要删除的页面：',
     deleteBtn: '删除 {n} 页',
@@ -360,7 +360,7 @@ export default {
     },
   },
   extract: {
-    title: '📋 提取 PDF 页面',
+    title: '提取 PDF 页面',
     desc: '从 PDF 中提取指定页面，保存为新的 PDF 文件',
     selectPages: '共 {n} 页，勾选要提取的页面：',
     extractBtn: '提取 {n} 页',
@@ -395,7 +395,7 @@ export default {
     },
   },
   reorder: {
-    title: '🔀 重排 PDF 页面顺序',
+    title: '重排 PDF 页面顺序',
     desc: '拖拽调整 PDF 页面顺序，然后导出为新文件',
     dragHint: '👇 拖拽页面缩略图来调整顺序',
     reorderBtn: '应用新顺序，导出 PDF',
@@ -431,7 +431,7 @@ export default {
     },
   },
   watermark: {
-    title: '🔏 PDF 添加水印',
+    title: 'PDF 添加水印',
     desc: '给 PDF 每一页添加文字水印',
     text: '水印文字',
     textPlaceholder: '例如：机密文件',
@@ -535,7 +535,7 @@ export default {
     },
   },
   pdfToWord: {
-    title: '📄 PDF 转 Word',
+    title: 'PDF 转 Word',
     desc: '将 PDF 文件转换为可编辑的 Word 文档',
     convertBtn: '转换为 Word',
     converting: '正在转换 PDF → Word...',
@@ -581,7 +581,7 @@ export default {
     },
   },
   pdfToExcel: {
-    title: '📊 PDF 转 Excel',
+    title: 'PDF 转 Excel',
     desc: '将 PDF 文件转换为 Excel 电子表格，每页 PDF 对应一个工作表',
     convertBtn: '转换为 Excel',
     converting: '正在转换 PDF → Excel...',
@@ -623,7 +623,7 @@ export default {
     },
   },
   pdfToPpt: {
-    title: '📽️ PDF 转 PPT',
+    title: 'PDF 转 PPT',
     desc: '将 PDF 文件转换为 PowerPoint 演示文稿，每页 PDF 对应一张幻灯片',
     renderNote: '文字可编辑 — 保留背景外观，文字作为透明文本框覆盖在幻灯片上',
     convertBtn: '转换为 PPT',
@@ -665,7 +665,7 @@ export default {
     },
   },
   pdfToImage: {
-    title: '🖼️ PDF 转图片',
+    title: 'PDF 转图片',
     desc: '将 PDF 页面导出为 PNG、JPEG、BMP 或 TIFF 图片',
     format: '图片格式',
     resolution: '分辨率',
@@ -703,7 +703,7 @@ export default {
     },
   },
   pdfToJpg: {
-    title: '🖼️ PDF 转 JPG',
+    title: 'PDF 转 JPG',
     desc: '将 PDF 页面导出为高质量 JPG 图片',
     resolution: '分辨率',
     convertBtn: '转换为 JPG',
@@ -739,7 +739,7 @@ export default {
     },
   },
   pdfToPng: {
-    title: '🖼️ PDF 转 PNG',
+    title: 'PDF 转 PNG',
     desc: '将 PDF 页面导出为无损 PNG 图片，支持透明背景',
     resolution: '分辨率',
     convertBtn: '转换为 PNG',
@@ -775,7 +775,7 @@ export default {
     },
   },
   pdfToTiff: {
-    title: '🖼️ PDF 转 TIFF',
+    title: 'PDF 转 TIFF',
     desc: '将 PDF 页面导出为 TIFF 格式，适合印刷和存档',
     resolution: '分辨率',
     convertBtn: '转换为 TIFF',
@@ -811,7 +811,7 @@ export default {
     },
   },
   pdfToSvg: {
-    title: '📐 PDF 转 SVG',
+    title: 'PDF 转 SVG',
     desc: '将 PDF 全部页面合并为一个 SVG 矢量文件，支持无损缩放',
     resolution: '分辨率',
     convertBtn: '转换为 SVG',
@@ -847,7 +847,7 @@ export default {
     },
   },
   pdfToText: {
-    title: '📝 PDF 转文本',
+    title: 'PDF 转文本',
     desc: '从 PDF 中提取文字内容，保留段落和换行结构',
     convertBtn: '提取文本',
     converting: '正在提取 PDF 文本...',
@@ -883,7 +883,7 @@ export default {
     },
   },
   pdfToHtml: {
-    title: '🌐 PDF 转 HTML',
+    title: 'PDF 转 HTML',
     desc: '将 PDF 转换为 HTML 网页，保留文字位置和布局',
     convertBtn: '转换为 HTML',
     converting: '正在转换 PDF → HTML...',
@@ -918,7 +918,7 @@ export default {
     },
   },
   wordToPdf: {
-    title: '📝 Word 转 PDF',
+    title: 'Word 转 PDF',
     desc: '将 Word 文档 (.docx) 转换为 PDF 格式',
     note: '⚠️ 注意：目前转换会保留文档的文字内容，复杂的格式（表格、图片、排版）可能无法完整保留。',
     convertBtn: '转换为 PDF',
@@ -952,7 +952,7 @@ export default {
     },
   },
   excelToPdf: {
-    title: '📊 Excel 转 PDF',
+    title: 'Excel 转 PDF',
     desc: '将 Excel 表格 (.xlsx) 转换为 PDF 格式',
     note: '⚠️ 注意：转换会保留表格数据和基本结构，复杂的样式和公式可能无法完整呈现。',
     convertBtn: '转换为 PDF',
@@ -986,7 +986,7 @@ export default {
     },
   },
   pptToPdf: {
-    title: '📽️ PPT 转 PDF',
+    title: 'PPT 转 PDF',
     desc: '将 PowerPoint 演示文稿 (.pptx) 转换为 PDF 格式',
     note: '⚠️ 注意：转换会保留每页幻灯片的文字内容，图片、动画和复杂排版可能无法完整呈现。',
     convertBtn: '转换为 PDF',
@@ -1020,7 +1020,7 @@ export default {
     },
   },
   imageToPdf: {
-    title: '🖼️ 图片转 PDF',
+    title: '图片转 PDF',
     desc: '将一张或多张图片合并转换为 PDF 文件',
     pageSize: '页面尺寸',
     orientation: '方向',
@@ -1061,7 +1061,7 @@ export default {
     },
   },
   reader: {
-    title: '📖 PDF 阅读器',
+    title: 'PDF 阅读器',
     desc: '在浏览器中阅读 PDF 文件',
     back: '← 返回',
     loading: '加载中...',
@@ -1103,7 +1103,7 @@ export default {
     moreTools: '更多工具',
   },
   protect: {
-    title: '🔒 加密 PDF',
+    title: '加密 PDF',
     desc: '给 PDF 添加密码保护，限制访问和操作权限',
     passwordLabel: '设置密码',
     passwordPlaceholder: '输入密码（至少 2 位）',
@@ -1148,7 +1148,7 @@ export default {
     },
   },
   unlock: {
-    title: '🔓 解密 PDF',
+    title: '解密 PDF',
     desc: '移除 PDF 文件的密码保护，恢复自由访问',
     passwordLabel: '输入密码',
     passwordPlaceholder: '输入 PDF 的打开密码',
@@ -1185,7 +1185,7 @@ export default {
     },
   },
   crop: {
-    title: '✂️ 裁剪 PDF',
+    title: '裁剪 PDF',
     desc: '裁剪 PDF 页面边距，去除多余空白区域',
     dragHint: '点击并拖动，选择要保留的区域，根据需要调整大小',
     changeFile: '更换文件',
@@ -1231,7 +1231,7 @@ export default {
     },
   },
   extractImg: {
-    title: '🖼️ 提取图片',
+    title: '提取图片',
     desc: '从 PDF 中导出所有内嵌的图片文件',
     extractBtn: '提取图片',
     extracting: '正在提取图片...',
@@ -1267,7 +1267,7 @@ export default {
     },
   },
   repair: {
-    title: '🔧 修复 PDF',
+    title: '修复 PDF',
     desc: '尝试修复损坏或无法正常打开的 PDF 文件',
     repairBtn: '开始修复',
     repairing: '正在修复 PDF...',
@@ -1301,7 +1301,7 @@ export default {
     },
   },
   editMetadata: {
-    title: '📋 编辑 PDF 元数据',
+    title: '编辑 PDF 元数据',
     desc: '查看和修改 PDF 文件的标题、作者、主题、关键词等信息',
     titleLabel: '标题',
     titlePlaceholder: '输入 PDF 标题...',
@@ -1349,11 +1349,11 @@ export default {
     },
   },
   flipPdf: {
-    title: '🔄 翻转 PDF 页面',
+    title: '翻转 PDF 页面',
     desc: '水平或垂直镜像翻转 PDF 的所有页面，适合处理扫描方向错误的文档',
     horizontal: '↔️ 水平翻转',
     vertical: '↕️ 垂直翻转',
-    flipBtn: '🔄 开始翻转',
+    flipBtn: '开始翻转',
     flipping: '正在翻转...',
     failed: '翻转失败，请重试',
     completed: '翻转完成',
@@ -1384,9 +1384,9 @@ export default {
     },
   },
   grayscalePdf: {
-    title: '⬛ 灰度转换 PDF',
+    title: '灰度转换 PDF',
     desc: '将彩色 PDF 转为黑白/灰度，减小文件体积，适合打印和归档',
-    convertBtn: '⬛ 转为灰度',
+    convertBtn: '转为灰度',
     converting: '正在转换...',
     failed: '转换失败，请重试',
     completed: '灰度转换完成',
@@ -1417,13 +1417,13 @@ export default {
     },
   },
   resizePdf: {
-    title: '📐 调整 PDF 页面大小',
+    title: '调整 PDF 页面大小',
     desc: '更改 PDF 的页面尺寸，支持 A4、A3、Letter 等标准格式，内容自动缩放适配',
     width: '宽度',
     height: '高度',
     unit: '毫米',
     scaleContent: '等比缩放内容适配新尺寸',
-    resizeBtn: '📐 调整大小',
+    resizeBtn: '调整大小',
     resizing: '正在调整...',
     failed: '调整失败，请重试',
     completed: '页面大小调整完成',
@@ -1454,7 +1454,7 @@ export default {
     },
   },
   headerFooter: {
-    title: '📖 添加页眉页脚',
+    title: '添加页眉页脚',
     desc: '为 PDF 每一页添加页眉和页脚文字，可分别设置内容和对齐方式',
     headerText: '页眉文字',
     headerPlaceholder: '输入页眉内容，留空则不添加',
@@ -1504,7 +1504,7 @@ export default {
     },
   },
   sign: {
-    title: '✍️ PDF 电子签名',
+    title: 'PDF 电子签名',
     desc: '支持图片签名、文本签名和手写签名三种方式，可调整位置和大小',
     modeImage: '图片签名',
     modeText: '文本签名',
@@ -1583,7 +1583,7 @@ export default {
     todayVisits: '今日 {n} 次',
   },
   htmlToPdf: {
-    title: '🌐 HTML 转 PDF',
+    title: 'HTML 转 PDF',
     desc: '将 HTML 代码或 HTML 文件转换为 PDF 文档',
     modePaste: '粘贴代码',
     modeFile: '上传文件',
@@ -1627,7 +1627,7 @@ export default {
     },
   },
   redactPdf: {
-    title: '🔏 密文遮盖',
+    title: '密文遮盖',
     desc: '在 PDF 上使用矩形、圆角矩形、圆形、椭圆、三角、五角星、六边形、十字或自由画笔永久遮盖敏感信息',
     drawHint: '选择绘制工具后在 PDF 页面上操作',
     toolRect: '矩形',
@@ -1678,7 +1678,7 @@ export default {
     },
   },
   fillForm: {
-    title: '📝 表单填写',
+    title: '表单填写',
     desc: '自动检测 PDF 中的交互式表单字段，填写后导出',
     fieldsFound: '检测到 {n} 个表单字段',
     fieldPlaceholder: '输入值...',

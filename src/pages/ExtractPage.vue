@@ -1,6 +1,6 @@
 <template>
   <div class="tool-page container">
-    <h1 class="tool-title">{{ $t('extract.title') }}</h1>
+    <h1 class="tool-title"><Copy :size="28" :stroke-width="2" class="tool-title__icon" /> {{ $t('extract.title') }}</h1>
     <p class="tool-desc">{{ $t('extract.desc') }}</p>
 
     <!-- 上传区：未选文件时显示 -->
@@ -90,6 +90,7 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Copy } from 'lucide-vue-next'
 import FileDropZone from '@/components/FileDropZone.vue'
 import ToolSeoContent from '@/components/ToolSeoContent.vue'
 import { useToolStore } from '@/stores/toolStore'
