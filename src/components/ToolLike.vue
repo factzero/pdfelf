@@ -56,8 +56,8 @@
         <button class="rating-panel__edit" @click="startEdit">{{ $t('rating.edit') }}</button>
       </div>
 
-      <!-- 评论列表 -->
-      <div v-if="ratingsList.length > 0" class="rating-panel__reviews">
+      <!-- 评论列表（未评分时显示） -->
+      <div v-if="ratingsList.length > 0 && !userRated" class="rating-panel__reviews">
         <div v-for="(r, idx) in displayedReviews" :key="idx" class="review-item">
           <div class="review-item__head">
             <span class="review-item__stars">
