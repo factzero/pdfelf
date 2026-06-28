@@ -328,8 +328,8 @@ if (process.env.NODE_ENV === 'production') {
     res.send(html)
   })
 
-  // 英文子页面路由 /en/* 
-  app.get('/en/*', (req, res) => {
+  // 英文子页面路由 /en/*
+  app.get('/en/:catchall*', (req, res) => {
     if (!cachedBaseHtml) {
       try { cachedBaseHtml = readFileSync(indexHtmlPath, 'utf-8') } catch {
         res.status(503).send('Service Unavailable'); return
