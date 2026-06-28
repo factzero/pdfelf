@@ -534,7 +534,7 @@ export function buildJsonLdEn(seo: SeoEntry): string {
       name: 'PDF Elf',
       url: 'https://pdfelf.online/en/',
       description: 'Free online PDF tools — compress, merge, split, convert, and 40+ features',
-      logo: 'https://pdfelf.online/favicon.svg',
+      logo: 'https://pdfelf.online/pdfelf-logo.svg',
       sameAs: ['https://github.com/factzero/pdfelf'],
     })
     graph.push({
@@ -598,7 +598,7 @@ export function buildJsonLd(seo: SeoEntry): string {
       name: 'PDF Elf',
       url: 'https://pdfelf.online/',
       description: '免费在线 PDF 处理工具，提供压缩、合并、拆分、转换等 20+ PDF 功能',
-      logo: 'https://pdfelf.online/favicon.svg',
+      logo: 'https://pdfelf.online/pdfelf-logo.svg',
       sameAs: [
         'https://github.com/factzero/pdfelf',
       ],

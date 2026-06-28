@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header-inner container">
       <router-link to="/" class="logo">
-        <span class="logo-icon">🧝</span>
+        <img src="/pdfelf-logo.svg" class="logo-icon" alt="PDF Elf" width="32" height="32" />
         <span class="logo-text">PDF Elf</span>
       </router-link>
       <nav class="nav">
@@ -61,7 +61,8 @@ function toggleLang() {
 }
 
 .logo-icon {
-  font-size: 1.5rem;
+  width: 32px;
+  height: 32px;
 }
 
 .nav {
