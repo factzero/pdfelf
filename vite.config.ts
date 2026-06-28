@@ -173,6 +173,12 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  build: {
+    // 低配服务器关闭 sourcemap，大幅减少内存占用
+    sourcemap: false,
+    // 限制并行 chunk 数，降低内存峰值
+    chunkSizeWarningLimit: 1000,
+  },
   server: {
     host: '0.0.0.0',
     allowedHosts: true,
