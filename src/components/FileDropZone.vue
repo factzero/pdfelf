@@ -150,6 +150,8 @@ defineExpose({
 
 <style scoped>
 .dropzone {
+  width: 100%;
+  margin: 0 auto;
   border: 2px dashed var(--color-dropzone-border);
   border-radius: var(--radius-lg);
   background: var(--color-dropzone);
