@@ -3,7 +3,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { readFileSync } from 'fs'
 import { getStats, recordVisit, initStore } from './statsStore'
-import { seoMap, buildJsonLd, homeSeo } from './seoMeta.js'
+import { seoMap, enSeoMap, buildJsonLd, buildJsonLdEn, homeSeo, homeEnSeo } from './seoMeta.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -111,26 +111,36 @@ if (process.env.NODE_ENV === 'production') {
     )
   }
 
-  /** 注入 hreflang 标签 */
-  function injectHreflang(html: string, path: string): string {
-    const canonicalUrl = `https://pdfelf.online${path === '/' ? '/' : path}`
-    const enUrl = path === '/' 
-      ? 'https://pdfelf.online/en/' 
-      : `https://pdfelf.online/en${path}`
+  /** 注入 hreflang 标签 — x-default 指向英文（Google 推荐：非中文用户默认英文）*/
+  function injectHreflang(html: string, path: string, isEnglish = false): string {
+    const basePath = path === '/' ? '/' : path
+    const zhUrl = `https://pdfelf.online${basePath}`
+    const enUrl = `https://pdfelf.online/en${basePath}`
+    const canonicalUrl = isEnglish ? enUrl : zhUrl
 
-    html = html.replace('__HREFLANG_ZH__', canonicalUrl)
+    html = html.replace('__HREFLANG_ZH__', zhUrl)
     html = html.replace('__HREFLANG_EN__', enUrl)
-    html = html.replace('__HREFLANG_DEFAULT__', canonicalUrl)
+    // x-default = English: non-Chinese users default to English
+    html = html.replace('__HREFLANG_DEFAULT__', enUrl)
+
+    // og:locale / og:locale:alternate
+    if (isEnglish) {
+      html = html.replace(/<meta property="og:locale" content="[^"]*"[^>]*>/,
+        '<meta property="og:locale" content="en_US" />')
+      html = html.replace('__OG_LOCALE_ALT__',
+        '<meta property="og:locale:alternate" content="zh_CN" />')
+    } else {
+      html = html.replace('__OG_LOCALE_ALT__',
+        '<meta property="og:locale:alternate" content="en_US" />')
+    }
 
     return html
   }
 
-  /** 根据请求 path 注入正确的路由级 meta（title / description / canonical / OG / JSON-LD / hreflang），
-   *  解决 SPA 对所有路由返回同一份首页 HTML 的 SEO 问题。 */
+  /** 根据请求 path 注入正确的路由级 meta（中文）*/
   function injectRouteMeta(rawHtml: string, path: string): string {
     const seo = seoMap.get(path)
     if (!seo) {
-      // 未匹配到路由 → 注入 hreflang + JSON-LD（用首页兜底），不注入 title/description
       let html = injectHreflang(rawHtml, path)
       html = injectJsonLd(html, '/')
       return html
@@ -163,16 +173,12 @@ if (process.env.NODE_ENV === 'production') {
       `<meta property="og:description" content="${seo.description}" />`)
     html = replaceInHtml(html, /<meta property="og:url" content="[^"]*"[^>]*>/,
       `<meta property="og:url" content="${canonicalUrl}" />`)
-    html = replaceInHtml(html, /<meta property="og:image" content="[^"]*"[^>]*>/,
-      `<meta property="og:image" content="https://pdfelf.online/og-image.png" />`)
 
     // Twitter Card
     html = replaceInHtml(html, /<meta name="twitter:title" content="[^"]*"[^>]*>/,
       `<meta name="twitter:title" content="${seo.title}" />`)
     html = replaceInHtml(html, /<meta name="twitter:description" content="[^"]*"[^>]*>/,
       `<meta name="twitter:description" content="${seo.description}" />`)
-    html = replaceInHtml(html, /<meta name="twitter:image" content="[^"]*"[^>]*>/,
-      `<meta name="twitter:image" content="https://pdfelf.online/og-image.png" />`)
 
     // JSON-LD
     html = injectJsonLd(html, path)
@@ -181,6 +187,72 @@ if (process.env.NODE_ENV === 'production') {
     html = injectHreflang(html, path)
 
     return html
+  }
+
+  /** 根据请求 path 注入英文路由级 meta */
+  function injectRouteMetaEn(rawHtml: string, path: string): string {
+    const seo = enSeoMap.get(path)
+    if (!seo) {
+      let html = injectHreflang(rawHtml, path, true)
+      html = html.replace('<html lang="zh-CN">', '<html lang="en">')
+      html = injectJsonLdEn(html, '/')
+      return html
+    }
+
+    let html = rawHtml
+
+    // lang attribute
+    html = html.replace('<html lang="zh-CN">', '<html lang="en">')
+
+    // title
+    html = replaceInHtml(html, /<title>.*?<\/title>/,
+      `<title>${seo.title}</title>`)
+
+    // meta description
+    html = replaceInHtml(html, /<meta name="description" content="[^"]*"[^>]*>/,
+      `<meta name="description" content="${seo.description}" />`)
+
+    // meta keywords (English)
+    const keywords = seo.applicationName.replace('PDF Elf — ', '') + ',PDF tools,PDF Elf,free PDF'
+    html = replaceInHtml(html, /<meta name="keywords" content="[^"]*"[^>]*>/,
+      `<meta name="keywords" content="${keywords}" />`)
+
+    // canonical
+    const canonicalUrl = `https://pdfelf.online/en${path === '/' ? '/' : path}`
+    html = replaceInHtml(html, /<link rel="canonical" href="[^"]*"[^>]*>/,
+      `<link rel="canonical" href="${canonicalUrl}" />`)
+
+    // Open Graph
+    html = replaceInHtml(html, /<meta property="og:title" content="[^"]*"[^>]*>/,
+      `<meta property="og:title" content="${seo.title}" />`)
+    html = replaceInHtml(html, /<meta property="og:description" content="[^"]*"[^>]*>/,
+      `<meta property="og:description" content="${seo.description}" />`)
+    html = replaceInHtml(html, /<meta property="og:url" content="[^"]*"[^>]*>/,
+      `<meta property="og:url" content="${canonicalUrl}" />`)
+
+    // Twitter Card
+    html = replaceInHtml(html, /<meta name="twitter:title" content="[^"]*"[^>]*>/,
+      `<meta name="twitter:title" content="${seo.title}" />`)
+    html = replaceInHtml(html, /<meta name="twitter:description" content="[^"]*"[^>]*>/,
+      `<meta name="twitter:description" content="${seo.description}" />`)
+
+    // JSON-LD (English)
+    html = injectJsonLdEn(html, path)
+
+    // hreflang
+    html = injectHreflang(html, path, true)
+
+    return html
+  }
+
+  /** 注入英文 JSON-LD */
+  function injectJsonLdEn(html: string, path: string): string {
+    const seo = enSeoMap.get(path) || homeEnSeo
+    const jsonLd = buildJsonLdEn(seo)
+    return html.replace(
+      '<!--JSON_LD_PLACEHOLDER-->',
+      `<script type="application/ld+json">\n${jsonLd}\n    </script>`
+    )
   }
 
   // 读取 index.html 一次（构建后不会再变）
@@ -192,7 +264,6 @@ if (process.env.NODE_ENV === 'production') {
   }
 
   // 首页路由：先于 express.static 处理，注入 JSON-LD / hreflang 等 SEO 数据
-  // 如果不拦截，express.static 会直接返回 dist/index.html，绕过 injectRouteMeta
   app.get('/', (_req, res) => {
     if (!cachedBaseHtml) {
       try { cachedBaseHtml = readFileSync(indexHtmlPath, 'utf-8') } catch {
@@ -200,6 +271,32 @@ if (process.env.NODE_ENV === 'production') {
       }
     }
     const html = injectRouteMeta(cachedBaseHtml, '/')
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.send(html)
+  })
+
+  // 英文首页
+  app.get('/en', (_req, res) => {
+    if (!cachedBaseHtml) {
+      try { cachedBaseHtml = readFileSync(indexHtmlPath, 'utf-8') } catch {
+        res.status(503).send('Service Unavailable'); return
+      }
+    }
+    const html = injectRouteMetaEn(cachedBaseHtml, '/')
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.send(html)
+  })
+
+  // 英文子页面路由 /en/* 
+  app.get('/en/*', (req, res) => {
+    if (!cachedBaseHtml) {
+      try { cachedBaseHtml = readFileSync(indexHtmlPath, 'utf-8') } catch {
+        res.status(503).send('Service Unavailable'); return
+      }
+    }
+    // 剥掉 /en 前缀获取实际路径
+    const enPath = req.path.replace(/^\/en/, '') || '/'
+    const html = injectRouteMetaEn(cachedBaseHtml, enPath)
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     res.send(html)
   })

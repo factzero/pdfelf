@@ -6,6 +6,20 @@ import i18n from './i18n'
 import { recordPageVisit } from './services/statsService'
 import './styles/global.css'
 
+// 处理 /en/ 路由前缀：剥掉 /en/ 并设置英文
+router.beforeEach((to) => {
+  if (to.path === '/en') {
+    i18n.global.locale.value = 'en'
+    localStorage.setItem('pdfelf-lang', 'en')
+    return '/'
+  }
+  if (to.path.startsWith('/en/')) {
+    i18n.global.locale.value = 'en'
+    localStorage.setItem('pdfelf-lang', 'en')
+    return to.path.replace(/^\/en/, '') || '/'
+  }
+})
+
 // 在 mount 前注册，确保首次加载也触发
 router.afterEach((to) => {
   recordPageVisit(to.path)

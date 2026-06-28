@@ -448,10 +448,138 @@ export const toolSeos: SeoEntry[] = [
   },
 ]
 
-/** path → SeoEntry 快速查找表 */
+/** path → SeoEntry 快速查找表（中文）*/
 export const seoMap = new Map<string, SeoEntry>()
 for (const entry of [homeSeo, ...toolSeos]) {
   seoMap.set(entry.path, entry)
+}
+
+// ═══════════════════ 英文 SEO 元数据 ═══════════════════
+
+export const homeEnSeo: SeoEntry = {
+  path: '/',
+  title: 'PDF Elf — Free Online PDF Tools | Compress Merge Split Convert',
+  description:
+    'PDF Elf is a free online PDF tool supporting 40+ features: compress, merge, split, convert, encrypt, decrypt, watermark, redact, sign, fill forms, and bidirectional PDF↔Office/image conversion. All processing runs locally in your browser — no file uploads, safe and private.',
+  applicationName: 'PDF Elf',
+  category: 'Home',
+  categoryEn: 'Home',
+}
+
+export const toolEnSeos: SeoEntry[] = [
+  // ═══════════ Organize PDF ═══════════
+  { path: '/compress-pdf', title: 'Compress PDF - PDF Elf | Free Online PDF Compressor', description: 'PDF Elf free online PDF compressor — basic & strong compression modes. Reduce PDF file size in your browser locally, no upload needed. Drag & drop to quickly shrink PDFs while maintaining quality.', applicationName: 'PDF Elf — Compress PDF', category: 'Organize PDF', categoryEn: 'Organize PDF' },
+  { path: '/merge-pdf', title: 'Merge PDF - PDF Elf | Free Online PDF Merger', description: 'PDF Elf free online PDF merger — drag & drop to reorder files, insert blank pages or new PDFs anywhere. Browser-local merging, multiple PDFs combined into one fast, no upload, safe & reliable.', applicationName: 'PDF Elf — Merge PDF', category: 'Organize PDF', categoryEn: 'Organize PDF' },
+  { path: '/split-pdf', title: 'Split PDF - PDF Elf | Free Online PDF Splitter', description: 'PDF Elf free online PDF splitter — split by page ranges or every N pages. Browser-local splitting, quickly divide a large PDF into multiple independent files, no server upload required.', applicationName: 'PDF Elf — Split PDF', category: 'Organize PDF', categoryEn: 'Organize PDF' },
+  { path: '/rotate-pdf', title: 'Rotate PDF - PDF Elf | Free Online PDF Rotator', description: 'PDF Elf free online PDF rotator — set rotation (90°, 180°, 270°) per page with visual thumbnails. Browser-local processing, zero upload. Fix PDF page orientation issues easily and fast.', applicationName: 'PDF Elf — Rotate PDF', category: 'Organize PDF', categoryEn: 'Organize PDF' },
+  { path: '/delete-pages', title: 'Delete PDF Pages - PDF Elf | Free Online PDF Page Remover', description: 'PDF Elf free online PDF page remover — check thumbnail checkboxes to delete unwanted pages. Supports select-all / batch operations, browser-local processing, original file unaffected.', applicationName: 'PDF Elf — Delete Pages', category: 'Organize PDF', categoryEn: 'Organize PDF' },
+  { path: '/extract-pages', title: 'Extract PDF Pages - PDF Elf | Free Online PDF Page Extractor', description: 'PDF Elf free online PDF page extractor — check pages via thumbnails to extract selected pages into a new PDF. Supports batch extraction, browser-local, formatting fully preserved.', applicationName: 'PDF Elf — Extract Pages', category: 'Organize PDF', categoryEn: 'Organize PDF' },
+  { path: '/reorder-pages', title: 'Reorder PDF Pages - PDF Elf | Free Online PDF Page Sorter', description: 'PDF Elf free online PDF page reorder tool — drag thumbnails to freely rearrange PDF page order, high-res preview for accuracy. Browser-local, original unchanged, export reordered PDF.', applicationName: 'PDF Elf — Reorder Pages', category: 'Organize PDF', categoryEn: 'Organize PDF' },
+  // ═══════════ Edit PDF ═══════════
+  { path: '/add-watermark', title: 'Add Watermark to PDF - PDF Elf | Free Online PDF Watermark Tool', description: 'PDF Elf free online PDF watermark tool — custom text, font size, opacity, rotation, and color. Watermark every page, browser-local processing, protect document copyright and confidentiality.', applicationName: 'PDF Elf — Add Watermark', category: 'Edit PDF', categoryEn: 'Edit PDF' },
+  { path: '/add-page-numbers', title: 'Add Page Numbers to PDF - PDF Elf | Free Online PDF Numbering Tool', description: 'PDF Elf free online page number tool — 6 positions, 3 formats (Page X of Y / numbers / X/Y), 3 fonts. Browser-local processing, quickly insert page numbers into PDFs.', applicationName: 'PDF Elf — Add Page Numbers', category: 'Edit PDF', categoryEn: 'Edit PDF' },
+  { path: '/add-header-footer', title: 'Add Header & Footer to PDF - PDF Elf | Free Online Tool', description: 'PDF Elf free online header & footer tool — set header and footer text independently with left/center/right alignment, 3 fonts, customizable size and margins. Browser-local, files stay private.', applicationName: 'PDF Elf — Header & Footer', category: 'Edit PDF', categoryEn: 'Edit PDF' },
+  // ═══════════ Security & Tools ═══════════
+  { path: '/protect-pdf', title: 'Protect PDF - PDF Elf | Free Online PDF Encryption Tool', description: 'PDF Elf free online PDF encryption — add an open password and set permissions (printing/modifying/copying). AES-128 encrypted locally in your browser, password and file never leave your device.', applicationName: 'PDF Elf — Protect PDF', category: 'Security & Tools', categoryEn: 'Security & Tools' },
+  { path: '/unlock-pdf', title: 'Unlock PDF - PDF Elf | Free Online PDF Password Remover', description: 'PDF Elf free online PDF unlocker — enter the original password to remove PDF protection. Browser-local processing, decrypted content and layout unchanged, file never leaves your device.', applicationName: 'PDF Elf — Unlock PDF', category: 'Security & Tools', categoryEn: 'Security & Tools' },
+  { path: '/crop-pdf', title: 'Crop PDF - PDF Elf | Free Online PDF Cropper', description: 'PDF Elf free online PDF cropper — set top/bottom/left/right crop distances, trim excess margins from PDF pages. Browser-local processing, precise cropping applied uniformly to all pages.', applicationName: 'PDF Elf — Crop PDF', category: 'Security & Tools', categoryEn: 'Security & Tools' },
+  { path: '/extract-images', title: 'Extract Images from PDF - PDF Elf | Free Online Image Extractor', description: 'PDF Elf free online PDF image extractor — auto-scans every page for embedded images and batch-exports to original format. All images zipped for download, browser-local, lossless quality.', applicationName: 'PDF Elf — Extract Images', category: 'Security & Tools', categoryEn: 'Security & Tools' },
+  { path: '/repair-pdf', title: 'Repair PDF - PDF Elf | Free Online PDF Repair Tool', description: 'PDF Elf free online PDF repair tool — attempts to rebuild damaged PDF internal structure, fix files that won\'t open or display incorrectly. Browser-local processing, quick file recovery.', applicationName: 'PDF Elf — Repair PDF', category: 'Security & Tools', categoryEn: 'Security & Tools' },
+  { path: '/sign-pdf', title: 'Sign PDF - PDF Elf | Free Online PDF Signing Tool', description: 'PDF Elf free online PDF signature tool — three methods: image upload, text signature, or freehand drawing. 6 preset positions with margin fine-tuning. Browser-local, files stay private.', applicationName: 'PDF Elf — Sign PDF', category: 'More Tools', categoryEn: 'More Tools' },
+  { path: '/redact-pdf', title: 'Redact PDF - PDF Elf | Free Online PDF Redaction Tool', description: 'PDF Elf free online PDF redaction tool — permanently redact sensitive content with rectangles, circles, ellipses, polygons, or freehand brush. Rasterized processing, content cannot be recovered.', applicationName: 'PDF Elf — Redact PDF', category: 'More Tools', categoryEn: 'More Tools' },
+  { path: '/fill-form', title: 'Fill PDF Form - PDF Elf | Free Online Form Filler', description: 'PDF Elf free online PDF form filler — auto-detect interactive form fields, fill them, and export. Supports text fields, checkboxes, dropdowns, radio buttons. Browser-local, form data stays private.', applicationName: 'PDF Elf — Fill Form', category: 'More Tools', categoryEn: 'More Tools' },
+  // ═══════════ Convert from PDF ═══════════
+  { path: '/pdf-to-word', title: 'PDF to Word - PDF Elf | Free Online PDF to Word Converter', description: 'PDF Elf free online PDF to Word converter — convert PDF to editable Word (.docx), preserving paragraph structure and formatting. Powered by Pyodide/LibreOffice engine. Browser-local, files never leave your device.', applicationName: 'PDF Elf — PDF to Word', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-excel', title: 'PDF to Excel - PDF Elf | Free Online PDF to Excel Converter', description: 'PDF Elf free online PDF to Excel converter — convert PDF table data to editable Excel spreadsheets. Each page becomes a worksheet, browser-local conversion, sensitive data stays private.', applicationName: 'PDF Elf — PDF to Excel', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-ppt', title: 'PDF to PPT - PDF Elf | Free Online PDF to PPT Converter', description: 'PDF Elf free online PDF to PPT converter — convert PDF to PowerPoint, each page becomes a slide. Text is freely editable, browser-local conversion, large confidential documents never uploaded.', applicationName: 'PDF Elf — PDF to PPT', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-image', title: 'PDF to Image - PDF Elf | Free Online PDF to Image Converter', description: 'PDF Elf free online PDF to image converter — export PDF as PNG, JPEG, BMP, or TIFF. Customizable DPI, browser-local rendering, high-quality images, each page as a separate image zipped for download.', applicationName: 'PDF Elf — PDF to Image', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-jpg', title: 'PDF to JPG - PDF Elf | Free Online PDF to JPG Converter', description: 'PDF Elf free online PDF to JPG converter — export PDF pages as high-quality JPG images, ideal for web and social sharing. Adjustable DPI (72–300), browser-local conversion, fast and secure.', applicationName: 'PDF Elf — PDF to JPG', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-png', title: 'PDF to PNG - PDF Elf | Free Online PDF to PNG Converter', description: 'PDF Elf free online PDF to PNG converter — export PDF pages as lossless PNG with transparency support. Customizable resolution for HD print and design. Browser-local, data fully confidential.', applicationName: 'PDF Elf — PDF to PNG', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-tiff', title: 'PDF to TIFF - PDF Elf | Free Online PDF to TIFF Converter', description: 'PDF Elf free online PDF to TIFF converter — export PDF pages as TIFF format, ideal for print publishing and professional imaging. Adjustable resolution, browser-local conversion, highest quality.', applicationName: 'PDF Elf — PDF to TIFF', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-svg', title: 'PDF to SVG - PDF Elf | Free Online PDF to SVG Converter', description: 'PDF Elf free online PDF to SVG converter — merge all PDF pages into a single vector SVG file, lossless scaling, no distortion. Browser-local conversion, openable in browsers or design software.', applicationName: 'PDF Elf — PDF to SVG', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-text', title: 'PDF to Text - PDF Elf | Free Online PDF Text Extractor', description: 'PDF Elf free online PDF text extractor — extract plain text from PDF while preserving paragraphs and line breaks. Auto-detects text hierarchy, browser-local processing, ideal for editing or translation.', applicationName: 'PDF Elf — PDF to Text', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  { path: '/pdf-to-html', title: 'PDF to HTML - PDF Elf | Free Online PDF to HTML Converter', description: 'PDF Elf free online PDF to HTML converter — convert PDF to HTML webpage format, preserving text position and layout. Generates standalone HTML files, browser-local conversion, ideal for web publishing.', applicationName: 'PDF Elf — PDF to HTML', category: 'Convert from PDF', categoryEn: 'Convert from PDF' },
+  // ═══════════ Convert to PDF ═══════════
+  { path: '/word-to-pdf', title: 'Word to PDF - PDF Elf | Free Online Word to PDF Converter', description: 'PDF Elf free online Word to PDF converter — convert Word (.docx) to PDF format, preserving text content and basic layout. Output standard PDF files, browser-local conversion, content never leaked.', applicationName: 'PDF Elf — Word to PDF', category: 'Convert to PDF', categoryEn: 'Convert to PDF' },
+  { path: '/excel-to-pdf', title: 'Excel to PDF - PDF Elf | Free Online Excel to PDF Converter', description: 'PDF Elf free online Excel to PDF converter — convert Excel (.xlsx/.xls) to PDF. Preserves table data and basic structure, each worksheet becomes a separate page, browser-local, sensitive data not uploaded.', applicationName: 'PDF Elf — Excel to PDF', category: 'Convert to PDF', categoryEn: 'Convert to PDF' },
+  { path: '/ppt-to-pdf', title: 'PPT to PDF - PDF Elf | Free Online PPT to PDF Converter', description: 'PDF Elf free online PPT to PDF converter — convert PowerPoint (.pptx) to PDF for cross-device sharing and printing. Browser-local conversion, presentation content stays confidential.', applicationName: 'PDF Elf — PPT to PDF', category: 'Convert to PDF', categoryEn: 'Convert to PDF' },
+  { path: '/image-to-pdf', title: 'Image to PDF - PDF Elf | Free Online Image to PDF Converter', description: 'PDF Elf free online image to PDF converter — combine PNG, JPEG, WebP, GIF into a single PDF. Custom page size (A4/A3/Letter) and orientation, browser-local conversion, multi-image one-click merge.', applicationName: 'PDF Elf — Image to PDF', category: 'Convert to PDF', categoryEn: 'Convert to PDF' },
+  { path: '/html-to-pdf', title: 'HTML to PDF - PDF Elf | Free Online HTML to PDF Converter', description: 'PDF Elf free online HTML to PDF converter — convert HTML code or .html files to PDF documents. Live preview, choose page size and orientation, browser-local processing, HTML content stays private.', applicationName: 'PDF Elf — HTML to PDF', category: 'Convert to PDF', categoryEn: 'Convert to PDF' },
+  // ═══════════ Reader ═══════════
+  { path: '/pdf-reader', title: 'PDF Reader - PDF Elf | Free Online PDF Reader', description: 'PDF Elf free online PDF reader — pure browser-based PDF reading, no software install needed. Keyboard navigation, zoom, page jumping, mobile & desktop compatible, large files load fast, no uploads.', applicationName: 'PDF Elf — PDF Reader', category: 'Reader', categoryEn: 'Reader' },
+  // ═══════════ More Tools ═══════════
+  { path: '/edit-metadata', title: 'Edit PDF Metadata - PDF Elf | Free Online Metadata Editor', description: 'PDF Elf free online PDF metadata editor — view and modify title, author, subject, keywords and more. Browser-local processing, no software install, edit and save metadata online.', applicationName: 'PDF Elf — Edit Metadata', category: 'More Tools', categoryEn: 'More Tools' },
+  { path: '/flip-pdf', title: 'Flip PDF Pages - PDF Elf | Free Online PDF Flipper', description: 'PDF Elf free online PDF page flipper — horizontal or vertical mirror flip all pages, perfect for correcting mis-scanned documents. Browser-local processing, download immediately.', applicationName: 'PDF Elf — Flip PDF', category: 'More Tools', categoryEn: 'More Tools' },
+  { path: '/grayscale-pdf', title: 'Grayscale PDF - PDF Elf | Free Online PDF Grayscale Converter', description: 'PDF Elf free online grayscale converter — convert color PDF to black & white, significantly reduce file size. Ideal for printing and archiving, browser-local processing, download instantly.', applicationName: 'PDF Elf — Grayscale PDF', category: 'More Tools', categoryEn: 'More Tools' },
+  { path: '/resize-pdf', title: 'Resize PDF Pages - PDF Elf | Free Online PDF Resizer', description: 'PDF Elf free online PDF page resizer — change PDF page dimensions to A4, A3, Letter, and more. Content scales to fit proportionally, browser-local processing, download resized PDF immediately.', applicationName: 'PDF Elf — Resize PDF', category: 'More Tools', categoryEn: 'More Tools' },
+]
+
+/** path → SeoEntry 快速查找表（英文）*/
+export const enSeoMap = new Map<string, SeoEntry>()
+for (const entry of [homeEnSeo, ...toolEnSeos]) {
+  enSeoMap.set(entry.path, entry)
+}
+
+/**
+ * 生成英文路由级 JSON-LD 
+ */
+export function buildJsonLdEn(seo: SeoEntry): string {
+  const isHome = seo.path === '/'
+
+  const graph: Record<string, unknown>[] = []
+
+  if (isHome) {
+    graph.push({
+      '@type': 'Organization',
+      name: 'PDF Elf',
+      url: 'https://pdfelf.online/en/',
+      description: 'Free online PDF tools — compress, merge, split, convert, and 40+ features',
+      logo: 'https://pdfelf.online/favicon.svg',
+      sameAs: ['https://github.com/factzero/pdfelf'],
+    })
+    graph.push({
+      '@type': 'WebSite',
+      name: 'PDF Elf',
+      url: 'https://pdfelf.online/en/',
+      description: seo.description,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: 'https://pdfelf.online/en/?q={search_term_string}' },
+        'query-input': 'required name=search_term_string',
+      },
+    })
+    graph.push({
+      '@type': 'WebApplication',
+      name: seo.applicationName,
+      url: 'https://pdfelf.online/en/',
+      description: seo.description,
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      browserRequirements: 'Requires JavaScript',
+    })
+  } else {
+    graph.push({
+      '@type': 'SoftwareApplication',
+      name: seo.applicationName,
+      url: `https://pdfelf.online/en${seo.path}`,
+      description: seo.description,
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    })
+
+    graph.push({
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://pdfelf.online/en/' },
+        { '@type': 'ListItem', position: 2, name: seo.categoryEn, item: 'https://pdfelf.online/en/' },
+        { '@type': 'ListItem', position: 3, name: seo.applicationName.replace('PDF Elf — ', '') },
+      ],
+    })
+  }
+
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })
 }
 
 /**
