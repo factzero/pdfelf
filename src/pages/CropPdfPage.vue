@@ -348,7 +348,6 @@ async function doCrop() {
 .tool-page {
   max-width: 1100px;
   margin: 0 auto;
-  padding: var(--spacing-2xl) var(--spacing-lg);
 }
 .tool-title { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: var(--spacing-sm); }
 .tool-desc { text-align: center; color: var(--color-text-secondary); margin-bottom: var(--spacing-xl); }
