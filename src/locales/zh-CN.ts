@@ -29,6 +29,9 @@ export default {
     split: '分割',
     toWord: '转Word',
     toImage: '转图片',
+    allTools: '所有工具',
+    upload: '上传文件',
+    menu: '菜单',
   },
   home: {
     heroTitle: 'PDF Elf — 免费在线 PDF 工具',

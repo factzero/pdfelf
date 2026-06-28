@@ -29,6 +29,9 @@ export default {
     split: 'Split',
     toWord: 'To Word',
     toImage: 'To Image',
+    allTools: 'All Tools',
+    upload: 'Upload',
+    menu: 'Menu',
   },
   home: {
     heroTitle: 'PDF Elf — Free Online PDF Tools',
