@@ -3,3 +3,13 @@ Allow: /
 Disallow: /api/
 
 Sitemap: https://pdfelf.online/sitemap.xml
+
+# Crawl-delay for polite crawling
+User-agent: Bingbot
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Crawl-delay: 1
+
+User-agent: Googlebot
+Crawl-delay: 0.5
