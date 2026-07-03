@@ -1,7 +1,7 @@
 <template>
   <div class="home container">
     <div class="hero">
-      <h1 class="hero__title">{{ $t('home.heroTitle') }}</h1>
+      <div class="hero__title">{{ $t('home.heroTitle') }}</div>
       <p class="hero__subtitle">{{ $t('home.heroSubtitle') }}</p>
     </div>
 

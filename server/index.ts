@@ -144,10 +144,10 @@ if (process.env.NODE_ENV === 'production') {
 
   /** 注入首页 H1（SEO 爬虫关键信号，放 app 外面避免被 Vue 替换）*/
   function injectStaticH1(html: string, isEnglish = false): string {
-    const h1Style = 'style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap"'
     const h1Text = isEnglish
       ? 'PDF Elf — Free Online PDF Tools'
       : 'PDF Elf — 免费在线 PDF 工具'
+    const h1Style = 'style="margin:0;padding:8px 16px;font-size:14px;font-weight:600;color:#334155;background:#f8fafc;text-align:center;"'
     return html.replace(
       '<!--__H1_PLACEHOLDER__-->',
       `<h1 ${h1Style}>${h1Text}</h1>`
