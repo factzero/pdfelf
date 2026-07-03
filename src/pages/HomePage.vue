@@ -1,7 +1,7 @@
 <template>
   <div class="home container">
     <div class="hero">
-      <h1 class="hero__title">{{ $t('home.heroTitle') }}</h1>
+      <h1 class="hero__title"><span class="hero__title-text">{{ $t('home.heroTitle') }}</span></h1>
       <p class="hero__subtitle">{{ $t('home.heroSubtitle') }}</p>
     </div>
 
@@ -181,13 +181,16 @@ const categories = [
   font-size: 1.75rem;
   font-weight: 800;
   line-height: 1.3;
+  margin-bottom: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero__title-text {
   background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #db2777 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 2px;
-  position: relative;
-  z-index: 1;
 }
 
 .hero__subtitle {
