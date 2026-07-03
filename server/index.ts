@@ -149,7 +149,7 @@ if (process.env.NODE_ENV === 'production') {
       ? 'PDF Elf — Free Online PDF Tools'
       : 'PDF Elf — 免费在线 PDF 工具'
     return html.replace(
-      '__H1_PLACEHOLDER__',
+      '<!--__H1_PLACEHOLDER__-->',
       `<h1 ${h1Style}>${h1Text}</h1>`
     )
   }
@@ -196,7 +196,7 @@ if (process.env.NODE_ENV === 'production') {
     if (!seo) {
       let html = injectHreflang(rawHtml, path)
       html = injectJsonLd(html, '/')
-      html = html.replace('__H1_PLACEHOLDER__', '')
+      html = html.replace('<!--__H1_PLACEHOLDER__-->', '')
       return html
     }
 
@@ -250,7 +250,7 @@ if (process.env.NODE_ENV === 'production') {
       let html = injectHreflang(rawHtml, path, true)
       html = html.replace('<html lang="zh-CN">', '<html lang="en">')
       html = injectJsonLdEn(html, '/')
-      html = html.replace('__H1_PLACEHOLDER__', '')
+      html = html.replace('<!--__H1_PLACEHOLDER__-->', '')
       return html
     }
 
@@ -358,7 +358,7 @@ if (process.env.NODE_ENV === 'production') {
     // 剥掉 /en 前缀获取实际路径
     const enPath = req.path.replace(/^\/en/, '') || '/'
     let html = injectRouteMetaEn(cachedBaseHtml, enPath)
-    html = html.replace('__H1_PLACEHOLDER__', '')
+    html = html.replace('<!--__H1_PLACEHOLDER__-->', '')
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     res.send(html)
   })
@@ -386,7 +386,7 @@ if (process.env.NODE_ENV === 'production') {
     }
     const path = req.path || '/'
     let html = injectRouteMeta(cachedBaseHtml, path)
-    html = html.replace('__H1_PLACEHOLDER__', '')
+    html = html.replace('<!--__H1_PLACEHOLDER__-->', '')
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     res.send(html)
   })
