@@ -49,7 +49,7 @@ export default {
   },
   seo: {
     homeTitle: 'PDF Elf — Free Online PDF Tools | Compress Merge Split Convert',
-    homeDesc: 'PDF Elf is a free online PDF tool supporting 20+ features: compress, merge, split, convert, rotate, extract, reorder pages, and more. Everything runs locally in your browser — no uploads needed, your files stay private.',
+    homeDesc: 'PDF Elf is a free online PDF tool with 40+ features. Compress, merge, split, convert, encrypt, sign, and more. All processing runs locally — no upload, safe.',
     compressPdf: 'Compress PDF - PDF Elf',
     mergePdf: 'Merge PDF - PDF Elf',
     splitPdf: 'Split PDF - PDF Elf',
