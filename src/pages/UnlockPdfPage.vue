@@ -166,7 +166,7 @@ onUnmounted(() => { if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl =
 </script>
 
 <style scoped>
-.tool-page { max-width: 720px; margin: 0 auto; padding: var(--spacing-2xl) var(--spacing-lg); }
+.tool-page { max-width: 880px; margin: 0 auto; }
 .tool-title { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: var(--spacing-sm); }
 .tool-desc { text-align: center; color: var(--color-text-secondary); margin-bottom: var(--spacing-xl); }
 

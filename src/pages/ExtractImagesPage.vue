@@ -201,13 +201,11 @@ onUnmounted(() => { if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl =
 .tool-page {
   max-width: 880px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
 }
 
 @media (max-width: 640px) {
   .tool-page {
     max-width: 100%;
-    padding: 0 var(--spacing-sm);
   }
 }
 
