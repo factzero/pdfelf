@@ -1,4 +1,17 @@
 export default {
+  feedback: {
+    toggle: 'Feedback',
+    title: 'Send Feedback',
+    thanks: 'Thanks for your feedback!',
+    typeBug: 'Bug Report',
+    typeFeature: 'Feature Request',
+    typeGeneral: 'Other',
+    messagePlaceholder: 'Describe your feedback…',
+    emailPlaceholder: 'Email (optional, for follow-up)',
+    submit: 'Submit',
+    submitting: 'Submitting…',
+    failed: 'Submission failed, please try again',
+  },
   rating: {
     title: 'Reviews',
     prompt: 'Tap to rate',

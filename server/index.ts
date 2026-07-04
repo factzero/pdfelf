@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import { readFileSync } from 'fs'
 import { getStats, recordVisit, initStore } from './statsStore'
 import { initRatingStore, submitRating, getPageRatings, getUserRating, getAllSummaries } from './likeStore.js'
+import { initFeedbackStore, submitFeedback, getFeedbackStats } from './feedbackStore.js'
 import { seoMap, enSeoMap, buildJsonLd, buildJsonLdEn, homeSeo, homeEnSeo } from './seoMeta.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -74,6 +75,36 @@ app.post('/api/ratings', (req, res) => {
   }
   const result = submitRating(path, visitorId, stars, review || '')
   res.json(result)
+})
+
+// API: 提交用户反馈
+app.post('/api/feedback', (req, res) => {
+  const { type, message, email, page, userAgent } = req.body
+  if (!type || !message) {
+    res.status(400).json({ error: 'type and message required' })
+    return
+  }
+  if (!['bug', 'feature', 'general'].includes(type)) {
+    res.status(400).json({ error: 'type must be bug, feature, or general' })
+    return
+  }
+  if (typeof message !== 'string' || message.trim().length === 0) {
+    res.status(400).json({ error: 'message must be a non-empty string' })
+    return
+  }
+  const entry = submitFeedback({
+    type,
+    message: message.trim(),
+    email: email || undefined,
+    page: page || '/',
+    userAgent: userAgent || 'unknown',
+  })
+  res.status(201).json({ submitted: true, id: entry.createdAt })
+})
+
+// API: 获取反馈统计
+app.get('/api/feedback/stats', (_req, res) => {
+  res.json(getFeedbackStats())
 })
 
 // 静态信息页面（SEO 信任信号：隐私、联系、关于）
@@ -395,6 +426,7 @@ if (process.env.NODE_ENV === 'production') {
 // 初始化统计存储文件（不存在则自动创建）
 initStore()
 initRatingStore()
+initFeedbackStore()
 
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`\n📊 [Stats Server] http://localhost:${PORT}`)

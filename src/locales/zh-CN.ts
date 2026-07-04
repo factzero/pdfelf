@@ -1,4 +1,17 @@
 export default {
+  feedback: {
+    toggle: '反馈',
+    title: '用户反馈',
+    thanks: '感谢您的反馈！',
+    typeBug: 'Bug 报告',
+    typeFeature: '功能建议',
+    typeGeneral: '其他',
+    messagePlaceholder: '请描述您的反馈内容…',
+    emailPlaceholder: '邮箱（选填，方便我们回复）',
+    submit: '提交反馈',
+    submitting: '提交中…',
+    failed: '提交失败，请重试',
+  },
   rating: {
     title: '用户评价',
     prompt: '点击评分',

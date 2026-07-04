@@ -22,6 +22,7 @@
         />
       </div>
     </section>
+    <FeedbackWidget />
   </div>
 </template>
 
@@ -56,6 +57,7 @@ import {
   Wrench,
 } from 'lucide-vue-next'
 import ToolCard from '@/components/ToolCard.vue'
+import FeedbackWidget from '@/components/FeedbackWidget.vue'
 
 const categories = [
   {
