@@ -49,7 +49,7 @@ export default {
   home: {
     heroTitle: 'PDF Elf — Free Online PDF Tools',
     heroSubtitle: 'Free, Secure & Fast — All processing done locally in your browser',
-    introText: '<strong>30+</strong> PDF tools: compress, merge, split, rotate, watermark, convert, and more. <strong>All processing runs locally in your browser — no file uploads</strong>, keeping your data private.',
+    introText: 'Free online PDF tools: compress, merge, convert, OCR, edit content, e-sign, compare PDFs and more. <strong>Runs locally in your browser — no upload</strong>, privacy safe.',
   },
   categories: {
     organize: 'Organize PDF',
@@ -112,6 +112,7 @@ export default {
     bookmarkSplit: 'Split PDF by Bookmarks - PDF Elf',
     deskewPdf: 'Deskew PDF - PDF Elf',
     batesNumbering: 'Bates Numbering - PDF Elf',
+    comparePdf: 'Compare PDF - PDF Elf',
   },
   tools: {
     compressPdf: { title: 'Compress PDF', desc: 'Reduce PDF file size with basic and strong compression modes' },
@@ -163,6 +164,7 @@ export default {
     bookmarkSplit: { title: 'Split by Bookmarks', desc: 'Auto-split PDF into separate files based on bookmarks/outline' },
     deskewPdf: { title: 'Deskew PDF', desc: 'Auto-correct skewed/tilted scanned pages' },
     batesNumbering: { title: 'Bates Numbering', desc: 'Add legal Bates stamps with custom prefix, digits, and positioning' },
+    comparePdf: { title: 'Compare PDF', desc: 'Compare two PDF documents and highlight text differences — additions, deletions, and modifications' },
   },
   trust: {
     localProcessing: '100% Local Browser Processing',
@@ -2204,4 +2206,51 @@ export default {
       ],
     },
   },
+  compare: {
+    title: 'Compare PDF',
+    desc: 'Upload two PDF files to automatically extract text and highlight differences — added, deleted, and unchanged content',
+    diffTip: 'Click the button to automatically extract text from both PDFs and compare line by line',
+    compareBtn: 'Start Comparing',
+    comparing: 'Extracting text and comparing differences...',
+    completed: 'Comparison Complete',
+    failed: 'Comparison failed, please try again',
+    originalFile: 'Original File',
+    modifiedFile: 'Modified File',
+    same: 'Same Lines',
+    added: 'Added',
+    deleted: 'Deleted',
+    totalLines: 'Total Lines',
+    noDiff: 'The two files are identical',
+    pages: 'pages',
+    recompare: 'Compare Again',
+    seo: {
+      featuresTitle: 'Features',
+      features: [
+        'Upload two PDF files and automatically extract text for line-by-line comparison',
+        'Highlight additions (blue) and deletions (red) at a glance',
+        'Stats bar shows counts of same, added, and deleted lines',
+        'Pure local browser processing — your files are never uploaded',
+      ],
+      stepsTitle: 'How to Use',
+      steps: [
+        { title: 'Upload original PDF', desc: 'Upload the original version of the PDF in the left panel' },
+        { title: 'Upload modified PDF', desc: 'Upload the modified version in the right panel' },
+        { title: 'Start comparison', desc: 'Click the compare button to automatically extract and compare text from both PDFs' },
+        { title: 'Review differences', desc: 'Browse the highlighted diff results to clearly see all changes' },
+      ],
+      faqTitle: 'FAQ',
+      faq: [
+        { q: 'How does PDF comparison work?', a: 'We use pdf.js to extract text from both PDFs, then apply an LCS (Longest Common Subsequence) algorithm to compare them line by line, identifying added, deleted, and unchanged lines with color-coded highlights.' },
+        { q: 'Does it work with scanned PDFs?', a: 'The comparison relies on text layer extraction. Pure image scans without an OCR text layer cannot have their text extracted. Use the OCR tool first to add a text layer to scans.' },
+        { q: 'Does it detect formatting changes?', a: 'Comparison is based on plain text content only. If two PDFs have identical text but different formatting (fonts, colors, etc.), those differences will not be detected.' },
+      ],
+      relatedTitle: 'Related Tools',
+      related: [
+        { label: 'OCR Recognition', path: '/ocr-pdf' },
+        { label: 'Edit PDF Content', path: '/edit-pdf' },
+        { label: 'Merge PDF', path: '/merge-pdf' },
+      ],
+    },
+  },
 }
+
