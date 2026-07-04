@@ -187,28 +187,28 @@ async function handleSubmit() {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 10px 18px;
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--color-text);
-  background: #fff;
-  border: 1.5px solid var(--color-border);
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.35);
   font-family: inherit;
 }
 
 .feedback-btn:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #1d4ed8;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
   transform: translateY(-1px);
 }
 
 .feedback-btn--active {
-  border-color: var(--color-primary);
-  background: #eff6ff;
+  background: #1e40af;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
 }
 
 .feedback-btn__label {
