@@ -41,6 +41,7 @@
     "concurrently": "^9.2.1",
     "cross-env": "^7.0.3",
     "express": "^5.1.0",
+    "playwright": "^1.61.1",
     "tsx": "^4.19.5",
     "typescript": "~6.0.2",
     "vite": "^8.0.12",

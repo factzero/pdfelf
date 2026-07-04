@@ -5,10 +5,12 @@
 import type { Component } from 'vue'
 import {
   FolderArchive, Combine, Scissors, RotateCw, Trash2, Copy, ArrowLeftRight,
-  Stamp, Hash, BookOpenText,
+  Layers, LayoutGrid, Bookmark, AlignCenter,
+  Stamp, Hash, BookOpenText, CopyPlus,
   Lock, LockOpen, Crop, Image, Wrench,
-  FileText, Table2, Presentation, FileImage, Maximize, FileType, Globe,
-  FileCode, FlipVertical, Palette, PenTool, EyeOff,
+  FileText, Table2, Presentation, FileImage, Maximize, FileType, Globe, FileCheck,
+  BookOpen,
+  ScanText, Edit3, FileCode, FlipVertical, Palette, PenTool, EyeOff,
 } from 'lucide-vue-next'
 
 export interface NavToolItem {
@@ -33,6 +35,10 @@ export const navDropdownCategories: NavDropdownCategory[] = [
       { icon: Trash2,        titleKey: 'tools.deletePages.title',   route: '/delete-pages' },
       { icon: Copy,          titleKey: 'tools.extractPages.title',  route: '/extract-pages' },
       { icon: ArrowLeftRight,titleKey: 'tools.reorderPages.title',  route: '/reorder-pages' },
+      { icon: Layers,        titleKey: 'tools.flattenPdf.title',     route: '/flatten-pdf' },
+      { icon: LayoutGrid,    titleKey: 'tools.nupPdf.title',         route: '/nup-pdf' },
+      { icon: Bookmark,      titleKey: 'tools.bookmarkSplit.title',  route: '/split-by-bookmarks' },
+      { icon: AlignCenter,   titleKey: 'tools.deskewPdf.title',      route: '/deskew-pdf' },
     ],
   },
   {
@@ -41,6 +47,7 @@ export const navDropdownCategories: NavDropdownCategory[] = [
       { icon: Stamp,        titleKey: 'tools.addWatermark.title',    route: '/add-watermark' },
       { icon: Hash,         titleKey: 'tools.addPageNumbers.title', route: '/add-page-numbers' },
       { icon: BookOpenText, titleKey: 'tools.headerFooter.title',   route: '/add-header-footer' },
+      { icon: CopyPlus,     titleKey: 'tools.pdfOverlay.title',     route: '/pdf-overlay' },
     ],
   },
   {
@@ -66,6 +73,7 @@ export const navDropdownCategories: NavDropdownCategory[] = [
       { icon: Maximize,     titleKey: 'tools.pdfToSvg.title',   route: '/pdf-to-svg' },
       { icon: FileType,     titleKey: 'tools.pdfToText.title',  route: '/pdf-to-text' },
       { icon: Globe,        titleKey: 'tools.pdfToHtml.title',  route: '/pdf-to-html' },
+      { icon: FileCheck,    titleKey: 'tools.pdfToPdfa.title',  route: '/pdf-to-pdfa' },
     ],
   },
   {
@@ -76,6 +84,8 @@ export const navDropdownCategories: NavDropdownCategory[] = [
       { icon: Presentation, titleKey: 'tools.pptToPdf.title',   route: '/ppt-to-pdf' },
       { icon: Image,        titleKey: 'tools.imageToPdf.title', route: '/image-to-pdf' },
       { icon: Globe,        titleKey: 'tools.htmlToPdf.title',  route: '/html-to-pdf' },
+      { icon: BookOpen,     titleKey: 'tools.epubToPdf.title',  route: '/epub-to-pdf' },
+      { icon: FileText,     titleKey: 'tools.txtToPdf.title',   route: '/txt-to-pdf' },
     ],
   },
   {
@@ -87,6 +97,8 @@ export const navDropdownCategories: NavDropdownCategory[] = [
   {
     categoryKey: 'categories.moreTools',
     tools: [
+      { icon: ScanText,     titleKey: 'tools.ocrPdf.title',        route: '/ocr-pdf' },
+      { icon: Edit3,        titleKey: 'tools.editPdf.title',       route: '/edit-pdf' },
       { icon: FileCode,     titleKey: 'tools.editMetadata.title',  route: '/edit-metadata' },
       { icon: FlipVertical, titleKey: 'tools.flipPdf.title',       route: '/flip-pdf' },
       { icon: Palette,      titleKey: 'tools.grayscalePdf.title',  route: '/grayscale-pdf' },
@@ -94,6 +106,7 @@ export const navDropdownCategories: NavDropdownCategory[] = [
       { icon: PenTool,      titleKey: 'tools.signPdf.title',       route: '/sign-pdf' },
       { icon: EyeOff,       titleKey: 'tools.redactPdf.title',     route: '/redact-pdf' },
       { icon: FileType,     titleKey: 'tools.fillForm.title',      route: '/fill-form' },
+      { icon: Hash,         titleKey: 'tools.batesNumbering.title', route: '/bates-numbering' },
     ],
   },
 ]

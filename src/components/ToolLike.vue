@@ -104,7 +104,9 @@ const toolRoutes = new Set([
   'pdf-reader',
   'edit-metadata', 'flip-pdf', 'grayscale-pdf', 'resize-pdf',
   'sign-pdf', 'redact-pdf', 'fill-form',
-  'ocr-pdf',
+  'ocr-pdf', 'edit-pdf',
+  'pdf-to-pdfa', 'flatten-pdf', 'epub-to-pdf', 'txt-to-pdf',
+  'pdf-overlay', 'nup-pdf', 'split-by-bookmarks', 'deskew-pdf', 'bates-numbering',
 ])
 
 const showOnPage = ref(false)

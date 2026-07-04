@@ -28,12 +28,18 @@
 
 <script setup lang="ts">
 import {
+  AlignCenter,
   ArrowLeftRight,
+  Bookmark,
+  BookOpen,
   BookOpenText,
   Combine,
   Copy,
+  CopyPlus,
   Crop,
+  Edit3,
   EyeOff,
+  FileCheck,
   FileCode,
   FileImage,
   FileText,
@@ -43,6 +49,8 @@ import {
   Globe,
   Hash,
   Image,
+  Layers,
+  LayoutGrid,
   Lock,
   LockOpen,
   Maximize,
@@ -71,6 +79,10 @@ const categories = [
       { icon: Trash2, titleKey: 'tools.deletePages.title', descKey: 'tools.deletePages.desc', route: '/delete-pages' },
       { icon: Copy, titleKey: 'tools.extractPages.title', descKey: 'tools.extractPages.desc', route: '/extract-pages' },
       { icon: ArrowLeftRight, titleKey: 'tools.reorderPages.title', descKey: 'tools.reorderPages.desc', route: '/reorder-pages' },
+      { icon: Layers, titleKey: 'tools.flattenPdf.title', descKey: 'tools.flattenPdf.desc', route: '/flatten-pdf' },
+      { icon: LayoutGrid, titleKey: 'tools.nupPdf.title', descKey: 'tools.nupPdf.desc', route: '/nup-pdf' },
+      { icon: Bookmark, titleKey: 'tools.bookmarkSplit.title', descKey: 'tools.bookmarkSplit.desc', route: '/split-by-bookmarks' },
+      { icon: AlignCenter, titleKey: 'tools.deskewPdf.title', descKey: 'tools.deskewPdf.desc', route: '/deskew-pdf' },
     ],
   },
   {
@@ -79,6 +91,7 @@ const categories = [
       { icon: Stamp, titleKey: 'tools.addWatermark.title', descKey: 'tools.addWatermark.desc', route: '/add-watermark' },
       { icon: Hash, titleKey: 'tools.addPageNumbers.title', descKey: 'tools.addPageNumbers.desc', route: '/add-page-numbers' },
       { icon: BookOpenText, titleKey: 'tools.headerFooter.title', descKey: 'tools.headerFooter.desc', route: '/add-header-footer' },
+      { icon: CopyPlus, titleKey: 'tools.pdfOverlay.title', descKey: 'tools.pdfOverlay.desc', route: '/pdf-overlay' },
     ],
   },
   {
@@ -104,6 +117,7 @@ const categories = [
       { icon: Maximize, titleKey: 'tools.pdfToSvg.title', descKey: 'tools.pdfToSvg.desc', route: '/pdf-to-svg' },
       { icon: FileType, titleKey: 'tools.pdfToText.title', descKey: 'tools.pdfToText.desc', route: '/pdf-to-text' },
       { icon: Globe, titleKey: 'tools.pdfToHtml.title', descKey: 'tools.pdfToHtml.desc', route: '/pdf-to-html' },
+      { icon: FileCheck, titleKey: 'tools.pdfToPdfa.title', descKey: 'tools.pdfToPdfa.desc', route: '/pdf-to-pdfa' },
     ],
   },
   {
@@ -114,6 +128,8 @@ const categories = [
       { icon: Presentation, titleKey: 'tools.pptToPdf.title', descKey: 'tools.pptToPdf.desc', route: '/ppt-to-pdf' },
       { icon: Image, titleKey: 'tools.imageToPdf.title', descKey: 'tools.imageToPdf.desc', route: '/image-to-pdf' },
       { icon: Globe, titleKey: 'tools.htmlToPdf.title', descKey: 'tools.htmlToPdf.desc', route: '/html-to-pdf' },
+      { icon: BookOpen, titleKey: 'tools.epubToPdf.title', descKey: 'tools.epubToPdf.desc', route: '/epub-to-pdf' },
+      { icon: FileText, titleKey: 'tools.txtToPdf.title', descKey: 'tools.txtToPdf.desc', route: '/txt-to-pdf' },
     ],
   },
   {
@@ -126,6 +142,7 @@ const categories = [
     nameKey: 'categories.moreTools',
     tools: [
       { icon: ScanText, titleKey: 'tools.ocrPdf.title', descKey: 'tools.ocrPdf.desc', route: '/ocr-pdf' },
+      { icon: Edit3, titleKey: 'tools.editPdf.title', descKey: 'tools.editPdf.desc', route: '/edit-pdf' },
       { icon: FileCode, titleKey: 'tools.editMetadata.title', descKey: 'tools.editMetadata.desc', route: '/edit-metadata' },
       { icon: FlipVertical, titleKey: 'tools.flipPdf.title', descKey: 'tools.flipPdf.desc', route: '/flip-pdf' },
       { icon: Palette, titleKey: 'tools.grayscalePdf.title', descKey: 'tools.grayscalePdf.desc', route: '/grayscale-pdf' },
@@ -133,6 +150,7 @@ const categories = [
       { icon: PenTool, titleKey: 'tools.signPdf.title', descKey: 'tools.signPdf.desc', route: '/sign-pdf' },
       { icon: EyeOff, titleKey: 'tools.redactPdf.title', descKey: 'tools.redactPdf.desc', route: '/redact-pdf' },
       { icon: FileType, titleKey: 'tools.fillForm.title', descKey: 'tools.fillForm.desc', route: '/fill-form' },
+      { icon: Hash, titleKey: 'tools.batesNumbering.title', descKey: 'tools.batesNumbering.desc', route: '/bates-numbering' },
     ],
   },
 ]

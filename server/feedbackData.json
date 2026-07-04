@@ -1,0 +1,25 @@
+{
+  "feedbacks": [
+    {
+      "type": "bug",
+      "message": "压缩PDF，压缩率不高",
+      "page": "/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0",
+      "createdAt": "2026-07-04T01:00:08.636Z"
+    },
+    {
+      "type": "feature",
+      "message": "是广东分公司",
+      "page": "/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0",
+      "createdAt": "2026-07-04T01:00:26.681Z"
+    },
+    {
+      "type": "general",
+      "message": "对方怪兽发动告诉对方",
+      "page": "/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0",
+      "createdAt": "2026-07-04T01:00:38.531Z"
+    }
+  ]
+}
