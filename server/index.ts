@@ -181,7 +181,7 @@ if (process.env.NODE_ENV === 'production') {
     const h1Text = isEnglish
       ? 'PDF Elf — Free Online PDF Tools'
       : 'PDF Elf — 免费在线 PDF 工具'
-    const h1Style = 'style="margin:0;padding:8px 16px;font-size:14px;font-weight:600;color:#334155;background:#f8fafc;text-align:center;"'
+    const h1Style = 'style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"'
     return html.replace(
       '<!--__H1_PLACEHOLDER__-->',
       `<h1 ${h1Style}>${h1Text}</h1>`
