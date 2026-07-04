@@ -50,6 +50,7 @@ import {
   PenTool,
   Presentation,
   RotateCw,
+  ScanText,
   Scissors,
   Stamp,
   Table2,
@@ -124,6 +125,7 @@ const categories = [
   {
     nameKey: 'categories.moreTools',
     tools: [
+      { icon: ScanText, titleKey: 'tools.ocrPdf.title', descKey: 'tools.ocrPdf.desc', route: '/ocr-pdf' },
       { icon: FileCode, titleKey: 'tools.editMetadata.title', descKey: 'tools.editMetadata.desc', route: '/edit-metadata' },
       { icon: FlipVertical, titleKey: 'tools.flipPdf.title', descKey: 'tools.flipPdf.desc', route: '/flip-pdf' },
       { icon: Palette, titleKey: 'tools.grayscalePdf.title', descKey: 'tools.grayscalePdf.desc', route: '/grayscale-pdf' },

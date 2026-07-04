@@ -104,6 +104,7 @@ const toolRoutes = new Set([
   'pdf-reader',
   'edit-metadata', 'flip-pdf', 'grayscale-pdf', 'resize-pdf',
   'sign-pdf', 'redact-pdf', 'fill-form',
+  'ocr-pdf',
 ])
 
 const showOnPage = ref(false)

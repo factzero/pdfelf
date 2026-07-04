@@ -238,6 +238,13 @@ const router = createRouter({
     },
     // 更多工具
     {
+      path: '/ocr-pdf',
+      alias: '/en/ocr-pdf',
+      name: 'ocr-pdf',
+      component: () => import('@/pages/OcrPdfPage.vue'),
+      meta: { titleKey: 'seo.ocrPdf', descKey: 'tools.ocrPdf.desc' },
+    },
+    {
       path: '/edit-metadata',
       alias: '/en/edit-metadata',
       name: 'edit-metadata',
