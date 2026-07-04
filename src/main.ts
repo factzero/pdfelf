@@ -6,17 +6,11 @@ import i18n from './i18n'
 import { recordPageVisit } from './services/statsService'
 import './styles/global.css'
 
-// 处理 /en/ 路由前缀：剥掉 /en/ 并设置英文
+// 检测 /en 路由前缀，设置语言为英文（不做重定向，alias 直接匹配）
 router.beforeEach((to) => {
-  if (to.path === '/en') {
+  if (to.path === '/en' || to.path.startsWith('/en/')) {
     i18n.global.locale.value = 'en'
     localStorage.setItem('pdfelf-lang', 'en')
-    return '/'
-  }
-  if (to.path.startsWith('/en/')) {
-    i18n.global.locale.value = 'en'
-    localStorage.setItem('pdfelf-lang', 'en')
-    return to.path.replace(/^\/en/, '') || '/'
   }
 })
 

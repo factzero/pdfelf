@@ -163,10 +163,14 @@ const dropdownRef = ref<HTMLElement | null>(null)
 let dropdownLeaveTimer: ReturnType<typeof setTimeout> | null = null
 
 // ── Computed ──
+// Normalize path: strip /en prefix so aliases match the underlying route
+const normalizedPath = computed(() =>
+  route.path.startsWith('/en/') ? route.path.replace('/en', '') : route.path
+)
+
 const isDropdownActive = computed(() => {
-  // Check if current route is one of the "more tools" routes
   return navDropdownCategories.some(cat =>
-    cat.tools.some(tool => route.path === tool.route)
+    cat.tools.some(tool => normalizedPath.value === tool.route)
   )
 })
 
