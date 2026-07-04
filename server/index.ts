@@ -5,6 +5,7 @@ import { readFileSync } from 'fs'
 import { getStats, recordVisit, initStore } from './statsStore'
 import { initRatingStore, submitRating, getPageRatings, getUserRating, getAllSummaries } from './likeStore.js'
 import { initFeedbackStore, submitFeedback, getFeedbackStats } from './feedbackStore.js'
+import { sendFeedbackEmail } from './mailService.js'
 import { seoMap, enSeoMap, buildJsonLd, buildJsonLdEn, homeSeo, homeEnSeo } from './seoMeta.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -99,6 +100,8 @@ app.post('/api/feedback', (req, res) => {
     page: page || '/',
     userAgent: userAgent || 'unknown',
   })
+  // 异步发送邮件通知，不阻塞响应
+  sendFeedbackEmail(entry)
   res.status(201).json({ submitted: true, id: entry.createdAt })
 })
 

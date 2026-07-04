@@ -85,6 +85,14 @@ const router = createRouter({
       component: () => import('@/pages/AddHeaderFooterPage.vue'),
       meta: { titleKey: 'seo.headerFooter', descKey: 'tools.headerFooter.desc' },
     },
+    // PDF 对比
+    {
+      path: '/compare-pdf',
+      alias: '/en/compare-pdf',
+      name: 'compare-pdf',
+      component: () => import('@/pages/ComparePdfPage.vue'),
+      meta: { titleKey: 'seo.comparePdf', descKey: 'tools.comparePdf.desc' },
+    },
     // 安全
     {
       path: '/protect-pdf',

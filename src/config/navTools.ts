@@ -10,7 +10,7 @@ import {
   Lock, LockOpen, Crop, Image, Wrench,
   FileText, Table2, Presentation, FileImage, Maximize, FileType, Globe, FileCheck,
   BookOpen,
-  ScanText, Edit3, FileCode, FlipVertical, Palette, PenTool, EyeOff,
+  ScanText, Edit3, GitCompare, FileCode, FlipVertical, Palette, PenTool, EyeOff,
 } from 'lucide-vue-next'
 
 export interface NavToolItem {
@@ -107,6 +107,7 @@ export const navDropdownCategories: NavDropdownCategory[] = [
       { icon: EyeOff,       titleKey: 'tools.redactPdf.title',     route: '/redact-pdf' },
       { icon: FileType,     titleKey: 'tools.fillForm.title',      route: '/fill-form' },
       { icon: Hash,         titleKey: 'tools.batesNumbering.title', route: '/bates-numbering' },
+      { icon: GitCompare,   titleKey: 'tools.comparePdf.title',     route: '/compare-pdf' },
     ],
   },
 ]

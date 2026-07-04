@@ -46,6 +46,7 @@ import {
   FileType,
   FlipVertical,
   FolderArchive,
+  GitCompare,
   Globe,
   Hash,
   Image,
@@ -151,6 +152,7 @@ const categories = [
       { icon: EyeOff, titleKey: 'tools.redactPdf.title', descKey: 'tools.redactPdf.desc', route: '/redact-pdf' },
       { icon: FileType, titleKey: 'tools.fillForm.title', descKey: 'tools.fillForm.desc', route: '/fill-form' },
       { icon: Hash, titleKey: 'tools.batesNumbering.title', descKey: 'tools.batesNumbering.desc', route: '/bates-numbering' },
+      { icon: GitCompare, titleKey: 'tools.comparePdf.title', descKey: 'tools.comparePdf.desc', route: '/compare-pdf' },
     ],
   },
 ]
