@@ -252,7 +252,8 @@ async function compress() {
     store.finishProcessing()
   } catch (e) {
     store.setError(e instanceof Error ? e.message : t('compress.failed'))
-    errorMsg.value = t('compress.failed')
+    console.error('[compress] failed:', e)
+    errorMsg.value = e instanceof Error ? `[debug] ${e.message}` : t('compress.failed')
   }
 }
 </script>
