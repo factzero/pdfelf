@@ -1,3 +1,6 @@
+// 最先加载 polyfill：补齐 pdf.js 依赖的 ES2024/ES2025 方法
+// （Uint8Array.prototype.toHex/toBase64、Map.prototype.getOrInsertComputed）
+import './utils/polyfills'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'

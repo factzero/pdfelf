@@ -16,9 +16,9 @@ export const DEFAULT_PDF_OPTIONS = {
   cMapPacked: true,
 }
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
+// 使用自定义 worker：先补齐 Uint8Array.prototype.toHex/toBase64（ES2024，旧浏览器缺失），
+// 再加载真正的 pdf.js worker，避免 "a.toHex is not a function" 错误。
+const pdfWorker = new Worker(new URL('../pdf.worker.ts', import.meta.url), { type: 'module' })
+pdfjsLib.GlobalWorkerOptions.workerPort = pdfWorker
 
 export { pdfjsLib }

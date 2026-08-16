@@ -7,6 +7,13 @@ import { readFileAsArrayBuffer } from '@/utils/fileUtils'
 
 /**
  * Compress a PDF file
+ *
+ * 真正的图片压缩方案：
+ *   - 'basic'  (方案B - 混合重建)：逐页扫描，纯文字页保留文字层（可选中/复制），
+ *             含图片页渲染为 JPEG 重建，只压缩图片，不破坏文字可搜索性。
+ *   - 'strong' (方案A - 全页栅格化)：每页渲染为低分辨率 JPEG 重建，极致压缩，
+ *             文字会变成图片（不可选中）。
+ *
  * @param file - Input PDF file
  * @param mode - 'basic' or 'strong'
  * @param onProgress - Progress callback (0-100)
@@ -17,34 +24,123 @@ export async function compressPDF(
   mode: 'basic' | 'strong',
   onProgress?: (percent: number) => void
 ): Promise<Blob> {
-  onProgress?.(10)
   const buffer = await readFileAsArrayBuffer(file)
+  onProgress?.(5)
 
-  onProgress?.(30)
-  const pdfDoc = await PDFDocument.load(buffer, {
-    ignoreEncryption: true,
-  })
+  // pdf.js 会把 ArrayBuffer transfer 给 worker，导致原 buffer 被 detach。
+  // 因此给 pdf.js 一份独立拷贝，原始 buffer 保留给 pdf-lib 使用。
+  const pdfjsBuffer = buffer.slice(0)
 
-  // Basic compression: remove metadata and unused objects
-  if (mode === 'strong') {
-    onProgress?.(50)
-    // Strong mode: re-compress embedded images
-    // pdf-lib's save() already does object dedup and font subsetting.
-    // For stronger compression, we could process images through Canvas,
-    // but pdf-lib doesn't easily expose embedded images for re-encoding.
-    // The save() with appropriate options provides good baseline compression.
+  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+  const loadingTask = pdfjsLib.getDocument({ data: pdfjsBuffer, ...DEFAULT_PDF_OPTIONS })
+  const pdf = await loadingTask.promise
+  const pageCount = pdf.numPages
+  if (pageCount === 0) {
+    pdf.cleanup()
+    throw new Error('PDF 没有页面')
   }
 
-  onProgress?.(70)
-  const compressedBytes = await pdfDoc.save({
-    useObjectStreams: true, // Combine small objects into streams
+  const newDoc = await PDFDocument.create()
+  // 强压缩：全页重建为 JPEG（保持分辨率，靠 JPEG 编码压缩）
+  // 基本压缩：仅重建含图片的页，纯文字页直接复制保留文字层
+  const SCALE_STRONG = 1.4
+  const SCALE_BASIC_IMG = 1.5
+  const JPEG_QUALITY_STRONG = 0.55
+  const JPEG_QUALITY_BASIC = 0.8
+
+  // 基本压缩模式下，用 pdf-lib 加载一次源文档用于复制纯文字页
+  const srcPdfDoc = mode === 'basic'
+    ? await PDFDocument.load(buffer, { ignoreEncryption: true })
+    : null
+
+  for (let i = 1; i <= pageCount; i++) {
+    // 进度从 10 → 90
+    onProgress?.(10 + Math.round((i / pageCount) * 80))
+
+    const page = await pdf.getPage(i)
+
+    if (mode === 'basic') {
+      const hasImage = await pageHasImage(page)
+      if (!hasImage && srcPdfDoc) {
+        // 纯文字页：直接从原 PDF 复制，保留文字层与清晰度
+        const copied = await newDoc.copyPages(srcPdfDoc, [i - 1])
+        newDoc.addPage(copied[0])
+        continue
+      }
+    }
+
+    // 含图片页 / 强压缩：渲染为 JPEG 重建
+    const baseViewport = page.getViewport({ scale: 1 })
+    const scale = mode === 'strong' ? SCALE_STRONG : SCALE_BASIC_IMG
+    const viewport = page.getViewport({ scale })
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.floor(viewport.width)
+    canvas.height = Math.floor(viewport.height)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) continue
+
+    // 白底背景（JPEG 不支持透明）
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    await page.render({ canvasContext: ctx, viewport, canvas }).promise
+
+    const jpegQuality = mode === 'strong' ? JPEG_QUALITY_STRONG : JPEG_QUALITY_BASIC
+    const jpegBlob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob((b) => resolve(b), 'image/jpeg', jpegQuality)
+    })
+    if (!jpegBlob) continue
+    const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer())
+
+    const image = await newDoc.embedJpg(jpegBytes)
+    const newPage = newDoc.addPage([baseViewport.width, baseViewport.height])
+    newPage.drawImage(image, {
+      x: 0,
+      y: 0,
+      width: baseViewport.width,
+      height: baseViewport.height,
+    })
+
+    page.cleanup()
+    // Yield to keep UI responsive
+    await new Promise((r) => setTimeout(r, 0))
+  }
+
+  pdf.cleanup()
+
+  onProgress?.(92)
+  const compressedBytes = await newDoc.save({
+    useObjectStreams: true,
     addDefaultPage: false,
   })
-
-  onProgress?.(90)
+  onProgress?.(98)
   const blob = new Blob([new Uint8Array(compressedBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
+}
+
+/**
+ * 检测页面是否包含图片 XObject（用于基本压缩模式）。
+ * 通过解析页面的 operator list，查找 paintImageXObject / paintImageMaskXObject 等指令。
+ */
+async function pageHasImage(page: import('pdfjs-dist').PDFPageProxy): Promise<boolean> {
+  try {
+    const operatorList = await page.getOperatorList()
+    const { OPS } = await import('pdfjs-dist')
+    const paintOps = new Set([
+      OPS.paintImageXObject,
+      OPS.paintImageMaskXObject,
+      OPS.paintImageXObjectRepeat,
+      OPS.paintImageMaskXObjectRepeat,
+      OPS.paintImageMaskXObjectGroup,
+    ])
+    for (const fn of operatorList.fnArray) {
+      if (paintOps.has(fn)) return true
+    }
+    return false
+  } catch {
+    // 解析失败时保守处理：当作含图片，走重建（避免文字页被错误保留成未压缩）
+    return true
+  }
 }
 
 /**
