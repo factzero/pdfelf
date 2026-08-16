@@ -1,173 +1,175 @@
-# 🧝 PDF Elf
+# PDF Elf
 
-免费在线 PDF 处理工具，提供 **49 种** PDF 工具，所有处理在浏览器本地完成，无需上传服务器。
+[**中文版 README**](README.zh-CN.md) | Read this in [Chinese](README.zh-CN.md)
 
-## ✨ 功能
+Free online PDF toolkit with **49 PDF tools**, all processed locally in your browser — nothing is uploaded to any server.
 
-### 📂 整理 PDF
-- ✅ 📁 **压缩 PDF** — 基本压缩保留文字层（纯文字页不变，图片页重建），强压缩全页重建为 JPEG，两种模式均可大幅减小体积
-- ✅ 🔗 **合并 PDF** — 多个 PDF 合并为一个，支持拖拽排序
-- ✅ ✂️ **分割 PDF** — 按页面范围或每 N 页分割
-- ✅ 🔄 **旋转 PDF** — 旋转 PDF 页面，每页独立设置角度
-- ✅ 🗑️ **删除页面** — 从 PDF 中删除不需要的页面
-- ✅ 📋 **提取页面** — 从 PDF 中提取指定页面为新文件
-- ✅ 🔀 **重排页面顺序** — 拖拽调整 PDF 页面顺序后重新导出
-- ✅ 📑 **拼合 PDF** — 将可填写表单和注释永久拼合为只读内容
-- ✅ 📐 **N-up 排版** — 将多页内容缩放到一页纸上打印
-- ✅ 🔖 **按书签拆分** — 根据 PDF 书签/目录自动拆分为多个文件
-- ✅ 📏 **纠偏** — 自动校正扫描件倾斜角度
+## Features
 
-### ✏️ 编辑 PDF
-- ✅ 🔏 **添加水印** — 给 PDF 每一页添加文字水印，支持自定义字体大小、透明度、颜色、角度
-- ✅ 🔢 **添加页码** — 将页码插入 PDF 文件，可选择页码的位置、大小、格式和字体
-- ✅ 📖 **页眉页脚** — 为 PDF 每一页添加页眉和页脚文字，支持自定义对齐和字体
-- ✅ 📎 **PDF 叠加** — 将两个 PDF 图层叠加合并为一个文件
+### Organize PDF
+- **Compress PDF** — Basic mode preserves the text layer (text-only pages unchanged, image pages rebuilt), Strong mode rebuilds all pages as JPEG; both modes significantly reduce file size
+- **Merge PDF** — Combine multiple PDFs into one, with drag-and-drop ordering
+- **Split PDF** — Split by page range or every N pages
+- **Rotate PDF** — Rotate PDF pages, independent angle per page
+- **Delete Pages** — Remove unwanted pages from a PDF
+- **Extract Pages** — Extract specific pages into a new file
+- **Reorder Pages** — Drag to reorder PDF pages, then re-export
+- **Flatten PDF** — Permanently flatten fillable forms and annotations into read-only content
+- **N-up Layout** — Scale multiple pages onto one sheet for printing
+- **Split by Bookmarks** — Auto-split a PDF into multiple files by its bookmarks/table of contents
+- **Deskew** — Automatically correct the tilt angle of scanned pages
 
-### 🔒 安全
-- ✅ 🔒 **加密 PDF** — 给 PDF 添加密码保护，限制打开/打印/修改权限
-- ✅ 🔓 **解密 PDF** — 移除 PDF 的密码保护
-- ✅ ✂️ **裁剪 PDF** — 裁切页面边距，更改页面可视区域
-- ✅ 🖼️ **提取图片** — 从 PDF 中导出所有内嵌图片
-- ✅ 🔧 **修复 PDF** — 尝试修复损坏的 PDF 文件
+### Edit PDF
+- **Add Watermark** — Add text watermarks to every page, with custom font size, opacity, color, angle
+- **Add Page Numbers** — Insert page numbers with configurable position, size, format, font
+- **Header & Footer** — Add headers and footers to every page with custom alignment and font
+- **PDF Overlay** — Overlay two PDF layers and merge into one file
 
-### 🛠️ 更多工具
-- ✅ 🔍 **OCR 文字识别** — 扫描件/图片 PDF 提取文字，Tesseract.js 本地运行
-- ✅ ✏️ **编辑 PDF 内容** — 在 PDF 页面上添加文字、图片、遮盖，交互式双层 Canvas
-- ✅ </> **编辑元数据** — 修改 PDF 的作者、标题、关键词等属性
-- ✅ ↕️ **翻转页面** — 水平或垂直镜像 PDF 页面
-- ✅ 🎨 **灰度转换** — 将彩色 PDF 转为黑白/灰度
-- ✅ ⤢ **调整页面大小** — 更改 PDF 页面尺寸，支持 A4/A3/Letter 等标准格式
-- ✅ ✍️ **电子签名** — 三种签名方式：上传图片签名、输入文字生成签名、手写绘制签名
-- ✅ 🙈 **密文遮盖** — 支持矩形、圆角矩形、圆形、多边形、自由画笔多种形状遮盖
-- ✅ 📝 **表单填写** — 自动检测并填写 PDF 交互式表单字段
-- ✅ 🔢 **Bates 编号** — 为法律文件添加批号印章，支持自定义编号格式和位置
-- ✅ 📊 **PDF 对比** — 并排对比两个 PDF 的文本差异，高亮显示新增、删除和修改内容
+### Security
+- **Encrypt PDF** — Password-protect a PDF, restrict open/print/modify permissions
+- **Decrypt PDF** — Remove password protection from a PDF
+- **Crop PDF** — Crop page margins and change the visible page area
+- **Extract Images** — Export all embedded images from a PDF
+- **Repair PDF** — Attempt to fix corrupted PDF files
 
-### 🔄 从 PDF 转换
-- ✅ 📄 **PDF 转 Word** — 转换为可编辑的 .docx 文档
-- ✅ 📊 **PDF 转 Excel** — 转换为 Excel 电子表格，每页对应一个工作表
-- ✅ 📽️ **PDF 转 PPT** — 转换为 PowerPoint 演示文稿，每页对应一张幻灯片
-- ✅ 🖼️ **PDF 转图片** — 导出为 PNG/JPEG，支持 72/150/300 DPI
-- ✅ 🖼️ **PDF 转 JPG** — 将所有页面导出为 JPG 图片
-- ✅ 🖼️ **PDF 转 PNG** — 将所有页面导出为 PNG 图片
-- ✅ 🖼️ **PDF 转 TIFF** — 将所有页面导出为 TIFF 图片
-- ✅ ⤢ **PDF 转 SVG** — 将页面转换为 SVG 矢量图
-- ✅ 📝 **PDF 转 Text** — 提取 PDF 中的纯文本内容
-- ✅ 🌐 **PDF 转 HTML** — 将 PDF 页面转换为 HTML 文件
-- ✅ ✔️ **PDF 转 PDF/A** — 转为长期存档标准格式 PDF/A
+### More Tools
+- **OCR Text Recognition** — Extract text from scanned/image PDFs, powered by Tesseract.js, runs locally
+- **Edit PDF Content** — Add text, images, redactions directly on pages with an interactive dual-layer canvas
+- **Edit Metadata** — Modify PDF author, title, keywords, and other properties
+- **Flip Pages** — Mirror PDF pages horizontally or vertically
+- **Grayscale Conversion** — Convert color PDFs to black-and-white/grayscale
+- **Resize Pages** — Change page size, supporting A4/A3/Letter and other standards
+- **E-Signature** — Three ways to sign: upload image signature, type text signature, draw handwritten signature
+- **Redact** — Cover sensitive content with rectangle, rounded-rect, circle/ellipse, polygon, and freehand shapes
+- **Fill Forms** — Auto-detect and fill PDF interactive form fields
+- **Bates Numbering** — Add batch number stamps to legal documents, custom format and position
+- **Compare PDF** — Side-by-side text diff of two PDFs, highlighting added, deleted, and modified content
 
-### 📥 转换成 PDF
-- ✅ 📄 **Word 转 PDF** — 将 Word 文档 (.docx) 转为 PDF
-- ✅ 📊 **Excel 转 PDF** — 将 Excel 表格 (.xlsx) 转为 PDF
-- ✅ 📽️ **PPT 转 PDF** — 将 PowerPoint (.pptx) 转为 PDF
-- ✅ 🖼️ **图片转 PDF** — 将图片合并转换为 PDF 文件
-- ✅ 🌐 **HTML 转 PDF** — 将 HTML 代码或文件转换为 PDF
-- ✅ 📚 **EPUB 转 PDF** — 将 EPUB 电子书转换为 PDF 格式
-- ✅ 📄 **TXT 转 PDF** — 将纯文本文件转换为 PDF
+### Convert from PDF
+- **PDF to Word** — Convert to editable .docx documents
+- **PDF to Excel** — Convert to Excel spreadsheets, one worksheet per page
+- **PDF to PPT** — Convert to PowerPoint presentations, one slide per page
+- **PDF to Image** — Export as PNG/JPEG, with 72/150/300 DPI options
+- **PDF to JPG** — Export all pages as JPG images
+- **PDF to PNG** — Export all pages as PNG images
+- **PDF to TIFF** — Export all pages as TIFF images
+- **PDF to SVG** — Convert pages to SVG vector graphics
+- **PDF to Text** — Extract plain text content from a PDF
+- **PDF to HTML** — Convert PDF pages to HTML files
+- **PDF to PDF/A** — Convert to the long-term archival PDF/A standard
 
-### 📖 阅读器
-- ✅ 📖 **PDF 阅读器** — 在浏览器中在线阅读 PDF 文件
+### Convert to PDF
+- **Word to PDF** — Convert Word documents (.docx) to PDF
+- **Excel to PDF** — Convert Excel spreadsheets (.xlsx) to PDF
+- **PPT to PDF** — Convert PowerPoint (.pptx) to PDF
+- **Image to PDF** — Merge images and convert to a PDF file
+- **HTML to PDF** — Convert HTML code or files to PDF
+- **EPUB to PDF** — Convert EPUB ebooks to PDF format
+- **TXT to PDF** — Convert plain text files to PDF
 
-### 💬 其他
-- ✅ 📣 **用户反馈** — 首页右下角浮动反馈按钮，支持 Bug 报告/功能建议/其他反馈，提交后自动转发邮件通知管理员
+### Reader
+- **PDF Reader** — Read PDF files online directly in the browser
 
-目前共 **49 个工具**，全部免费、不限次数。
+### Other
+- **User Feedback** — Floating feedback button (bottom-right on the homepage), supporting bug reports / feature suggestions / other feedback, auto-forwarded to the admin by email
+
+**49 tools in total, all free and unlimited.**
 
 ---
 
-## 🗺️ 开发计划
+## Roadmap
 
-### 🟡 Phase 1 — AI 增强
+### Phase 1 — AI Enhancements
 
-| 任务 | 说明 | 备注 |
+| Task | Description | Notes |
 |---|---|---|
-| **AI 摘要 PDF** | 自动提取 PDF 核心要点 | 需云端 API，做可选功能，标注需联网 |
-| **AI 对话 PDF** | 自然语言问答，基于 PDF 内容 | 同上 |
-| **翻译 PDF** | 全文翻译并保持排版 | 同上 |
+| **AI PDF Summary** | Auto-extract key points from a PDF | Requires cloud API, optional feature, needs internet |
+| **AI PDF Chat** | Natural language Q&A based on PDF content | Same as above |
+| **Translate PDF** | Full-text translation preserving layout | Same as above |
 
-### 🔵 Phase 2 — 用户体验
+### Phase 2 — User Experience
 
-| 任务 | 说明 |
+| Task | Description |
 |---|---|
-| **拖拽上传增强** | 支持粘贴图片、批量拖拽文件夹 |
-| **处理进度条** | 大文件处理时显示实时进度 |
-| **历史记录** | 本地记录最近处理的文件，支持重新下载 |
-| **批量处理** | 多个文件同一操作一键批处理 |
+| **Enhanced Drag & Drop** | Support pasting images, batch folder drag-and-drop |
+| **Processing Progress Bar** | Show real-time progress for large files |
+| **History** | Locally record recently processed files, support re-download |
+| **Batch Processing** | Process multiple files with one action |
 
 ---
 
-## 🚀 快速开始
+## Quick Start
 
 ```bash
 npm install
 
-# 仅前端开发
+# Frontend only
 npm run dev
 
-# 前端 + 访问统计后台
+# Frontend + stats server
 npm run dev:all
 ```
 
-## 📊 访问统计
+## Access Statistics
 
-项目内置一个轻量级 Express 后台用于统计网站访问量。
+The project includes a lightweight Express backend for tracking website visits.
 
-统计 API：
-- `GET /api/stats` — 获取统计数据（总访问量、今日访问、独立访客）
-- `POST /api/stats/visit` — 记录一次页面访问
+Stats API:
+- `GET /api/stats` — Get statistics (total visits, today's visits, unique visitors)
+- `POST /api/stats/visit` — Record a page visit
 
-数据存储在 `server/statsData.json` 文件中（已加入 .gitignore）。
+Data is stored in `server/statsData.json` (added to .gitignore).
 
-### 邮件通知（可选）
+### Email Notifications (Optional)
 
-用户提交反馈时，可选通过 SMTP 将反馈内容转发到你的邮箱。通过环境变量配置：
+When a user submits feedback, the content can optionally be forwarded to your email via SMTP. Configure through environment variables:
 
 ```bash
-export SMTP_HOST=smtp.qq.com      # SMTP 服务器
-export SMTP_PORT=465              # 端口（QQ/163 用 465）
-export SMTP_USER=your@qq.com      # 发件邮箱
-export SMTP_PASS=your_auth_code   # 邮箱授权码（非登录密码）
-export NOTIFY_EMAIL=admin@email.com  # 接收反馈通知的邮箱（可选，默认=发件邮箱）
+export SMTP_HOST=smtp.qq.com      # SMTP server
+export SMTP_PORT=465              # Port (QQ/163 use 465)
+export SMTP_USER=your@qq.com      # Sender email
+export SMTP_PASS=your_auth_code   # Email authorization code (not login password)
+export NOTIFY_EMAIL=admin@email.com  # Email to receive feedback (optional, defaults to sender)
 ```
 
-未配置 `SMTP_HOST` 时邮件功能静默跳过，不影响其他功能。
+If `SMTP_HOST` is not set, the email feature is silently skipped without affecting other features.
 
-### 本地开发
+### Local Development
 
 ```bash
-# 仅前端
+# Frontend only
 npm run dev
 
-# 前端 + 统计后台（推荐）
+# Frontend + stats server (recommended)
 npm run dev:all
 
-# 预览生产构建（单进程，同源无代理）
+# Preview production build (single process, same-origin no proxy)
 npm run build
 npm run preview:all
 ```
 
-## 🚀 部署
+## Deployment
 
-生产环境由 **Nginx 托管静态文件** + **PM2 守护 stats server** 组成：
+Production setup consists of **Nginx serving static files** + **PM2 managing the stats server**:
 
-### 1. 服务器初始配置
+### 1. Initial Server Setup
 
 ```bash
-# 安装 PM2（守护进程 + 开机自启）
+# Install PM2 (process manager + auto-start on boot)
 npm install -g pm2
 
-# 启动 stats server
+# Start stats server
 cd /home/admin/pdfelf
 pm2 start "npm run start" --name pdfelf-stats
 
-# 设置开机自启
+# Enable auto-start on boot
 pm2 save
 pm2 startup
 ```
 
-### 2. Nginx 配置
+### 2. Nginx Configuration
 
-在 HTTPS server 块中加入 `/api/` 代理：
+Add the `/api/` proxy inside the HTTPS server block:
 
 ```nginx
 server {
@@ -176,7 +178,7 @@ server {
     root /home/admin/pdfelf/dist;
     index index.html;
 
-    # API 代理到 stats server
+    # Proxy API to stats server
     location /api/ {
         proxy_pass http://127.0.0.1:3001;
         proxy_set_header Host $host;
@@ -185,23 +187,23 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # 静态资源（带 hash，可长期缓存）
+    # Static assets (hashed, can be cached long-term)
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
-    # SPA 路由回退
+    # SPA route fallback
     location / {
         try_files $uri $uri/ /index.html;
     }
 
     listen 443 ssl;
-    # ... SSL 证书配置
+    # ... SSL certificate configuration
 }
 ```
 
-### 3. 更新部署
+### 3. Update Deployment
 
 ```bash
 cd /home/admin/pdfelf
@@ -211,25 +213,25 @@ pm2 restart pdfelf-stats
 nginx -s reload
 ```
 
-## 📁 项目结构
+## Project Structure
 
 ```
 src/
-├── pages/         # 页面组件
-├── components/    # 共享组件
-├── services/      # PDF/Word/图片/HTML/SVG 处理服务
-├── stores/        # Pinia 状态管理
-├── router/        # 路由配置
-├── locales/       # 语言文件 (zh-CN, en)
-├── utils/         # 工具函数（含 pdf.js 兼容性 polyfill）
-├── pdf.worker.ts  # 自定义 pdf.js worker（补齐 ES2024/2025 方法）
-└── styles/        # 全局样式
+├── pages/         # Page components
+├── components/    # Shared components
+├── services/      # PDF/Word/Image/HTML/SVG processing services
+├── stores/        # Pinia state management
+├── router/        # Router configuration
+├── locales/       # Locale files (zh-CN, en)
+├── utils/         # Utility functions (incl. pdf.js compatibility polyfills)
+├── pdf.worker.ts  # Custom pdf.js worker (patches ES2024/2025 methods)
+└── styles/        # Global styles
 public/
-└── pyodide/       # Pyodide 运行时 (Python → TIFF/SVG)
+└── pyodide/       # Pyodide runtime (Python → TIFF/SVG)
 server/
-└── *.ts           # 访问统计后台 + 反馈邮件转发 (Express)
+└── *.ts           # Access stats + feedback email forwarding (Express)
 ```
 
-## 🔒 隐私
+## Privacy
 
-所有文件处理在浏览器本地完成，不会上传到任何服务器。
+All file processing happens locally in your browser. Nothing is uploaded to any server.
