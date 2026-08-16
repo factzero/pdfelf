@@ -189,6 +189,6 @@ export default defineConfig({
     proxy: proxyConfig,
   },
   worker: {
-    format: 'iife',
+    format: 'es',
   },
 })
