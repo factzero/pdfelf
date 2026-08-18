@@ -191,6 +191,10 @@ server {
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
+        # 关键：COEP require-corp 环境下，模块 worker（pdf.worker-*.js）需要
+        # CORP 头才能被浏览器加载。否则 pdf.js 会回退到主线程 fake worker，
+        # 导致大 PDF 解析时阻塞 UI。
+        add_header Cross-Origin-Resource-Policy "same-origin";
     }
 
     # SPA 路由回退

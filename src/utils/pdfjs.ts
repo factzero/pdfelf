@@ -8,10 +8,12 @@
 import * as pdfjsLib from 'pdfjs-dist'
 import { WorkerMessageHandler } from 'pdfjs-dist/build/pdf.worker.min.mjs'
 
-// 将 WorkerMessageHandler 挂到 globalThis.pdfjsWorker，让 pdf.js 在主线程 fake worker
-// 模式下直接复用（详见 pdf.mjs 的 #mainThreadWorkerMessageHandler getter）。
-// 这样即使独立 Web Worker 加载失败，也能正确回退到主线程运行，而不是报
-// "Cannot read properties of undefined (reading 'setup')"。
+// 双保险：把 WorkerMessageHandler 挂到 globalThis.pdfjsWorker。
+//
+// 当真实 Web Worker 因 COEP/CSP 等原因加载失败时，pdf.js 会回退到主线程
+// fake worker 模式（详见 pdf.mjs 的 #mainThreadWorkerMessageHandler getter），
+// 此时直接从 globalThis.pdfjsWorker 读取 handler，避免再动态 import(workerSrc)
+// 导致 "Cannot read properties of undefined (reading 'setup')" 崩溃。
 ;(globalThis as any).pdfjsWorker = { WorkerMessageHandler }
 
 /** cMap 文件的基础 URL，用于加载中文字体映射表 */
@@ -27,8 +29,9 @@ export const DEFAULT_PDF_OPTIONS = {
 // 通过 workerSrc 交给 pdf.js 自己创建 Worker，这样当 worker 加载失败时，
 // pdf.js 会自动回退到主线程模式（#setupFakeWorker），不会卡死。
 //
-// 之前用 workerPort 方式：pdf.js 拿到外部 Worker 后，加载失败时【不会】自动回退，
-// 导致服务器 HTTPS 环境下 worker 加载失败时 getDocument 永久挂起。
+// 注意：生产环境 nginx 需要给 /assets/ 下的 worker 脚本加
+// `Cross-Origin-Resource-Policy: same-origin` 响应头，
+// 否则在页面 COEP: require-corp 策略下，模块 worker 会被浏览器拦截加载。
 import workerUrl from '../pdf.worker.ts?worker&url'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl

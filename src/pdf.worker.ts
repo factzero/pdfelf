@@ -6,10 +6,12 @@
  *   - "a.toHex is not a function"
  *   - "this[#methodPromises].getOrInsertComputed is not a function"
  *
- * 本文件作为 pdf.js 的自定义 worker（通过 GlobalWorkerOptions.workerPort 注入，
- * Vite 以 worker 打包）：
+ * 本文件作为 pdf.js 的自定义 worker（Vite 以 worker 打包）：
  *   1. 先加载 polyfill（补齐缺失方法）
  *   2. 再加载真正的 pdf.js worker 逻辑（同线程直接运行）
+ *
+ * 注意：同时导出 WorkerMessageHandler，供主线程 fake worker 回退路径使用
+ * （pdf.mjs 的 _setupFakeWorkerGlobal 会动态 import 本文件并读取该导出）。
  */
 
 import '@/utils/polyfills'

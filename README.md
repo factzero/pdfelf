@@ -191,6 +191,10 @@ server {
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
+        # Critical: under COEP require-corp, module workers (pdf.worker-*.js)
+        # need a CORP header to be loadable. Otherwise pdf.js falls back to the
+        # main-thread fake worker, blocking the UI for large PDFs.
+        add_header Cross-Origin-Resource-Policy "same-origin";
     }
 
     # SPA route fallback
