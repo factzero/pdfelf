@@ -69,4 +69,78 @@ if (typeof mapProto.getOrInsertComputed !== 'function') {
   })
 }
 
+// ---- Promise.withResolvers (ES2024) ----
+// 返回 { promise, resolve, reject }，避免手动构造 Promise 时的竞态问题。
+interface PromiseConstructorLike {
+  withResolvers?: <T>() => {
+    promise: Promise<T>
+    resolve: (value: T | PromiseLike<T>) => void
+    reject: (reason?: unknown) => void
+  }
+}
+
+const PromiseCtor = Promise as unknown as PromiseConstructorLike
+if (typeof PromiseCtor.withResolvers !== 'function') {
+  Object.defineProperty(Promise, 'withResolvers', {
+    configurable: true,
+    writable: true,
+    value: function withResolvers<T>() {
+      let resolve!: (value: T | PromiseLike<T>) => void
+      let reject!: (reason?: unknown) => void
+      const promise = new Promise<T>((res, rej) => {
+        resolve = res
+        reject = rej
+      })
+      return { promise, resolve, reject }
+    },
+  })
+}
+
+// ---- Uint8Array.fromBase64 (ES2024) ----
+// 解码 base64 字符串为 Uint8Array。注意：浏览器环境可用 atob，Worker 环境同样可用。
+interface Uint8ArrayConstructorLike {
+  fromBase64?: (str: string) => Uint8Array
+}
+
+const Uint8ArrayCtor = Uint8Array as unknown as Uint8ArrayConstructorLike
+if (typeof Uint8ArrayCtor.fromBase64 !== 'function') {
+  Object.defineProperty(Uint8Array, 'fromBase64', {
+    configurable: true,
+    writable: true,
+    value: function fromBase64(str: string): Uint8Array {
+      const binary = atob(str)
+      const bytes = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i)
+      }
+      return bytes
+    },
+  })
+}
+
+// ---- Array.prototype.at / TypedArray.prototype.at (ES2022) ----
+// 支持负索引取元素。较老浏览器可能缺失。
+function atPolyfill<T>(this: ArrayLike<T>, index: number): T | undefined {
+  const len = this.length
+  const i = index < 0 ? len + index : index
+  return i >= 0 && i < len ? this[i] : undefined
+}
+
+if (typeof (Array.prototype as any).at !== 'function') {
+  Object.defineProperty(Array.prototype, 'at', {
+    configurable: true,
+    writable: true,
+    value: atPolyfill,
+  })
+}
+
+// TypedArray.prototype.at（Uint8Array 等）
+if (typeof (Uint8Array.prototype as any).at !== 'function') {
+  Object.defineProperty(Uint8Array.prototype, 'at', {
+    configurable: true,
+    writable: true,
+    value: atPolyfill,
+  })
+}
+
 export {}
