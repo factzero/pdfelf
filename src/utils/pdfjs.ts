@@ -16,55 +16,14 @@ export const DEFAULT_PDF_OPTIONS = {
   cMapPacked: true,
 }
 
-// 使用自定义 worker：先补齐 Uint8Array.prototype.toHex/toBase64（ES2024，旧浏览器缺失），
-// 再加载真正的 pdf.js worker，避免 "a.toHex is not a function" 错误。
-let pdfWorker: Worker | null = null
+// 使用自定义 worker（内部先补齐 ES2024/2025 polyfill 再加载 pdf.js worker）。
+// 通过 workerSrc 交给 pdf.js 自己创建 Worker，这样当 worker 加载失败时，
+// pdf.js 会自动回退到主线程模式（#setupFakeWorker），不会卡死。
+//
+// 之前用 workerPort 方式：pdf.js 拿到外部 Worker 后，加载失败时【不会】自动回退，
+// 导致服务器 HTTPS 环境下 worker 加载失败时 getDocument 永久挂起。
+import workerUrl from '../pdf.worker.ts?worker&url'
 
-if (typeof Worker !== 'undefined') {
-  try {
-    pdfWorker = new Worker(new URL('../pdf.worker.ts', import.meta.url), { type: 'module' })
-    console.log('[pdfjs] custom worker created, port=', !!pdfjsLib.GlobalWorkerOptions.workerPort)
-
-    pdfWorker.addEventListener('error', (e) => {
-      console.error('[pdfjs] worker error event:', {
-        message: e.message,
-        filename: e.filename,
-        lineno: e.lineno,
-        colno: e.colno,
-        error: e.error,
-        stack: (e as any).error?.stack,
-      })
-    })
-
-    pdfWorker.addEventListener('messageerror', (e) => {
-      console.error('[pdfjs] worker messageerror event:', e)
-    })
-
-    // 监听 pdf.js 内部 worker 消息（第一个消息通常是 ready/error）
-    pdfWorker.addEventListener('message', (e) => {
-      if (e.data?.type === 'worker-init-error') {
-        console.error('[pdfjs] worker init ERROR:', e.data)
-      } else if (e.data?.type === 'worker-unhandled-rejection') {
-        console.error('[pdfjs] worker unhandled rejection:', e.data)
-      } else if (e.data?.sourceName === 'pdf.worker') {
-        console.log('[pdfjs] worker msg:', e.data?.action ?? 'ready')
-      }
-    })
-  } catch (err) {
-    console.error('[pdfjs] failed to create custom worker:', err)
-  }
-}
-
-if (pdfWorker) {
-  pdfjsLib.GlobalWorkerOptions.workerPort = pdfWorker
-  console.log('[pdfjs] workerPort assigned')
-} else {
-  console.warn('[pdfjs] workerPort NOT assigned, pdf.js will use workerSrc fallback')
-  // 无 workerPort 时回退到默认 workerSrc（旧浏览器场景）
-  pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.mjs',
-    import.meta.url
-  ).toString()
-}
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl
 
 export { pdfjsLib }
