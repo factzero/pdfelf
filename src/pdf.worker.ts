@@ -9,14 +9,10 @@
  * 本文件作为 pdf.js 的自定义 worker（Vite 以 worker 打包）：
  *   1. 先加载 polyfill（补齐缺失方法）
  *   2. 再加载真正的 pdf.js worker 逻辑（同线程直接运行）
- *
- * 注意：同时导出 WorkerMessageHandler，供主线程 fake worker 回退路径使用
- * （pdf.mjs 的 _setupFakeWorkerGlobal 会动态 import 本文件并读取该导出）。
  */
 
 import '@/utils/polyfills'
 import 'pdfjs-dist/build/pdf.worker.min.mjs'
-export { WorkerMessageHandler } from 'pdfjs-dist/build/pdf.worker.min.mjs'
 
 // 全局错误捕获：worker 初始化失败时，把真实错误通过 postMessage 回传主线程，
 // 便于定位服务器上 worker 加载失败的具体原因。
