@@ -143,4 +143,47 @@ if (typeof (Uint8Array.prototype as any).at !== 'function') {
   })
 }
 
+// ---- Promise.try (ES2024) ----
+// 同步执行 fn(...args)，返回 Promise；fn 抛错则 reject，返回 Promise 则采纳。
+// 注意：pdf.js 内部以 Promise.try(fn, ...args) 形式调用（带额外参数）。
+interface PromiseTryConstructor {
+  try?: <T>(fn: (...args: any[]) => T | PromiseLike<T>, ...args: any[]) => Promise<T>
+}
+
+const PromiseTryCtor = Promise as unknown as PromiseTryConstructor
+if (typeof PromiseTryCtor.try !== 'function') {
+  Object.defineProperty(Promise, 'try', {
+    configurable: true,
+    writable: true,
+    value: function <T>(fn: (...args: any[]) => T | PromiseLike<T>, ...args: any[]): Promise<T> {
+      try {
+        return Promise.resolve(fn(...args))
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    },
+  })
+}
+
+// ---- Set.prototype.intersection (ES2025) ----
+// 返回两个 Set 的交集（新 Set）。
+interface SetWithIntersection<T> {
+  intersection?: (other: Set<T>) => Set<T>
+}
+
+const SetProto = Set.prototype as unknown as SetWithIntersection<any>
+if (typeof SetProto.intersection !== 'function') {
+  Object.defineProperty(Set.prototype, 'intersection', {
+    configurable: true,
+    writable: true,
+    value: function intersection<T>(this: Set<T>, other: Set<T>): Set<T> {
+      const result = new Set<T>()
+      for (const item of this) {
+        if (other.has(item)) result.add(item)
+      }
+      return result
+    },
+  })
+}
+
 export {}
