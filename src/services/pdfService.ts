@@ -26,28 +26,20 @@ export async function compressPDF(
 ): Promise<Blob> {
   const buffer = await readFileAsArrayBuffer(file)
   onProgress?.(5)
-  console.log('[compress] buffer read, size=', buffer.byteLength)
 
   // pdf.js 会把 ArrayBuffer transfer 给 worker，导致原 buffer 被 detach。
   // 因此给 pdf.js 一份独立拷贝，原始 buffer 保留给 pdf-lib 使用。
   const pdfjsBuffer = buffer.slice(0)
 
   const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
-  console.log('[compress] pdfjs imported, has workerPort=', !!pdfjsLib.GlobalWorkerOptions.workerPort)
-  console.log('[compress] polyfills:', {
-    toHex: typeof (Uint8Array.prototype as any).toHex,
-    getOrInsertComputed: typeof (Map.prototype as any).getOrInsertComputed,
-  })
 
   let pdf: any
   try {
     const loadingTask = pdfjsLib.getDocument({ data: pdfjsBuffer, ...DEFAULT_PDF_OPTIONS })
-    console.log('[compress] getDocument called, waiting for promise...')
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('[timeout] getDocument 10s 超时，pdf.js worker 可能未就绪')), 10000)
     )
     pdf = await Promise.race([loadingTask.promise, timeoutPromise])
-    console.log('[compress] getDocument resolved, numPages=', pdf.numPages)
   } catch (err: any) {
     console.error('[compress] getDocument failed:', err?.message, err?.stack)
     throw new Error(`pdf.js 加载失败: ${err?.message}`)
@@ -72,22 +64,18 @@ export async function compressPDF(
     ? await PDFDocument.load(buffer, { ignoreEncryption: true })
     : null
 
-  console.log('[compress] starting page loop, mode=', mode, 'pages=', pageCount)
   for (let i = 1; i <= pageCount; i++) {
     // 进度从 10 → 90
     onProgress?.(10 + Math.round((i / pageCount) * 80))
 
     const page = await pdf.getPage(i)
-    console.log(`[compress] page ${i}/${pageCount} got page`)
 
     if (mode === 'basic') {
       const hasImage = await pageHasImage(page)
-      console.log(`[compress] page ${i} hasImage=`, hasImage)
       if (!hasImage && srcPdfDoc) {
         // 纯文字页：直接从原 PDF 复制，保留文字层与清晰度
         const copied = await newDoc.copyPages(srcPdfDoc, [i - 1])
         newDoc.addPage(copied[0])
-        console.log(`[compress] page ${i} copied as text page`)
         continue
       }
     }
@@ -111,7 +99,6 @@ export async function compressPDF(
       console.error(`[compress] page ${i} render failed:`, err?.message)
       throw new Error(`页面 ${i} 渲染失败: ${err?.message}`)
     }
-    console.log(`[compress] page ${i} rendered, size=${canvas.width}x${canvas.height}`)
 
     const jpegQuality = mode === 'strong' ? JPEG_QUALITY_STRONG : JPEG_QUALITY_BASIC
     const jpegBlob = await new Promise<Blob | null>((resolve) => {
@@ -119,7 +106,6 @@ export async function compressPDF(
     })
     if (!jpegBlob) continue
     const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer())
-    console.log(`[compress] page ${i} jpeg bytes=`, jpegBytes.length)
 
     const image = await newDoc.embedJpg(jpegBytes)
     const newPage = newDoc.addPage([baseViewport.width, baseViewport.height])
