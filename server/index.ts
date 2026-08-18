@@ -362,6 +362,9 @@ if (process.env.NODE_ENV === 'production') {
     let html = injectRouteMeta(cachedBaseHtml, '/')
     html = injectStaticH1(html)
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    // HTML 不缓存：JS/CSS 资源带 immutable 缓存，必须让浏览器每次重新拉取
+    // index.html 才能拿到最新的 chunk hash，否则旧代码会被长期缓存。
+    res.setHeader('Cache-Control', 'no-cache')
     res.send(html)
   })
 
@@ -375,6 +378,7 @@ if (process.env.NODE_ENV === 'production') {
     let html = injectRouteMetaEn(cachedBaseHtml, '/')
     html = injectStaticH1(html, true)
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-cache')
     res.send(html)
   })
 
@@ -394,6 +398,7 @@ if (process.env.NODE_ENV === 'production') {
     let html = injectRouteMetaEn(cachedBaseHtml, enPath)
     html = html.replace('<!--__H1_PLACEHOLDER__-->', '')
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-cache')
     res.send(html)
   })
 
@@ -422,6 +427,7 @@ if (process.env.NODE_ENV === 'production') {
     let html = injectRouteMeta(cachedBaseHtml, path)
     html = html.replace('<!--__H1_PLACEHOLDER__-->', '')
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-cache')
     res.send(html)
   })
 }
