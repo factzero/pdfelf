@@ -6,6 +6,13 @@
  */
 
 import * as pdfjsLib from 'pdfjs-dist'
+import { WorkerMessageHandler } from 'pdfjs-dist/build/pdf.worker.min.mjs'
+
+// 将 WorkerMessageHandler 挂到 globalThis.pdfjsWorker，让 pdf.js 在主线程 fake worker
+// 模式下直接复用（详见 pdf.mjs 的 #mainThreadWorkerMessageHandler getter）。
+// 这样即使独立 Web Worker 加载失败，也能正确回退到主线程运行，而不是报
+// "Cannot read properties of undefined (reading 'setup')"。
+;(globalThis as any).pdfjsWorker = { WorkerMessageHandler }
 
 /** cMap 文件的基础 URL，用于加载中文字体映射表 */
 export const C_MAP_URL = '/cmaps/'

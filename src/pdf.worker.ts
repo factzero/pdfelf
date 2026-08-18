@@ -14,6 +14,7 @@
 
 import '@/utils/polyfills'
 import 'pdfjs-dist/build/pdf.worker.min.mjs'
+export { WorkerMessageHandler } from 'pdfjs-dist/build/pdf.worker.min.mjs'
 
 // 全局错误捕获：worker 初始化失败时，把真实错误通过 postMessage 回传主线程，
 // 便于定位服务器上 worker 加载失败的具体原因。
@@ -45,5 +46,3 @@ self.addEventListener('unhandledrejection', (event) => {
     /* ignore */
   }
 })
-
-export {}
