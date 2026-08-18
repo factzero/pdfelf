@@ -26,12 +26,27 @@ if (typeof Worker !== 'undefined') {
     console.log('[pdfjs] custom worker created, port=', !!pdfjsLib.GlobalWorkerOptions.workerPort)
 
     pdfWorker.addEventListener('error', (e) => {
-      console.error('[pdfjs] worker error event:', e.message, e.filename, e.lineno)
+      console.error('[pdfjs] worker error event:', {
+        message: e.message,
+        filename: e.filename,
+        lineno: e.lineno,
+        colno: e.colno,
+        error: e.error,
+        stack: (e as any).error?.stack,
+      })
+    })
+
+    pdfWorker.addEventListener('messageerror', (e) => {
+      console.error('[pdfjs] worker messageerror event:', e)
     })
 
     // 监听 pdf.js 内部 worker 消息（第一个消息通常是 ready/error）
     pdfWorker.addEventListener('message', (e) => {
-      if (e.data?.sourceName === 'pdf.worker') {
+      if (e.data?.type === 'worker-init-error') {
+        console.error('[pdfjs] worker init ERROR:', e.data)
+      } else if (e.data?.type === 'worker-unhandled-rejection') {
+        console.error('[pdfjs] worker unhandled rejection:', e.data)
+      } else if (e.data?.sourceName === 'pdf.worker') {
         console.log('[pdfjs] worker msg:', e.data?.action ?? 'ready')
       }
     })

@@ -15,4 +15,35 @@
 import '@/utils/polyfills'
 import 'pdfjs-dist/build/pdf.worker.min.mjs'
 
+// 全局错误捕获：worker 初始化失败时，把真实错误通过 postMessage 回传主线程，
+// 便于定位服务器上 worker 加载失败的具体原因。
+self.addEventListener('error', (event) => {
+  const detail = {
+    type: 'worker-init-error',
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    error: event.error ? String(event.error) : null,
+    stack: event.error?.stack ?? null,
+  }
+  try {
+    ;(self as any).postMessage(detail)
+  } catch (_) {
+    /* ignore */
+  }
+})
+
+self.addEventListener('unhandledrejection', (event) => {
+  try {
+    ;(self as any).postMessage({
+      type: 'worker-unhandled-rejection',
+      reason: String(event.reason),
+      stack: (event.reason as any)?.stack ?? null,
+    })
+  } catch (_) {
+    /* ignore */
+  }
+})
+
 export {}
