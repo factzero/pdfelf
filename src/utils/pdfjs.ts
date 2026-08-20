@@ -16,16 +16,15 @@ export const DEFAULT_PDF_OPTIONS = {
   cMapPacked: true,
 }
 
-// 使用自定义 worker（内部先补齐 ES2024/2025 polyfill 再加载 pdf.js worker）。
-// 通过 workerSrc 交给 pdf.js 自己创建 Worker，这样当 worker 加载失败时，
-// pdf.js 会自动回退到主线程模式（#setupFakeWorker），不会卡死。
+// 使用独立 ES 模块 worker（public/pdf.worker.js，由 syncPdfWorkerPlugin 生成）。
 //
-// 注意：生产环境 nginx 需要给 /assets/ 下的 worker 脚本同时加
-// `Cross-Origin-Embedder-Policy: require-corp` 和
-// `Cross-Origin-Resource-Policy: same-origin` 响应头，
-// 否则在页面 COEP: require-corp 跨域隔离策略下，模块 worker 会被浏览器拦截加载。
-import workerUrl from '../pdf.worker.ts?worker&url'
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl
+// 关键：不能用 Vite 的 `?worker&url` 打包 —— 它会把 worker 打包成副作用脚本，
+// 吞掉 `export { WorkerMessageHandler }`，导致 pdf.js 真实 worker 加载失败后
+// 回退 fake worker 时 `import(workerSrc)` 读不到导出而崩溃。
+//
+// public/pdf.worker.js 是独立 ES 模块：内联 ES2024/2025 polyfill，
+// 并 `export { WorkerMessageHandler }`（re-export 自 pdf.worker.core.js），
+// 因此无论走真实 worker 还是 fake worker 回退都能正常工作。
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js'
 
 export { pdfjsLib }

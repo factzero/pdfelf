@@ -114,6 +114,100 @@ function wasmHeadersPlugin(): Plugin {
   }
 }
 
+/**
+ * 插件：生成 public/pdf.worker.js + public/pdf.worker.core.js
+ *
+ * 背景：Vite 的 `?worker&url` 会把 worker 打包成 IIFE 副作用脚本，吞掉
+ * `export { WorkerMessageHandler }`。当 pdf.js 真实 worker 加载失败、回退到
+ * fake worker 时，会 `import(workerSrc)` 并读取 `worker.WorkerMessageHandler`，
+ * 但打包后的 worker 没有该导出 → undefined.setup() 崩溃。
+ *
+ * 解决：把 pdf.worker 作为独立 ES 模块放到 public/（不经 Vite 模块处理），
+ * 保留 `export { WorkerMessageHandler }`，并内联 ES2024/2025 polyfill。
+ */
+function syncPdfWorkerPlugin(): Plugin {
+  const WORKER_CORE_SRC = resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs')
+
+  // 内联的 polyfill（与 src/utils/polyfills.ts 保持一致，此处为纯 JS 版本）
+  const polyfillJs = `
+// ES2024/2025 polyfills for pdf.js worker
+const _up = Uint8Array.prototype;
+if (typeof _up.toHex !== 'function') {
+  Object.defineProperty(Uint8Array.prototype, 'toHex', { configurable: true, writable: true, value: function () {
+    let hex = ''; for (let i = 0; i < this.length; i++) hex += this[i].toString(16).padStart(2, '0'); return hex;
+  }});
+}
+if (typeof _up.toBase64 !== 'function') {
+  Object.defineProperty(Uint8Array.prototype, 'toBase64', { configurable: true, writable: true, value: function () {
+    let binary = ''; for (let i = 0; i < this.length; i++) binary += String.fromCharCode(this[i]); return btoa(binary);
+  }});
+}
+if (typeof Map.prototype.getOrInsertComputed !== 'function') {
+  Object.defineProperty(Map.prototype, 'getOrInsertComputed', { configurable: true, writable: true, value: function (key, cb) {
+    if (this.has(key)) return this.get(key); const v = cb(); this.set(key, v); return v;
+  }});
+}
+if (typeof Promise.withResolvers !== 'function') {
+  Object.defineProperty(Promise, 'withResolvers', { configurable: true, writable: true, value: function () {
+    let resolve, reject; const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
+    return { promise, resolve, reject };
+  }});
+}
+if (typeof Uint8Array.fromBase64 !== 'function') {
+  Object.defineProperty(Uint8Array, 'fromBase64', { configurable: true, writable: true, value: function (str) {
+    const binary = atob(str); const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i); return bytes;
+  }});
+}
+function _atPolyfill(index) {
+  const len = this.length; const i = index < 0 ? len + index : index;
+  return i >= 0 && i < len ? this[i] : undefined;
+}
+if (typeof Array.prototype.at !== 'function') {
+  Object.defineProperty(Array.prototype, 'at', { configurable: true, writable: true, value: _atPolyfill });
+}
+if (typeof Uint8Array.prototype.at !== 'function') {
+  Object.defineProperty(Uint8Array.prototype, 'at', { configurable: true, writable: true, value: _atPolyfill });
+}
+if (typeof Promise.try !== 'function') {
+  Object.defineProperty(Promise, 'try', { configurable: true, writable: true, value: function (fn, ...args) {
+    try { return Promise.resolve(fn(...args)); } catch (err) { return Promise.reject(err); }
+  }});
+}
+if (typeof Set.prototype.intersection !== 'function') {
+  Object.defineProperty(Set.prototype, 'intersection', { configurable: true, writable: true, value: function (other) {
+    const result = new Set(); for (const item of this) if (other.has(item)) result.add(item); return result;
+  }});
+}
+`
+
+  return {
+    name: 'sync-pdf-worker',
+    apply: 'build',
+    async buildStart() {
+      const publicDir = resolve(__dirname, 'public')
+      fs.mkdirSync(publicDir, { recursive: true })
+
+      // 1. 复制 worker 核心（pdf.worker.min.mjs 自包含，无 import）
+      if (!fs.existsSync(WORKER_CORE_SRC)) {
+        console.warn('  [sync-pdf-worker] pdf.worker.min.mjs not found, skip')
+        return
+      }
+      const core = fs.readFileSync(WORKER_CORE_SRC, 'utf8')
+      fs.writeFileSync(resolve(publicDir, 'pdf.worker.core.js'), core)
+      console.log('  [sync-pdf-worker] wrote public/pdf.worker.core.js')
+
+      // 2. 生成 worker 入口（polyfill + import/export）
+      const entry = `${polyfillJs}
+import { WorkerMessageHandler } from './pdf.worker.core.js';
+export { WorkerMessageHandler };
+`
+      fs.writeFileSync(resolve(publicDir, 'pdf.worker.js'), entry)
+      console.log('  [sync-pdf-worker] wrote public/pdf.worker.js')
+    },
+  }
+}
+
 // 插件：将构建产物中的 .mjs 重命名为 .js，彻底避免服务器 MIME 类型问题
 function renameMjsPlugin(): Plugin {
   return {
@@ -167,7 +261,7 @@ function renameMjsPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [vue(), copyCmapsPlugin(), wasmHeadersPlugin(), renameMjsPlugin()],
+  plugins: [vue(), copyCmapsPlugin(), wasmHeadersPlugin(), syncPdfWorkerPlugin(), renameMjsPlugin()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

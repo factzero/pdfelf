@@ -410,6 +410,16 @@ if (process.env.NODE_ENV === 'production') {
       } else if (filePath.endsWith('.wasm')) {
         res.setHeader('Content-Type', 'application/wasm')
       }
+
+      // pdf.js worker 脚本（dist 根目录）需要 COEP/CORP 头，
+      // 否则在页面 COEP: require-corp 跨域隔离策略下，模块 worker 无法加载。
+      const base = filePath.split(/[\\/]/).pop() || ''
+      if (base === 'pdf.worker.js' || base === 'pdf.worker.core.js') {
+        res.setHeader('Content-Type', 'application/javascript')
+        res.setHeader('Cross-Origin-Resource-Policy', 'same-origin')
+        res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
+        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+      }
     },
   }))
 
