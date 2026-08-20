@@ -52,9 +52,11 @@ export async function compressPDF(
   }
 
   const newDoc = await PDFDocument.create()
-  // 强压缩：全页重建为 JPEG（保持分辨率，靠 JPEG 编码压缩）
-  // 基本压缩：仅重建含图片的页，纯文字页直接复制保留文字层
-  const SCALE_STRONG = 1.4
+  // 强压缩：全页重建为 JPEG（较低分辨率 + 低质量，追求极致压缩，牺牲清晰度）
+  // 基本压缩：仅重建含图片的页，纯文字页直接复制保留文字层。
+  // 基本压缩以「质量优先」为目标：保持 1.5x 分辨率 + 0.8 JPEG 质量，
+  // 若重建后体积反而变大，由末尾的兜底逻辑直接返回原文件。
+  const SCALE_STRONG = 1.2
   const SCALE_BASIC_IMG = 1.5
   const JPEG_QUALITY_STRONG = 0.55
   const JPEG_QUALITY_BASIC = 0.8
@@ -129,6 +131,14 @@ export async function compressPDF(
     addDefaultPage: false,
   })
   onProgress?.(98)
+
+  // 兜底：如果压缩后反而更大（图片型/文字型 PDF 栅格化后可能变大），
+  // 直接返回原始文件，保证"压缩"语义不会让文件变大。
+  if (compressedBytes.byteLength >= buffer.byteLength) {
+    onProgress?.(100)
+    return new Blob([buffer], { type: 'application/pdf' })
+  }
+
   const blob = new Blob([new Uint8Array(compressedBytes)], { type: 'application/pdf' })
   onProgress?.(100)
   return blob
