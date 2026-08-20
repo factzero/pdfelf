@@ -411,14 +411,11 @@ if (process.env.NODE_ENV === 'production') {
         res.setHeader('Content-Type', 'application/wasm')
       }
 
-      // pdf.js worker 脚本（dist 根目录）需要 COEP/CORP 头，
-      // 否则在页面 COEP: require-corp 跨域隔离策略下，模块 worker 无法加载。
+      // pdf.js worker 脚本（dist 根目录）只需确保正确的 JS MIME 类型。
+      // COEP/CORP/COOP 头由 nginx 统一添加，这里不再重复设置，避免响应头重复。
       const base = filePath.split(/[\\/]/).pop() || ''
       if (base === 'pdf.worker.js' || base === 'pdf.worker.core.js') {
         res.setHeader('Content-Type', 'application/javascript')
-        res.setHeader('Cross-Origin-Resource-Policy', 'same-origin')
-        res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
-        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
       }
     },
   }))
