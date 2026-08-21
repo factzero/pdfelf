@@ -186,4 +186,120 @@ if (typeof SetProto.intersection !== 'function') {
   })
 }
 
+// ---- Math.sumPrecise (ES2025) ----
+// 高精度求和（Neumaier 补偿算法，消除累积浮点误差）。
+// pdf.js 在 worker 的字体尺寸计算与主库文本编辑中直接调用全局 Math.sumPrecise，
+// Chrome 117+ / Firefox 119+ / Safari 17.4+ 才原生支持，缺失时：
+//   "TypeError: Math.sumPrecise is not a function"（渲染/压缩卡死）。
+interface MathConstructorLike {
+  sumPrecise?: (items: Iterable<number>) => number
+}
+
+const MathCtor = Math as unknown as MathConstructorLike
+if (typeof MathCtor.sumPrecise !== 'function') {
+  Object.defineProperty(Math, 'sumPrecise', {
+    configurable: true,
+    writable: true,
+    value: function sumPrecise(items: Iterable<number>): number {
+      let sum = 0
+      let compensation = 0
+      for (const value of items) {
+        const y = value - compensation
+        const t = sum + y
+        compensation = t - sum - y
+        sum = t
+      }
+      return sum
+    },
+  })
+}
+
+// ---- ArrayBuffer.prototype.transferToFixedLength / transfer (ES2024) ----
+// transferToFixedLength(newLength)：返回固定长度为 newLength 的新 ArrayBuffer，
+// 并复制源数据（标准语义会 detach 源 buffer；polyfill 无法模拟 detach，无碍，
+// 因为 pdf.js 调用后不再使用源 buffer）。
+// pdf.js worker 的 compileSystemFontInfo 直接调用 o.transferToFixedLength(c)，
+// 缺失时报 "TypeError: o.transferToFixedLength is not a function"。
+interface ArrayBufferWithTransfer {
+  transfer?: (newLength?: number) => ArrayBuffer
+  transferToFixedLength?: (newLength: number) => ArrayBuffer
+}
+
+const abProto = ArrayBuffer.prototype as unknown as ArrayBufferWithTransfer
+if (typeof abProto.transferToFixedLength !== 'function') {
+  Object.defineProperty(ArrayBuffer.prototype, 'transferToFixedLength', {
+    configurable: true,
+    writable: true,
+    value: function transferToFixedLength(newLength: number): ArrayBuffer {
+      const source = this as ArrayBuffer
+      const out = new ArrayBuffer(newLength)
+      const copy = Math.min(source.byteLength, newLength)
+      if (copy > 0) new Uint8Array(out).set(new Uint8Array(source, 0, copy))
+      return out
+    },
+  })
+}
+if (typeof abProto.transfer !== 'function') {
+  Object.defineProperty(ArrayBuffer.prototype, 'transfer', {
+    configurable: true,
+    writable: true,
+    value: function transfer(newLength?: number): ArrayBuffer {
+      const source = this as ArrayBuffer
+      const len = newLength === undefined ? source.byteLength : newLength
+      const out = new ArrayBuffer(len)
+      const copy = Math.min(source.byteLength, len)
+      if (copy > 0) new Uint8Array(out).set(new Uint8Array(source, 0, copy))
+      return out
+    },
+  })
+}
+
+// ---- Object.hasOwn (ES2022) ----
+// Chrome 93+ 才原生支持；pdf.js worker 的 getDestination 等路径会调用 Object.hasOwn。
+if (typeof (Object as any).hasOwn !== 'function') {
+  Object.defineProperty(Object, 'hasOwn', {
+    configurable: true,
+    writable: true,
+    value: function hasOwn(obj: object, key: PropertyKey): boolean {
+      return Object.prototype.hasOwnProperty.call(obj, key)
+    },
+  })
+}
+
+// ---- Array.prototype.findLast / findLastIndex (ES2023) ----
+// Chrome 97+ 才原生支持；pdf.js 主库在 URL 参数解析等路径使用 findLast。
+// 用 any 访问避免 TS lib 版本差异。
+if (typeof (Array.prototype as any).findLast !== 'function') {
+  Object.defineProperty(Array.prototype, 'findLast', {
+    configurable: true,
+    writable: true,
+    value: function findLast<T>(
+      this: T[],
+      predicate: (value: T, index: number, array: T[]) => unknown,
+      thisArg?: unknown,
+    ): T | undefined {
+      for (let i = this.length - 1; i >= 0; i--) {
+        if (predicate.call(thisArg, this[i], i, this)) return this[i]
+      }
+      return undefined
+    },
+  })
+}
+if (typeof (Array.prototype as any).findLastIndex !== 'function') {
+  Object.defineProperty(Array.prototype, 'findLastIndex', {
+    configurable: true,
+    writable: true,
+    value: function findLastIndex<T>(
+      this: T[],
+      predicate: (value: T, index: number, array: T[]) => unknown,
+      thisArg?: unknown,
+    ): number {
+      for (let i = this.length - 1; i >= 0; i--) {
+        if (predicate.call(thisArg, this[i], i, this)) return i
+      }
+      return -1
+    },
+  })
+}
+
 export {}

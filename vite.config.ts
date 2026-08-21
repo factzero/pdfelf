@@ -179,6 +179,40 @@ if (typeof Set.prototype.intersection !== 'function') {
     const result = new Set(); for (const item of this) if (other.has(item)) result.add(item); return result;
   }});
 }
+if (typeof Math.sumPrecise !== 'function') {
+  Object.defineProperty(Math, 'sumPrecise', { configurable: true, writable: true, value: function (items) {
+    let sum = 0, compensation = 0;
+    for (const value of items) {
+      const y = value - compensation;
+      const t = sum + y;
+      compensation = t - sum - y;
+      sum = t;
+    }
+    return sum;
+  }});
+}
+if (typeof ArrayBuffer.prototype.transferToFixedLength !== 'function') {
+  Object.defineProperty(ArrayBuffer.prototype, 'transferToFixedLength', { configurable: true, writable: true, value: function (newLength) {
+    const source = this, out = new ArrayBuffer(newLength);
+    const copy = Math.min(source.byteLength, newLength);
+    if (copy > 0) new Uint8Array(out).set(new Uint8Array(source, 0, copy));
+    return out;
+  }});
+}
+if (typeof ArrayBuffer.prototype.transfer !== 'function') {
+  Object.defineProperty(ArrayBuffer.prototype, 'transfer', { configurable: true, writable: true, value: function (newLength) {
+    const source = this, len = newLength === undefined ? source.byteLength : newLength;
+    const out = new ArrayBuffer(len);
+    const copy = Math.min(source.byteLength, len);
+    if (copy > 0) new Uint8Array(out).set(new Uint8Array(source, 0, copy));
+    return out;
+  }});
+}
+if (typeof Object.hasOwn !== 'function') {
+  Object.defineProperty(Object, 'hasOwn', { configurable: true, writable: true, value: function (obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+  }});
+}
 `
 
   return {
