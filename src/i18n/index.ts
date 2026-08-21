@@ -26,6 +26,9 @@ const i18n = createI18n({
   legacy: false,
   locale: detectedLocale,
   fallbackLocale: 'zh-CN',
+  // introText 等消息含 <strong> 标签且通过 v-html 渲染；
+  // 消息均为本地硬编码（非用户输入），无 XSS 风险，关闭 HTML 检测警告。
+  warnHtmlMessage: false,
   messages: {
     'zh-CN': zhCN,
     en,

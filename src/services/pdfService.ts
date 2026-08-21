@@ -31,15 +31,13 @@ export async function compressPDF(
   // 因此给 pdf.js 一份独立拷贝，原始 buffer 保留给 pdf-lib 使用。
   const pdfjsBuffer = buffer.slice(0)
 
-  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+  const { openPdfDocument } = await import('@/utils/pdfjs')
 
   let pdf: any
   try {
-    const loadingTask = pdfjsLib.getDocument({ data: pdfjsBuffer, ...DEFAULT_PDF_OPTIONS })
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('[timeout] getDocument 10s 超时，pdf.js worker 可能未就绪')), 10000)
-    )
-    pdf = await Promise.race([loadingTask.promise, timeoutPromise])
+    // 统一封装：60s 超时仅作防挂死保险（首次访问 worker core 下载可能较慢），
+    // 超时或失败时自动 destroy loadingTask，避免 worker 泄漏与 unhandledrejection。
+    pdf = await openPdfDocument(pdfjsBuffer)
   } catch (err: any) {
     console.error('[compress] getDocument failed:', err?.message, err?.stack)
     throw new Error(`pdf.js 加载失败: ${err?.message}`)
@@ -1329,11 +1327,10 @@ async function tryRenderRebuild(
   onProgress?: (percent: number) => void
 ): Promise<Blob | null> {
   try {
-    const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+    const { openPdfDocument } = await import('@/utils/pdfjs')
     const buffer = await readFileAsArrayBuffer(file)
 
-    const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
-    const pdf = await loadingTask.promise
+    const pdf = await openPdfDocument(buffer)
     const pageCount = pdf.numPages
 
     if (pageCount === 0) {
@@ -1444,12 +1441,11 @@ export async function flipPdf(
   onProgress?: (percent: number) => void,
 ): Promise<Blob> {
   onProgress?.(5)
-  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+  const { openPdfDocument } = await import('@/utils/pdfjs')
   const buffer = await readFileAsArrayBuffer(file)
   onProgress?.(10)
 
-  const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
-  const pdf = await loadingTask.promise
+  const pdf = await openPdfDocument(buffer)
   const pageCount = pdf.numPages
   onProgress?.(20)
 
@@ -1502,12 +1498,11 @@ export async function grayscalePdf(
   onProgress?: (percent: number) => void,
 ): Promise<Blob> {
   onProgress?.(5)
-  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
+  const { openPdfDocument } = await import('@/utils/pdfjs')
   const buffer = await readFileAsArrayBuffer(file)
   onProgress?.(10)
 
-  const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
-  const pdf = await loadingTask.promise
+  const pdf = await openPdfDocument(buffer)
   const pageCount = pdf.numPages
   onProgress?.(20)
 
@@ -1837,9 +1832,8 @@ export async function redactPdf(
   const totalPages = srcDoc.getPageCount()
   onProgress?.(15)
 
-  const { pdfjsLib, DEFAULT_PDF_OPTIONS } = await import('@/utils/pdfjs')
-  const loadingTask = pdfjsLib.getDocument({ data: buffer.slice(0), ...DEFAULT_PDF_OPTIONS })
-  const pdfJsDoc = await loadingTask.promise
+  const { openPdfDocument } = await import('@/utils/pdfjs')
+  const pdfJsDoc = await openPdfDocument(buffer.slice(0))
   onProgress?.(20)
 
   const newDoc = await PDFDocument.create()

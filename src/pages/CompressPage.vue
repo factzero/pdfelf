@@ -113,7 +113,7 @@ import { useToolStore } from '@/stores/toolStore'
 import { storeToRefs } from 'pinia'
 import { generateOutputFilename, readFileAsArrayBuffer, downloadBlob } from '@/utils/fileUtils'
 import { compressPDF } from '@/services/pdfService'
-import { pdfjsLib, DEFAULT_PDF_OPTIONS } from '@/utils/pdfjs'
+import { openPdfDocument } from '@/utils/pdfjs'
 
 const { t } = useI18n()
 const store = useToolStore()
@@ -203,8 +203,7 @@ async function onFileSelected(file: File | File[]) {
 
   try {
     const buffer = await readFileAsArrayBuffer(selectedFile.value)
-    const loadingTask = pdfjsLib.getDocument({ data: buffer, ...DEFAULT_PDF_OPTIONS })
-    const pdf = await loadingTask.promise
+    const pdf = await openPdfDocument(buffer)
     totalPages.value = pdf.numPages
 
     if (pdf.numPages > 0) {

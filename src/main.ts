@@ -46,3 +46,12 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.mount('#app')
+
+// 空闲时预热 pdf.js worker（动态 import，不增加首屏 bundle；warmUpPdfjs 幂等）。
+// 首次访问时 worker core（约 1.2MB）下载 + 启动较慢，提前加载可避免
+// 用户首次压缩/预览时在超时窗口内冷启动。
+window.setTimeout(() => {
+  import('./utils/pdfjs')
+    .then(({ warmUpPdfjs }) => warmUpPdfjs())
+    .catch(() => {})
+}, 3000)
